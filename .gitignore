@@ -30,9 +30,9 @@ Config.xcconfig
 macos/fastlane/README.md
 macos/fastlane/report.xml
 
-macos/MusicBar.app/
-MusicBar.app.dSYM.zip
-MusicBar.zip
+macos/MediaBar.app/
+MediaBar.app.dSYM.zip
+MediaBar.zip
 
 # Finder
 Icon

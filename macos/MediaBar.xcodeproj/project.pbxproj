@@ -55,6 +55,8 @@
 		6EB3808324539BBF00307E8C /* NSString+GetMusicBarVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB3808224539BBF00307E8C /* NSString+GetMusicBarVersion.m */; };
 		6EB380892453AF6900307E8C /* ReactiveCocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6EB380882453AF6900307E8C /* ReactiveCocoa.framework */; };
 		6EB3808A2453AF6900307E8C /* ReactiveCocoa.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6EB380882453AF6900307E8C /* ReactiveCocoa.framework */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		9BD934BB26BF17BC00F4C2C8 /* MediaRemote.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BD934BA26BF17BC00F4C2C8 /* MediaRemote.framework */; };
+		9BD934BC26BF17BC00F4C2C8 /* MediaRemote.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9BD934BA26BF17BC00F4C2C8 /* MediaRemote.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -69,6 +71,7 @@
 				6E3FB752244659C400A343FE /* Mantle.framework in Embed Frameworks */,
 				6E3FB754244659C500A343FE /* Squirrel.framework in Embed Frameworks */,
 				6E3FB73E2444173A00A343FE /* Sentry.framework in Embed Frameworks */,
+				9BD934BC26BF17BC00F4C2C8 /* MediaRemote.framework in Embed Frameworks */,
 				6E6BF6B824502D4100702DE0 /* PrivateMediaRemote.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
@@ -87,7 +90,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
-		6E04236C2439F6AE00E113F4 /* MusicBar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MusicBar.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		6E04236C2439F6AE00E113F4 /* MediaBar.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MediaBar.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		6E04236F2439F6AE00E113F4 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		6E0423702439F6AE00E113F4 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		6E0423722439F6AF00E113F4 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -125,7 +128,6 @@
 		6E3FB73624437D4900A343FE /* DNLoginServiceKit.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = DNLoginServiceKit.framework.dSYM; path = Carthage/Build/Mac/DNLoginServiceKit.framework.dSYM; sourceTree = "<group>"; };
 		6E3FB7392443858900A343FE /* Sentry.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sentry.framework; path = Carthage/Build/Mac/Sentry.framework; sourceTree = "<group>"; };
 		6E3FB73B2443859500A343FE /* Sentry.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = Sentry.framework.dSYM; path = Carthage/Build/Mac/Sentry.framework.dSYM; sourceTree = "<group>"; };
-		6E3FB743244438B900A343FE /* Configuration/Config.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Configuration/Config.xcconfig; sourceTree = "<group>"; };
 		6E3FB744244438FC00A343FE /* Configuration/ConfigExample.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Configuration/ConfigExample.xcconfig; sourceTree = "<group>"; };
 		6E3FB7472446592D00A343FE /* Mantle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Mantle.framework; path = Carthage/Build/Mac/Mantle.framework; sourceTree = "<group>"; };
 		6E3FB7492446593700A343FE /* Squirrel.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Squirrel.framework; path = Carthage/Build/Mac/Squirrel.framework; sourceTree = "<group>"; };
@@ -157,7 +159,6 @@
 		6E81930224412A5000879AEE /* PreferencesTabPageViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PreferencesTabPageViewController.m; sourceTree = "<group>"; };
 		6E887B182448F14E0011849F /* Gemfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Gemfile; sourceTree = "<group>"; };
 		6E887B192448F14E0011849F /* Gemfile.lock */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Gemfile.lock; sourceTree = "<group>"; };
-		6E887B202448F14E0011849F /* Cartfile.resolved */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cartfile.resolved; sourceTree = "<group>"; };
 		6E8F7F53244963D4000FBC83 /* Configuration/MusicBar.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Configuration/MusicBar.entitlements; sourceTree = "<group>"; };
 		6E8F7F58244973FE000FBC83 /* Constants.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Constants.mm; sourceTree = "<group>"; };
 		6E8F7F59244973FE000FBC83 /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
@@ -168,6 +169,7 @@
 		6EB380882453AF6900307E8C /* ReactiveCocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ReactiveCocoa.framework; path = Carthage/Build/Mac/ReactiveCocoa.framework; sourceTree = "<group>"; };
 		6EB3808B2453AF9D00307E8C /* PrivateMediaRemote.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = PrivateMediaRemote.framework.dSYM; path = Carthage/Build/Mac/PrivateMediaRemote.framework.dSYM; sourceTree = "<group>"; };
 		6EB3808C2453AFB900307E8C /* PrivateProtocolBuffer.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = PrivateProtocolBuffer.framework.dSYM; path = Carthage/Build/Mac/PrivateProtocolBuffer.framework.dSYM; sourceTree = "<group>"; };
+		9BD934BA26BF17BC00F4C2C8 /* MediaRemote.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaRemote.framework; path = ../../../../../System/Library/PrivateFrameworks/MediaRemote.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -178,6 +180,7 @@
 				6E3FB73D2444173A00A343FE /* Sentry.framework in Frameworks */,
 				6E3FB753244659C500A343FE /* Squirrel.framework in Frameworks */,
 				6E8F7F54244964F9000FBC83 /* ScriptingBridge.framework in Frameworks */,
+				9BD934BB26BF17BC00F4C2C8 /* MediaRemote.framework in Frameworks */,
 				6E6BF6C0245030AE00702DE0 /* PDFKit.framework in Frameworks */,
 				6E3FB73024437B3600A343FE /* DNLoginServiceKit.framework in Frameworks */,
 				6E6BF6BA24502FA900702DE0 /* MediaRemote.framework in Frameworks */,
@@ -223,7 +226,7 @@
 		6E04236D2439F6AE00E113F4 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				6E04236C2439F6AE00E113F4 /* MusicBar.app */,
+				6E04236C2439F6AE00E113F4 /* MediaBar.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -231,6 +234,7 @@
 		6E0423E8243A437700E113F4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				9BD934BA26BF17BC00F4C2C8 /* MediaRemote.framework */,
 				6E6BF6BF245030AE00702DE0 /* PDFKit.framework */,
 				6E6BF6B924502FA900702DE0 /* MediaRemote.framework */,
 				6E376BA2245027E3005528CF /* PrivateMediaRemote.framework */,
@@ -329,11 +333,9 @@
 			isa = PBXGroup;
 			children = (
 				6E3FB72C2443799D00A343FE /* Cartfile */,
-				6E887B202448F14E0011849F /* Cartfile.resolved */,
 				6E887B182448F14E0011849F /* Gemfile */,
 				6E887B192448F14E0011849F /* Gemfile.lock */,
 				6E8F7F53244963D4000FBC83 /* Configuration/MusicBar.entitlements */,
-				6E3FB743244438B900A343FE /* Configuration/Config.xcconfig */,
 				6E3FB744244438FC00A343FE /* Configuration/ConfigExample.xcconfig */,
 				6E0423772439F6AF00E113F4 /* Configuration/Info.plist */,
 				6E3FB6D92441458100A343FE /* Configuration/DefaultPreferences.plist */,
@@ -344,9 +346,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		6E04236B2439F6AE00E113F4 /* MusicBar */ = {
+		6E04236B2439F6AE00E113F4 /* MediaBar */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = 6E04237D2439F6AF00E113F4 /* Build configuration list for PBXNativeTarget "MusicBar" */;
+			buildConfigurationList = 6E04237D2439F6AF00E113F4 /* Build configuration list for PBXNativeTarget "MediaBar" */;
 			buildPhases = (
 				6E0423682439F6AE00E113F4 /* Sources */,
 				6E0423692439F6AE00E113F4 /* Frameworks */,
@@ -359,9 +361,9 @@
 			);
 			dependencies = (
 			);
-			name = MusicBar;
+			name = MediaBar;
 			productName = MusicMenu;
-			productReference = 6E04236C2439F6AE00E113F4 /* MusicBar.app */;
+			productReference = 6E04236C2439F6AE00E113F4 /* MediaBar.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -378,7 +380,7 @@
 					};
 				};
 			};
-			buildConfigurationList = 6E0423672439F6AE00E113F4 /* Build configuration list for PBXProject "MusicBar" */;
+			buildConfigurationList = 6E0423672439F6AE00E113F4 /* Build configuration list for PBXProject "MediaBar" */;
 			compatibilityVersion = "Xcode 9.3";
 			developmentRegion = en;
 			hasScannedForEncodings = 0;
@@ -391,7 +393,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				6E04236B2439F6AE00E113F4 /* MusicBar */,
+				6E04236B2439F6AE00E113F4 /* MediaBar */,
 			);
 		};
 /* End PBXProject section */
@@ -592,15 +594,14 @@
 		};
 		6E04237E2439F6AF00E113F4 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6E3FB743244438B900A343FE /* Configuration/Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Configuration/MusicBar.entitlements;
-				CODE_SIGN_IDENTITY = "Developer ID Application";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 0.0.0.0.0;
-				DEVELOPMENT_TEAM = GD9UG2H679;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -613,23 +614,26 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 0.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.dimitarnestorov.MusicBar;
+				PRODUCT_BUNDLE_IDENTIFIER = xyz.resticker.MediaBar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SYSTEM_FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
+				);
 			};
 			name = Debug;
 		};
 		6E04237F2439F6AF00E113F4 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 6E3FB743244438B900A343FE /* Configuration/Config.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_ENTITLEMENTS = Configuration/MusicBar.entitlements;
-				CODE_SIGN_IDENTITY = "Developer ID Application";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "-";
+				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 0.0.0.0.0;
-				DEVELOPMENT_TEAM = GD9UG2H679;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -642,16 +646,20 @@
 					"@executable_path/../Frameworks",
 				);
 				MARKETING_VERSION = 0.0.0;
-				PRODUCT_BUNDLE_IDENTIFIER = com.dimitarnestorov.MusicBar;
+				PRODUCT_BUNDLE_IDENTIFIER = xyz.resticker.MediaBar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SYSTEM_FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
+				);
 			};
 			name = Release;
 		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		6E0423672439F6AE00E113F4 /* Build configuration list for PBXProject "MusicBar" */ = {
+		6E0423672439F6AE00E113F4 /* Build configuration list for PBXProject "MediaBar" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6E04237B2439F6AF00E113F4 /* Debug */,
@@ -660,7 +668,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		6E04237D2439F6AF00E113F4 /* Build configuration list for PBXNativeTarget "MusicBar" */ = {
+		6E04237D2439F6AF00E113F4 /* Build configuration list for PBXNativeTarget "MediaBar" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				6E04237E2439F6AF00E113F4 /* Debug */,

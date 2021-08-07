@@ -1,9 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="16096" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="wnN-yC-qI9">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="wnN-yC-qI9">
     <dependencies>
-        <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="16096"/>
-        <plugIn identifier="com.apple.pdfkit.ibplugin" version="16096"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="18122"/>
+        <plugIn identifier="com.apple.pdfkit.ibplugin" version="18122"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -66,25 +65,25 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <subviews>
                             <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="YtL-Up-lsH">
-                                <rect key="frame" x="35" y="98" width="380" height="5"/>
+                                <rect key="frame" x="35" y="93" width="380" height="5"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="380" id="SuZ-TX-cQK"/>
                                 </constraints>
                             </box>
                             <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="aqE-ze-POg">
-                                <rect key="frame" x="35" y="142" width="380" height="5"/>
+                                <rect key="frame" x="35" y="139" width="380" height="5"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="380" id="6hv-m7-aRG"/>
                                 </constraints>
                             </box>
                             <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="nVV-QP-DHe">
-                                <rect key="frame" x="35" y="54" width="380" height="5"/>
+                                <rect key="frame" x="35" y="49" width="380" height="5"/>
                                 <constraints>
                                     <constraint firstAttribute="width" constant="380" id="E8n-iR-lF9"/>
                                 </constraints>
                             </box>
                             <gridView xPlacement="leading" yPlacement="center" rowAlignment="none" translatesAutoresizingMaskIntoConstraints="NO" id="BaQ-x2-xWf">
-                                <rect key="frame" x="20" y="26" width="411" height="292"/>
+                                <rect key="frame" x="20" y="21" width="411" height="302"/>
                                 <rows>
                                     <gridRow id="uMH-m3-wwu"/>
                                     <gridRow id="SJx-dh-uQE"/>
@@ -108,7 +107,7 @@
                                     <gridCell row="uMH-m3-wwu" column="nzm-tR-Q8n" id="d6h-mC-loH"/>
                                     <gridCell row="uMH-m3-wwu" column="fr5-HD-BPh" id="tIj-aZ-ieI">
                                         <button key="contentView" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="ikO-WV-lWE" customClass="PreferencesCheckbox">
-                                            <rect key="frame" x="182" y="276" width="91" height="18"/>
+                                            <rect key="frame" x="182" y="285" width="95" height="18"/>
                                             <buttonCell key="cell" type="check" title="Show artist" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="UJf-2O-AFJ">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
@@ -121,7 +120,7 @@
                                     <gridCell row="SJx-dh-uQE" column="nzm-tR-Q8n" id="EVy-32-e1M"/>
                                     <gridCell row="SJx-dh-uQE" column="fr5-HD-BPh" id="qUI-ZV-zlv">
                                         <button key="contentView" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="w5W-Oe-4ah" customClass="PreferencesCheckbox">
-                                            <rect key="frame" x="182" y="256" width="82" height="18"/>
+                                            <rect key="frame" x="182" y="263" width="86" height="18"/>
                                             <buttonCell key="cell" type="check" title="Show title" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="NqE-PX-nvl">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
@@ -134,7 +133,7 @@
                                     <gridCell row="rqV-3x-F0Y" column="nzm-tR-Q8n" id="cKK-HE-hIc"/>
                                     <gridCell row="rqV-3x-F0Y" column="fr5-HD-BPh" id="EcQ-vg-buP">
                                         <button key="contentView" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="1JE-H8-vxH" customClass="PreferencesCheckbox">
-                                            <rect key="frame" x="182" y="236" width="96" height="18"/>
+                                            <rect key="frame" x="182" y="241" width="100" height="18"/>
                                             <buttonCell key="cell" type="check" title="Show album" bezelStyle="regularSquare" imagePosition="left" inset="2" id="Elr-kS-Keg">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
@@ -147,7 +146,7 @@
                                     <gridCell row="dU1-6W-vVe" column="nzm-tR-Q8n" id="8jf-4q-puY"/>
                                     <gridCell row="dU1-6W-vVe" column="fr5-HD-BPh" id="q93-0a-Vzk">
                                         <button key="contentView" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="6XV-3z-juQ" customClass="PreferencesCheckbox">
-                                            <rect key="frame" x="182" y="216" width="161" height="18"/>
+                                            <rect key="frame" x="182" y="219" width="165" height="18"/>
                                             <buttonCell key="cell" type="check" title="Hide text when paused" bezelStyle="regularSquare" imagePosition="left" inset="2" id="19G-zx-l6B">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
@@ -159,7 +158,7 @@
                                     </gridCell>
                                     <gridCell row="Kl4-SW-6Ds" column="nzm-tR-Q8n" id="y1T-oH-rHI">
                                         <textField key="contentView" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="vbg-t1-05O">
-                                            <rect key="frame" x="50" y="192" width="130" height="16"/>
+                                            <rect key="frame" x="50" y="194" width="130" height="16"/>
                                             <textFieldCell key="cell" lineBreakMode="clipping" title="Icon (always visible):" id="coc-ul-nAU">
                                                 <font key="font" usesAppearanceFont="YES"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -169,7 +168,7 @@
                                     </gridCell>
                                     <gridCell row="Kl4-SW-6Ds" column="fr5-HD-BPh" xPlacement="fill" id="tun-Ia-mxy">
                                         <customView key="contentView" translatesAutoresizingMaskIntoConstraints="NO" id="dd6-ht-wPi">
-                                            <rect key="frame" x="184" y="187" width="227" height="25"/>
+                                            <rect key="frame" x="184" y="189" width="227" height="25"/>
                                             <subviews>
                                                 <popUpButton verticalHuggingPriority="750" id="Y5e-cP-g20" customClass="PreferencesPopUpButton">
                                                     <rect key="frame" x="-2" y="-1" width="73" height="25"/>
@@ -204,7 +203,7 @@
                                     </gridCell>
                                     <gridCell row="BiE-lJ-gyo" column="nzm-tR-Q8n" id="IQD-wR-7rx">
                                         <textField key="contentView" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="xZM-on-gjn">
-                                            <rect key="frame" x="64" y="161" width="116" height="16"/>
+                                            <rect key="frame" x="64" y="163" width="116" height="16"/>
                                             <textFieldCell key="cell" lineBreakMode="clipping" title="Icon while playing:" id="guQ-tp-Sgf">
                                                 <font key="font" usesAppearanceFont="YES"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -214,7 +213,7 @@
                                     </gridCell>
                                     <gridCell row="BiE-lJ-gyo" column="fr5-HD-BPh" xPlacement="fill" id="pcx-2e-IC5">
                                         <customView key="contentView" wantsLayer="YES" translatesAutoresizingMaskIntoConstraints="NO" id="VSg-Kn-OCO">
-                                            <rect key="frame" x="184" y="156" width="227" height="25"/>
+                                            <rect key="frame" x="184" y="158" width="227" height="25"/>
                                             <subviews>
                                                 <popUpButton verticalHuggingPriority="750" id="R3p-OK-iYs" customClass="PreferencesPopUpButton">
                                                     <rect key="frame" x="-2" y="-1" width="73" height="25"/>
@@ -249,7 +248,7 @@
                                     </gridCell>
                                     <gridCell row="sg2-5q-zM4" column="nzm-tR-Q8n" id="FwA-2V-2yj">
                                         <textField key="contentView" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="VH8-OE-bpu">
-                                            <rect key="frame" x="77" y="133" width="103" height="16"/>
+                                            <rect key="frame" x="77" y="135" width="103" height="16"/>
                                             <textFieldCell key="cell" lineBreakMode="clipping" title="Maximum width:" id="dQr-v7-e2s">
                                                 <font key="font" usesAppearanceFont="YES"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -259,7 +258,7 @@
                                     </gridCell>
                                     <gridCell row="sg2-5q-zM4" column="fr5-HD-BPh" xPlacement="fill" id="cQo-at-BKe">
                                         <customView key="contentView" translatesAutoresizingMaskIntoConstraints="NO" id="J5N-0a-ynN">
-                                            <rect key="frame" x="184" y="131" width="227" height="19"/>
+                                            <rect key="frame" x="184" y="133" width="227" height="19"/>
                                             <subviews>
                                                 <slider verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Thh-3K-mv9">
                                                     <rect key="frame" x="-2" y="0.0" width="180" height="19"/>
@@ -277,7 +276,7 @@
                                     </gridCell>
                                     <gridCell row="gO0-OK-28q" column="nzm-tR-Q8n" xPlacement="fill" id="7mH-Q1-Hmu">
                                         <customView key="contentView" translatesAutoresizingMaskIntoConstraints="NO" id="q5K-UD-IhT">
-                                            <rect key="frame" x="0.0" y="109" width="178" height="16"/>
+                                            <rect key="frame" x="0.0" y="111" width="178" height="16"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="16" id="61w-Fy-jFE"/>
                                             </constraints>
@@ -287,7 +286,7 @@
                                     <gridCell row="dFH-gd-QWi" column="nzm-tR-Q8n" id="7A5-5Q-NlJ"/>
                                     <gridCell row="dFH-gd-QWi" column="fr5-HD-BPh" id="ZWU-HJ-qCh">
                                         <button key="contentView" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="joB-N1-0Lj" customClass="PreferencesCheckbox">
-                                            <rect key="frame" x="182" y="87" width="179" height="18"/>
+                                            <rect key="frame" x="182" y="88" width="183" height="18"/>
                                             <buttonCell key="cell" type="check" title="Enable automatic updates" bezelStyle="regularSquare" imagePosition="left" inset="2" id="XII-Je-wu4">
                                                 <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
                                                 <font key="font" metaFont="system"/>
@@ -309,7 +308,7 @@
                                     <gridCell row="xhO-OI-UDQ" column="nzm-tR-Q8n" id="JX7-VR-W1f"/>
                                     <gridCell row="xhO-OI-UDQ" column="fr5-HD-BPh" id="8aV-2y-zrD">
                                         <button key="contentView" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="jKW-Ye-LdJ">
-                                            <rect key="frame" x="182" y="41" width="115" height="22"/>
+                                            <rect key="frame" x="182" y="42" width="119" height="20"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="18" id="hrj-4e-eia"/>
                                             </constraints>
@@ -334,7 +333,7 @@
                                     <gridCell row="1iM-RS-HD8" column="nzm-tR-Q8n" id="ZFm-4E-hCk"/>
                                     <gridCell row="1iM-RS-HD8" column="fr5-HD-BPh" id="uuc-6D-UJJ">
                                         <button key="contentView" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="Jl5-nP-5Un" customClass="PreferencesCheckbox">
-                                            <rect key="frame" x="182" y="-2" width="156" height="22"/>
+                                            <rect key="frame" x="182" y="-1" width="160" height="20"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="18" id="bND-Q8-aCY"/>
                                             </constraints>
@@ -397,7 +396,7 @@
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Usc-ep-6ra">
                                 <rect key="frame" x="96" y="76" width="234" height="29"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" lineBreakMode="clipping" title="MusicBar" id="xFg-wY-mAz">
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="MediaBar" id="xFg-wY-mAz">
                                     <font key="font" metaFont="system" size="25"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -427,7 +426,7 @@
                                 <rect key="frame" x="18" y="20" width="414" height="16"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" alignment="center" title="Copyright © 2020 Dimitar Nestorov" id="xsD-BW-Gfn">
-                                    <font key="font" metaFont="controlContent"/>
+                                    <font key="font" metaFont="cellTitle"/>
                                     <color key="textColor" name="tertiaryLabelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
