@@ -1,4 +1,4 @@
-@import ReactiveCocoa;
+//@import ReactiveCocoa;
 @import UserNotifications;
 
 #import "AppDelegate.h"
@@ -41,7 +41,7 @@
 
 @property (strong) NSTimer *productHuntTimer;
 
-@property (strong) RACDisposable *interval;
+//@property (strong) RACDisposable *interval;
 
 @property (strong) NSPopover *welcomePopover;
 
