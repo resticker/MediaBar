@@ -309,6 +309,8 @@
 #pragma mark - Actions
 
 - (IBAction)preferencesAction:(NSMenuItem *)sender {
+    NSLog(@"Should show preferences");
+    
     if (self.preferencesController == nil) {
         NSStoryboard *storyboard = [NSStoryboard storyboardWithName:@"Preferences" bundle:nil];
         self.preferencesController = [storyboard instantiateInitialController];

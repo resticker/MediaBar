@@ -53,7 +53,7 @@
                                     <font key="font" metaFont="system"/>
                                 </buttonCell>
                                 <connections>
-                                    <action selector="githubButtonAction:" target="E1o-DD-LD3" id="0zb-QB-kxb"/>
+                                    <action selector="githubButtonAction:" target="E1o-DD-LD3" id="cWa-Qk-SAk"/>
                                 </connections>
                             </button>
                         </subviews>
@@ -66,12 +66,12 @@
         <!--Preferences Tab View Controller-->
         <scene sceneID="coX-yp-Nez">
             <objects>
-                <tabViewController selectedTabViewItemIndex="3" tabStyle="toolbar" id="Il2-2x-b5S" customClass="PreferencesTabViewController" sceneMemberID="viewController">
+                <tabViewController selectedTabViewItemIndex="0" tabStyle="toolbar" id="Il2-2x-b5S" customClass="PreferencesTabViewController" sceneMemberID="viewController">
                     <tabViewItems>
                         <tabViewItem label="General" identifier="" image="NSPreferencesGeneral" id="OKl-pm-Xzf"/>
                         <tabViewItem label="About" identifier="" image="NSInfo" id="OQI-xC-6J9"/>
                         <tabViewItem label="License" image="Copyleft" id="DsC-BB-Tr3" userLabel="License"/>
-                        <tabViewItem label="Shortcuts" image="Bug" id="q4O-dC-KYz" userLabel="Shortcuts"/>
+                        <tabViewItem image="Bug" id="I8Q-EZ-ugj" userLabel="Shortcuts"/>
                     </tabViewItems>
                     <viewControllerTransitionOptions key="transitionOptions" allowUserInteraction="YES"/>
                     <tabView key="tabView" type="noTabsNoBorder" id="gba-RS-o9Q">
@@ -87,7 +87,7 @@
                         <segue destination="aoq-ld-YGy" kind="relationship" relationship="tabItems" id="RB8-NQ-2Cj"/>
                         <segue destination="hOf-4p-afm" kind="relationship" relationship="tabItems" id="G6C-pc-lvA"/>
                         <segue destination="Qli-Ed-XsV" kind="relationship" relationship="tabItems" id="BGj-GR-uXH"/>
-                        <segue destination="E1o-DD-LD3" kind="relationship" relationship="tabItems" id="2NC-hT-iJd"/>
+                        <segue destination="E1o-DD-LD3" kind="relationship" relationship="tabItems" id="Hk3-J2-tQX"/>
                     </connections>
                 </tabViewController>
                 <customObject id="wpq-eU-sxz" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
