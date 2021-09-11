@@ -152,7 +152,22 @@ static void commonInit(GlobalState *self) {
 
 - (void)previous {
     MRMediaRemoteSendCommand(MRMediaRemoteCommandPreviousTrack, nil);
+//    MRMediaRemoteSendCommand(MRMediaRemoteCommandRewind15Seconds, nil);
+    NSLog(@"global previous");
 }
+
+- (void)skipBackward {
+    NSLog(@"self.globalState.elapsedTime: %lf", self.elapsedTime);
+    MRMediaRemoteSetElapsedTime(self.elapsedTime - 10);
+    NSLog(@"global skipBackward");
+}
+
+- (void)skipForward {
+    NSLog(@"self.globalState.elapsedTime: %lf", self.elapsedTime);
+    MRMediaRemoteSetElapsedTime(self.elapsedTime + 10);
+    NSLog(@"global skipForward");
+}
+
 
 - (void)next {
     MRMediaRemoteSendCommand(MRMediaRemoteCommandNextTrack, nil);

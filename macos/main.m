@@ -1,18 +1,11 @@
 @import Cocoa;
-@import Sentry;
 
 #import "Constants.h"
 
 int main(int argc, const char * argv[]) {
     @autoreleasepool {
         __block BOOL shouldSend = NO;
-        [SentrySDK startWithOptions:@{
-            @"dsn": [NSBundle.mainBundle.infoDictionary objectForKey:@"MBSentryDSN"],
-            @"beforeSend": ^(SentryEvent *event) {
-                if (shouldSend) return event;
-                return (SentryEvent *)nil;
-            },
-        }];
+
         NSUserDefaults *userDefaults = [[NSUserDefaults alloc] init];
         [userDefaults registerDefaults:[NSDictionary dictionaryWithContentsOfURL:[NSBundle.mainBundle URLForResource:@"DefaultPreferences" withExtension:@"plist"]]];
         

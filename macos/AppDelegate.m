@@ -1,6 +1,4 @@
 @import ReactiveCocoa;
-@import Squirrel;
-@import Sentry;
 @import UserNotifications;
 
 #import "AppDelegate.h"
@@ -15,14 +13,6 @@
 
 #define RETURN_VOID(EXP) { EXP; return; }
 
-void (^handleError)(NSError * _Nullable) = ^(NSError * _Nullable error) {
-    if (error != nil) {
-        [SentrySDK captureError:error];
-#ifdef DEBUG
-        NSLog(@"%@", error);
-#endif
-    }
-};
 
 @interface AppDelegate ()
 
@@ -51,7 +41,6 @@ void (^handleError)(NSError * _Nullable) = ^(NSError * _Nullable error) {
 
 @property (strong) NSTimer *productHuntTimer;
 
-@property (strong) SQRLUpdater *updater;
 @property (strong) RACDisposable *interval;
 
 @property (strong) NSPopover *welcomePopover;
@@ -94,21 +83,15 @@ void (^handleError)(NSError * _Nullable) = ^(NSError * _Nullable error) {
     self.iconWhilePlaying = [self.userDefaults stringForKey:IconWhilePlayingUserDefaultsKey];
     self.maximumWidth = [self.userDefaults integerForKey:MaximumWidthUserDefaultsKey];
     
-    if ([self.userDefaults boolForKey:EnableAutomaticUpdatesUserDefaultsKey]) {
-        [self turnOnAutomaticUpdates];
-        [self startProductHuntTimer];
-    } else {
-        [self turnOffAutomaticUpdates];
-        [self stopProductHuntTimer];
-    }
+//    if ([self.userDefaults boolForKey:EnableAutomaticUpdatesUserDefaultsKey]) {
+//        [self turnOnAutomaticUpdates];
+//        [self startProductHuntTimer];
+//    } else {
+//        [self turnOffAutomaticUpdates];
+//        [self stopProductHuntTimer];
+//    }
 }
 
-- (void)turnOffAutomaticUpdates {
-    if (self.updater == nil) return;
-    
-    [self.interval dispose];
-    self.updater = nil;
-}
 
 - (void)turnOnAutomaticUpdates {
 #ifndef DEBUG
@@ -148,88 +131,26 @@ void (^handleError)(NSError * _Nullable) = ^(NSError * _Nullable error) {
 #endif
 }
 
-- (void)stopProductHuntTimer {
-    if (self.productHuntTimer != nil) {
-        [self.productHuntTimer invalidate];
-        self.productHuntTimer = nil;
-    }
-}
+//- (void)stopProductHuntTimer {
+//    if (self.productHuntTimer != nil) {
+//        [self.productHuntTimer invalidate];
+//        self.productHuntTimer = nil;
+//    }
+//}
+//
+//- (void)startProductHuntTimer {
+//    if (self.productHuntTimer != nil) return;
+//    if ([self.userDefaults boolForKey:ProductHuntNotificationDisplayedUserDefaultsKey]) return;
+//
+//    if (@available(macOS 10.14, *)) {
+//        self.productHuntTimer = [NSTimer scheduledTimerWithTimeInterval:60 * 60 target:self selector:@selector(checkForProductHuntRelease) userInfo:nil repeats:YES];
+//    }
+//}
 
-- (void)startProductHuntTimer {
-    if (self.productHuntTimer != nil) return;
-    if ([self.userDefaults boolForKey:ProductHuntNotificationDisplayedUserDefaultsKey]) return;
-
-    if (@available(macOS 10.14, *)) {
-        self.productHuntTimer = [NSTimer scheduledTimerWithTimeInterval:60 * 60 target:self selector:@selector(checkForProductHuntRelease) userInfo:nil repeats:YES];
-    }
-}
-
-- (void)checkForProductHuntRelease API_AVAILABLE(macos(10.14)) {
-    if ([self.userDefaults boolForKey:ProductHuntNotificationDisplayedUserDefaultsKey]) return;
-
-    NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
-    [request setHTTPMethod:@"GET"];
-    [request setURL:[NSURL URLWithString:@"https://raw.githubusercontent.com/dimitarnestorov/MusicBar/product-hunt/release.json"]];
-
-    #define ARGUMENT_TYPES NSData * _Nullable, NSURLResponse * _Nullable, NSError * _Nullable
-    void (^completionHandler)(ARGUMENT_TYPES) = ^(NSData * _Nullable data, NSURLResponse * _Nullable response, NSError * _Nullable error) {
-        if (error != nil) RETURN_VOID(handleError(error))
-        
-        NSError *parseError;
-        id parsed = [NSJSONSerialization JSONObjectWithData:data options:0 error:&parseError];
-        
-        if (parseError != nil) RETURN_VOID(handleError(parseError))
-        
-        if (![parsed isKindOfClass:NSDictionary.class]) return;
-        
-        id url = [parsed objectForKey:@"url"];
-        id date = [parsed objectForKey:@"date"];
-        
-        if (url == nil || date == nil) return;
-        if (![url isKindOfClass:NSString.class] || ![date isKindOfClass:NSString.class]) return;
-        
-        NSTimeInterval timeInterval = [[[NSISO8601DateFormatter new] dateFromString:date] timeIntervalSinceNow];
-        if (-timeInterval > 60 * 60 * 24) RETURN_VOID([self.userDefaults setBool:YES forKey:ProductHuntNotificationDisplayedUserDefaultsKey])
-
-        [UNUserNotificationCenter.currentNotificationCenter getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings * _Nonnull settings) {
-            if (settings.authorizationStatus == UNAuthorizationStatusNotDetermined || settings.authorizationStatus == UNAuthorizationStatusDenied) return;
-
-            UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
-            content.title = @"MusicBar is on Product Hunt!";
-            content.subtitle = @"Click here to check it out";
-            content.userInfo = @{ @"url": url };
-            NSError *error;
-            content.attachments = @[
-                [UNNotificationAttachment attachmentWithIdentifier:@"ProductHuntLogo"
-                                                               URL:[NSBundle.mainBundle URLForResource:@"product-hunt-logo-orange-240" withExtension:@"png"]
-                                                           options:nil
-                                                             error:&error]
-            ];
-
-            if (error != nil) {
-                [SentrySDK captureError:error];
-#ifdef DEBUG
-                NSLog(@"%@", error);
-#endif
-                content.attachments = @[];
-            }
-
-            NSString *identifier = [NSString stringWithFormat:@"MBProductHuntRelease%@", [[NSUUID UUID] UUIDString]];
-            UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:identifier content:content trigger:nil];
-            [UNUserNotificationCenter.currentNotificationCenter addNotificationRequest:request
-                                                                 withCompletionHandler:handleError];
-            [self.userDefaults setBool:YES forKey:ProductHuntNotificationDisplayedUserDefaultsKey];
-        }];
-    };
-    [[NSURLSession.sharedSession dataTaskWithRequest:request completionHandler:completionHandler] resume];
-}
 
 #pragma mark - User notification center delegate
 
 - (void)userNotificationCenter:(UNUserNotificationCenter *)center didReceiveNotificationResponse:(UNNotificationResponse *)response withCompletionHandler:(void (^)(void))completionHandler API_AVAILABLE(macos(10.14)) {
-    if ([response.notification.request.identifier isEqualToString:@"MBNewUpdateAvailable"] && [response.actionIdentifier isEqualToString:UNNotificationDefaultActionIdentifier]) {
-        [[self.updater relaunchToInstallUpdate] subscribeError:handleError];
-    }
 
     if ([response.notification.request.identifier hasPrefix:@"MBProductHuntRelease"] && [response.actionIdentifier isEqualToString:UNNotificationDefaultActionIdentifier]) {
         [NSWorkspace.sharedWorkspace openURL:[[NSURL alloc] initWithString:[response.notification.request.content.userInfo objectForKey:@"url"]]];
@@ -283,14 +204,14 @@ void (^handleError)(NSError * _Nullable) = ^(NSError * _Nullable error) {
     [self.userDefaults setBool:NO forKey:ProductHuntNotificationDisplayedUserDefaultsKey];
 #endif
     
-    if (@available(macOS 10.14, *)) {
-        UNUserNotificationCenter.currentNotificationCenter.delegate = self;
-        [UNUserNotificationCenter.currentNotificationCenter removeDeliveredNotificationsWithIdentifiers:@[@"MBNewUpdateAvailable"]];
-
-        if ([self.userDefaults boolForKey:EnableAutomaticUpdatesUserDefaultsKey]) {
-            [self checkForProductHuntRelease];
-        }
-    }
+//    if (@available(macOS 10.14, *)) {
+//        UNUserNotificationCenter.currentNotificationCenter.delegate = self;
+//        [UNUserNotificationCenter.currentNotificationCenter removeDeliveredNotificationsWithIdentifiers:@[@"MBNewUpdateAvailable"]];
+//
+//        if ([self.userDefaults boolForKey:EnableAutomaticUpdatesUserDefaultsKey]) {
+//            [self checkForProductHuntRelease];
+//        }
+//    }
     
     if (![self.userDefaults boolForKey:SetupCompletedUserDefaultsKey]) {
         self.statusItem.button.action = nil;

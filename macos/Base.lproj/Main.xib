@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="16096" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="18122" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="16096"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="18122"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <objects>
@@ -141,6 +141,34 @@
                                         <action selector="nextAction:" target="wJc-5T-Kn7" id="OPL-6X-55h"/>
                                     </connections>
                                 </button>
+                                <button alphaValue="0.69999999999999996" translatesAutoresizingMaskIntoConstraints="NO" id="8bV-sv-RQo" userLabel="SkipForward" customClass="Button">
+                                    <rect key="frame" x="207" y="10" width="30" height="30"/>
+                                    <constraints>
+                                        <constraint firstAttribute="width" constant="30" id="9G3-sC-i5U"/>
+                                        <constraint firstAttribute="height" constant="30" id="9lw-Hb-ewU"/>
+                                    </constraints>
+                                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="Skip Forward" imagePosition="only" alignment="center" imageScaling="proportionallyDown" inset="2" id="itG-P2-aVD">
+                                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="skipForward:" target="wJc-5T-Kn7" id="LaQ-XQ-7LH"/>
+                                    </connections>
+                                </button>
+                                <button alphaValue="0.69999999999999996" translatesAutoresizingMaskIntoConstraints="NO" id="ycR-rJ-EzC" userLabel="SkipBackward" customClass="Button">
+                                    <rect key="frame" x="63" y="10" width="30" height="30"/>
+                                    <constraints>
+                                        <constraint firstAttribute="height" constant="30" id="8LZ-dP-fR5"/>
+                                        <constraint firstAttribute="width" constant="30" id="8se-3L-xHA"/>
+                                    </constraints>
+                                    <buttonCell key="cell" type="square" bezelStyle="shadowlessSquare" image="Skip Backward" imagePosition="only" alignment="center" imageScaling="proportionallyDown" inset="2" id="qNM-6m-x2K">
+                                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="skipBackward:" target="wJc-5T-Kn7" id="NDR-Dk-BfA"/>
+                                    </connections>
+                                </button>
                                 <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" alphaValue="0.69999999999999996" id="B4m-M8-pXJ" userLabel="Elapsed Time">
                                     <rect key="frame" x="6" y="26" width="60" height="16"/>
                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
@@ -168,18 +196,22 @@
                                 </textField>
                             </subviews>
                             <constraints>
+                                <constraint firstAttribute="bottom" secondItem="ycR-rJ-EzC" secondAttribute="bottom" constant="10" id="0w0-sA-Vq6"/>
                                 <constraint firstAttribute="bottom" secondItem="Ieq-bg-6rR" secondAttribute="bottom" constant="10" id="1bE-ag-Cke"/>
                                 <constraint firstAttribute="trailing" secondItem="b2E-Qh-GKS" secondAttribute="trailing" constant="8" id="2Sn-JJ-CFV"/>
                                 <constraint firstItem="AFL-SP-q48" firstAttribute="centerY" secondItem="VvF-Ga-Hmb" secondAttribute="centerY" id="3DM-rw-FuV"/>
+                                <constraint firstItem="8bV-sv-RQo" firstAttribute="leading" secondItem="cVL-ZC-VZ4" secondAttribute="trailing" constant="2" id="CrA-bb-aDe"/>
                                 <constraint firstAttribute="bottom" secondItem="WIu-ft-cKy" secondAttribute="bottom" id="Job-Dd-Gch"/>
                                 <constraint firstItem="NYb-RB-Bpm" firstAttribute="trailing" secondItem="b2E-Qh-GKS" secondAttribute="trailing" id="P5L-ab-ELU"/>
                                 <constraint firstAttribute="height" constant="300" id="S7F-Eg-dUK"/>
                                 <constraint firstItem="NYb-RB-Bpm" firstAttribute="leading" secondItem="cVL-ZC-VZ4" secondAttribute="trailing" constant="31" id="SjU-g4-v3P"/>
                                 <constraint firstItem="WIu-ft-cKy" firstAttribute="top" secondItem="Djp-Di-l29" secondAttribute="top" id="T4l-C7-6CJ"/>
                                 <constraint firstItem="Ieq-bg-6rR" firstAttribute="leading" secondItem="B4m-M8-pXJ" secondAttribute="trailing" constant="31" id="UGP-a8-iGK"/>
+                                <constraint firstAttribute="bottom" secondItem="8bV-sv-RQo" secondAttribute="bottom" constant="10" id="VdE-f5-p4X"/>
                                 <constraint firstItem="WIu-ft-cKy" firstAttribute="leading" secondItem="Djp-Di-l29" secondAttribute="leading" id="YzJ-fT-znl"/>
                                 <constraint firstItem="b2E-Qh-GKS" firstAttribute="leading" secondItem="Djp-Di-l29" secondAttribute="leading" constant="8" id="ai9-uF-Qyg"/>
                                 <constraint firstAttribute="bottom" secondItem="cVL-ZC-VZ4" secondAttribute="bottom" constant="10" id="iZu-HH-9a4"/>
+                                <constraint firstItem="Ieq-bg-6rR" firstAttribute="leading" secondItem="ycR-rJ-EzC" secondAttribute="trailing" constant="2" id="nrC-Jn-rN3"/>
                                 <constraint firstAttribute="bottom" secondItem="Lrb-RT-9iW" secondAttribute="bottom" constant="10" id="qZY-NP-SJ1"/>
                                 <constraint firstItem="cVL-ZC-VZ4" firstAttribute="leading" secondItem="Lrb-RT-9iW" secondAttribute="trailing" constant="10" id="ryY-AB-Cqg"/>
                                 <constraint firstItem="AFL-SP-q48" firstAttribute="trailing" secondItem="VvF-Ga-Hmb" secondAttribute="trailing" constant="4" id="sl7-Oj-ZJp"/>
@@ -211,7 +243,7 @@
             <windowCollectionBehavior key="collectionBehavior" moveToActiveSpace="YES" stationary="YES" ignoresCycle="YES" fullScreenNone="YES" fullScreenDisallowsTiling="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
             <rect key="contentRect" x="196" y="207" width="10" height="22"/>
-            <rect key="screenRect" x="0.0" y="0.0" width="1920" height="1057"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1415"/>
             <view key="contentView" alphaValue="0.0" id="A89-U3-U6f">
                 <rect key="frame" x="0.0" y="0.0" width="10" height="22"/>
                 <autoresizingMask key="autoresizingMask"/>
@@ -256,5 +288,7 @@
         <image name="Next" width="30" height="30"/>
         <image name="Play" width="30" height="30"/>
         <image name="Previous" width="30" height="30"/>
+        <image name="Skip Backward" width="30" height="30"/>
+        <image name="Skip Forward" width="30" height="30"/>
     </resources>
 </document>

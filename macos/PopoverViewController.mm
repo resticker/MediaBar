@@ -7,6 +7,7 @@
 
 #import "GlobalState.h"
 
+
 static NSImage *playImage = [NSImage imageNamed:@"Play"];
 static NSImage *pauseImage = [NSImage imageNamed:@"Pause"];
 static NSSize albumArtworkSize = NSMakeSize(300, 300);
@@ -39,6 +40,21 @@ static NSSize albumArtworkSize = NSMakeSize(300, 300);
 @end
 
 @implementation PopoverViewController
+
+- (BOOL)canBecomeFirstResponder {
+    return YES;
+}
+
+//- (NSArray<UIKeyCommand *>*)keyCommands {
+//    return @[
+//        [UIKeyCommand keyCommandWithInput:@"1" modifierFlags:UIKeyModifierCommand action:@selector(selectTab:) discoverabilityTitle:@"Types"],
+//
+//        [UIKeyCommand keyCommandWithInput:@"f"
+//                            modifierFlags:UIKeyModifierCommand | UIKeyModifierAlternate
+//                                   action:@selector(search:)
+//                     discoverabilityTitle:@"Find…"]
+//    ];
+//}
 
 - (void)handleTickWithElapsedTime:(double)elapsedTime {
     double duration = self.globalState.duration;
@@ -138,6 +154,17 @@ static NSSize albumArtworkSize = NSMakeSize(300, 300);
 
 - (IBAction)previousAction:(NSButton *)sender {
     [self.globalState previous];
+    NSLog(@"in previousAction");
+}
+
+- (IBAction)skipBackward:(NSButton *)sender {
+    [self.globalState skipBackward];
+    NSLog(@"in skipBackward");
+}
+
+- (IBAction)skipForward:(NSButton *)sender {
+    [self.globalState skipForward];
+    NSLog(@"in skipForward");
 }
 
 - (IBAction)nextAction:(NSButton *)sender {

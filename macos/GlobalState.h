@@ -23,6 +23,8 @@ extern const struct GlobalStateNotificationStruct {
 
 - (void)togglePlayPause;
 - (void)previous;
+- (void)skipBackward;
+- (void)skipForward;
 - (void)next;
 
 @end
