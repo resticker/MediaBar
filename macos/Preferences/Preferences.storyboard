@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="wnN-yC-qI9">
     <dependencies>
+        <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="18122"/>
         <plugIn identifier="com.apple.pdfkit.ibplugin" version="18122"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -25,16 +26,52 @@
                 </windowController>
                 <customObject id="Pft-KM-6ey" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="-149" y="45"/>
+            <point key="canvasLocation" x="-233" y="49"/>
+        </scene>
+        <!--Shortcuts-->
+        <scene sceneID="9Pw-Ry-PVC">
+            <objects>
+                <viewController title="Shortcuts" id="E1o-DD-LD3" customClass="ShortcutsTabViewController" sceneMemberID="viewController">
+                    <view key="view" id="tCw-WQ-goD">
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                        <subviews>
+                            <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fzq-te-YoF">
+                                <rect key="frame" x="65" y="201" width="92" height="16"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <textFieldCell key="cell" lineBreakMode="clipping" title="Some test text" id="D7H-Ox-edM">
+                                    <font key="font" usesAppearanceFont="YES"/>
+                                    <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                    <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                </textFieldCell>
+                            </textField>
+                            <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YOb-RP-rSO">
+                                <rect key="frame" x="155" y="127" width="90" height="32"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                <buttonCell key="cell" type="push" title="Press me" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="cb6-gA-U2f">
+                                    <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                    <font key="font" metaFont="system"/>
+                                </buttonCell>
+                                <connections>
+                                    <action selector="githubButtonAction:" target="E1o-DD-LD3" id="0zb-QB-kxb"/>
+                                </connections>
+                            </button>
+                        </subviews>
+                    </view>
+                </viewController>
+                <customObject id="dAz-Hz-Aet" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="70" y="648"/>
         </scene>
         <!--Preferences Tab View Controller-->
         <scene sceneID="coX-yp-Nez">
             <objects>
-                <tabViewController tabStyle="toolbar" id="Il2-2x-b5S" customClass="PreferencesTabViewController" sceneMemberID="viewController">
+                <tabViewController selectedTabViewItemIndex="3" tabStyle="toolbar" id="Il2-2x-b5S" customClass="PreferencesTabViewController" sceneMemberID="viewController">
                     <tabViewItems>
                         <tabViewItem label="General" identifier="" image="NSPreferencesGeneral" id="OKl-pm-Xzf"/>
                         <tabViewItem label="About" identifier="" image="NSInfo" id="OQI-xC-6J9"/>
                         <tabViewItem label="License" image="Copyleft" id="DsC-BB-Tr3" userLabel="License"/>
+                        <tabViewItem label="Shortcuts" image="Bug" id="q4O-dC-KYz" userLabel="Shortcuts"/>
                     </tabViewItems>
                     <viewControllerTransitionOptions key="transitionOptions" allowUserInteraction="YES"/>
                     <tabView key="tabView" type="noTabsNoBorder" id="gba-RS-o9Q">
@@ -50,6 +87,7 @@
                         <segue destination="aoq-ld-YGy" kind="relationship" relationship="tabItems" id="RB8-NQ-2Cj"/>
                         <segue destination="hOf-4p-afm" kind="relationship" relationship="tabItems" id="G6C-pc-lvA"/>
                         <segue destination="Qli-Ed-XsV" kind="relationship" relationship="tabItems" id="BGj-GR-uXH"/>
+                        <segue destination="E1o-DD-LD3" kind="relationship" relationship="tabItems" id="2NC-hT-iJd"/>
                     </connections>
                 </tabViewController>
                 <customObject id="wpq-eU-sxz" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
@@ -175,7 +213,7 @@
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                     <popUpButtonCell key="cell" type="push" title="None" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="z1j-Xi-vTK" id="3bt-bE-dbq">
                                                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                                                        <font key="font" metaFont="system"/>
+                                                        <font key="font" metaFont="menu"/>
                                                         <menu key="menu" id="4NC-ER-e93">
                                                             <items>
                                                                 <menuItem title="None" state="on" id="z1j-Xi-vTK"/>
@@ -220,7 +258,7 @@
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                                     <popUpButtonCell key="cell" type="push" title="None" bezelStyle="rounded" alignment="left" lineBreakMode="truncatingTail" state="on" borderStyle="borderAndBezel" imageScaling="proportionallyDown" inset="2" selectedItem="QfW-nJ-ZMs" id="hlo-6Z-FL3">
                                                         <behavior key="behavior" lightByBackground="YES" lightByGray="YES"/>
-                                                        <font key="font" metaFont="system"/>
+                                                        <font key="font" metaFont="menu"/>
                                                         <menu key="menu" id="bp1-VO-4YF">
                                                             <items>
                                                                 <menuItem title="None" state="on" id="QfW-nJ-ZMs"/>
@@ -436,7 +474,7 @@
                 </viewController>
                 <customObject id="4th-Tk-F9c" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1117" y="798"/>
+            <point key="canvasLocation" x="665" y="565"/>
         </scene>
         <!--License-->
         <scene sceneID="wCZ-Hp-fo6">
@@ -459,6 +497,7 @@
         </scene>
     </scenes>
     <resources>
+        <image name="Bug" width="1200" height="1200"/>
         <image name="Copyleft" width="1200" height="1200"/>
         <image name="GitHub Mark Small" width="33" height="32"/>
         <image name="NSApplicationIcon" width="32" height="32"/>
