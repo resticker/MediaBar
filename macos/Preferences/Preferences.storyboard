@@ -37,7 +37,7 @@
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="fzq-te-YoF">
-                                <rect key="frame" x="65" y="201" width="92" height="16"/>
+                                <rect key="frame" x="61" y="237" width="111" height="17"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" lineBreakMode="clipping" title="Some test text" id="D7H-Ox-edM">
                                     <font key="font" usesAppearanceFont="YES"/>
@@ -56,12 +56,19 @@
                                     <action selector="githubButtonAction:" target="E1o-DD-LD3" id="cWa-Qk-SAk"/>
                                 </connections>
                             </button>
+                            <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="s8A-Wy-R9o" customClass="MASShortcutView">
+                                <rect key="frame" x="210" y="236" width="163" height="19"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                            </customView>
                         </subviews>
                     </view>
+                    <connections>
+                        <outlet property="shortcutView" destination="s8A-Wy-R9o" id="5TO-ZR-Xd7"/>
+                    </connections>
                 </viewController>
                 <customObject id="dAz-Hz-Aet" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="70" y="648"/>
+            <point key="canvasLocation" x="74" y="648"/>
         </scene>
         <!--Preferences Tab View Controller-->
         <scene sceneID="coX-yp-Nez">
