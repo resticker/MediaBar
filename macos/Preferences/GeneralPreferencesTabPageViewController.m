@@ -46,9 +46,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-    
 
-    
     
     [self setupCheckbox:self.showArtistCheckbox userDefaultsKey:ShowArtistUserDefaultsKey];
     [self setupCheckbox:self.showTitleCheckbox userDefaultsKey:ShowTitleUserDefaultsKey];

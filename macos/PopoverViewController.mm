@@ -149,6 +149,7 @@ static NSSize albumArtworkSize = NSMakeSize(300, 300);
 #pragma mark - Actions
 
 - (IBAction)playPauseAction:(NSButton *)sender {
+    NSLog(@"self.global State object is: %@", self.globalState);
     [self.globalState togglePlayPause];
 }
 

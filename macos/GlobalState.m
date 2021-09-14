@@ -117,7 +117,13 @@ static void commonInit(GlobalState *self) {
 
 - (instancetype)init {
     self = [super init];
-    if (self) commonInit(self);
+//    if (self) commonInit(self);
+    if (self) {
+        NSLog(@"global state saw self");
+        commonInit(self);
+    } else {
+        NSLog(@"global state didn't see self");
+    }
     return self;
 }
 
@@ -147,6 +153,7 @@ static void commonInit(GlobalState *self) {
 #pragma mark - Actions
 
 - (void)togglePlayPause {
+    NSLog(@"togglePlayPause");
     MRMediaRemoteSendCommand(MRMediaRemoteCommandTogglePlayPause, nil);
 }
 

@@ -46,7 +46,7 @@
 		6E91D1042454CC5A00AA9875 /* musicbar.ttf in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6E6BF6FE24515C7800702DE0 /* musicbar.ttf */; };
 		6EB380802453988B00307E8C /* CustomMutableURLRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB3807F2453988B00307E8C /* CustomMutableURLRequest.m */; };
 		6EB3808324539BBF00307E8C /* NSString+GetMusicBarVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB3808224539BBF00307E8C /* NSString+GetMusicBarVersion.m */; };
-		9B55088426ED67100023948A /* ShortcutsTabViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9B55088326ED67100023948A /* ShortcutsTabViewController.m */; };
+		9B55088426ED67100023948A /* ShortcutsTabViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9B55088326ED67100023948A /* ShortcutsTabViewController.mm */; };
 		9B6B718A26ED449000D1D815 /* MASShortcut.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B6B718926ED449000D1D815 /* MASShortcut.framework */; };
 		9B6B718B26ED449000D1D815 /* MASShortcut.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9B6B718926ED449000D1D815 /* MASShortcut.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9B6B718D26ED449F00D1D815 /* MASShortcut.framework.dSYM in Resources */ = {isa = PBXBuildFile; fileRef = 9B6B718C26ED449F00D1D815 /* MASShortcut.framework.dSYM */; };
@@ -152,7 +152,7 @@
 		6EB3808124539BBF00307E8C /* NSString+GetMusicBarVersion.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+GetMusicBarVersion.h"; sourceTree = "<group>"; };
 		6EB3808224539BBF00307E8C /* NSString+GetMusicBarVersion.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+GetMusicBarVersion.m"; sourceTree = "<group>"; };
 		6EB3808B2453AF9D00307E8C /* PrivateMediaRemote.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = PrivateMediaRemote.framework.dSYM; path = Carthage/Build/Mac/PrivateMediaRemote.framework.dSYM; sourceTree = "<group>"; };
-		9B55088326ED67100023948A /* ShortcutsTabViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ShortcutsTabViewController.m; sourceTree = "<group>"; };
+		9B55088326ED67100023948A /* ShortcutsTabViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ShortcutsTabViewController.mm; sourceTree = "<group>"; };
 		9B55088526ED672D0023948A /* ShortcutsTabViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShortcutsTabViewController.h; sourceTree = "<group>"; };
 		9B6B718926ED449000D1D815 /* MASShortcut.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MASShortcut.framework; path = Carthage/Build/Mac/MASShortcut.framework; sourceTree = "<group>"; };
 		9B6B718C26ED449F00D1D815 /* MASShortcut.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = MASShortcut.framework.dSYM; path = Carthage/Build/Mac/MASShortcut.framework.dSYM; sourceTree = "<group>"; };
@@ -301,7 +301,7 @@
 				6E6BF6BD2450301B00702DE0 /* LicenseView.m */,
 				6E6BF7002452B0AB00702DE0 /* VersionLabel.h */,
 				6E6BF7012452B0AB00702DE0 /* VersionLabel.m */,
-				9B55088326ED67100023948A /* ShortcutsTabViewController.m */,
+				9B55088326ED67100023948A /* ShortcutsTabViewController.mm */,
 				9B55088526ED672D0023948A /* ShortcutsTabViewController.h */,
 			);
 			path = Preferences;
@@ -422,7 +422,7 @@
 			files = (
 				6E8F7F5A244973FE000FBC83 /* Constants.mm in Sources */,
 				6E0423F3243B4A8E00E113F4 /* NSObject+Debounce.m in Sources */,
-				9B55088426ED67100023948A /* ShortcutsTabViewController.m in Sources */,
+				9B55088426ED67100023948A /* ShortcutsTabViewController.mm in Sources */,
 				6E3FB6F02441A69900A343FE /* PreferencesPopUpButton.m in Sources */,
 				6E81930324412A5000879AEE /* PreferencesTabPageViewController.m in Sources */,
 				6E04241D243D44CC00E113F4 /* NSString+FormatTime.mm in Sources */,

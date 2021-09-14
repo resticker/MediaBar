@@ -1,4 +1,5 @@
 #import "PreferencesTabViewController.h"
+#import "GlobalState.h"
 
 @interface PreferencesTabViewController ()
 

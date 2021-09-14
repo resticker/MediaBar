@@ -321,4 +321,8 @@
     [NSApp activateIgnoringOtherApps:YES];
 }
 
+- (IBAction)testPlayPause:(NSButton *)sender {
+    [self.globalState togglePlayPause];
+}
+
 @end
