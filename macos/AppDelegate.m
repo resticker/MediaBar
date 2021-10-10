@@ -93,44 +93,6 @@
 }
 
 
-- (void)turnOnAutomaticUpdates {
-#ifndef DEBUG
-    if (self.updater != nil) return;
-    
-    NSString *version = [NSString getMusicBarVersionFor:UpdatesVersionUseCase];
-    NSString *updateInfoURL = [@"stable" isEqualToString:version] ? @"https://raw.githubusercontent.com/dimitarnestorov/MusicBar/update/stable.json" : [NSString stringWithFormat:@"https://api.github.com/repos/dimitarnestorov/MusicBar/contents/%@.json?ref=update", version];
-    CustomMutableURLRequest *urlRequest = [CustomMutableURLRequest requestWithURL:[NSURL URLWithString:updateInfoURL]];
-    NSString *buildVersion = [NSBundle.mainBundle.infoDictionary objectForKey:@"CFBundleVersion"];
-    self.updater = [[SQRLUpdater alloc] initWithUpdateRequest:urlRequest forVersion:buildVersion];
-
-    if (@available(macOS 10.14, *)) {
-        void (^completionHandler)(BOOL, NSError * _Nullable) = ^(BOOL granted, NSError * _Nullable error) {
-            if (error != nil) {
-                [SentrySDK captureError:error];
-                return;
-            }
-        };
-        [UNUserNotificationCenter.currentNotificationCenter requestAuthorizationWithOptions:UNAuthorizationOptionAlert completionHandler:completionHandler];
-
-        [self.updater.updates subscribeNext:^(SQRLDownloadedUpdate *downloadedUpdate) {
-            [UNUserNotificationCenter.currentNotificationCenter getNotificationSettingsWithCompletionHandler:^(UNNotificationSettings * _Nonnull settings) {
-                if (settings.authorizationStatus == UNAuthorizationStatusNotDetermined || settings.authorizationStatus == UNAuthorizationStatusDenied) return;
-                
-                UNMutableNotificationContent *content = [[UNMutableNotificationContent alloc] init];
-                content.title = @"A new update is ready to install";
-                content.subtitle = @"Click here to restart MusicBar";
-                UNNotificationRequest *request = [UNNotificationRequest requestWithIdentifier:@"MBNewUpdateAvailable" content:content trigger:nil];
-                [UNUserNotificationCenter.currentNotificationCenter addNotificationRequest:request
-                                                                     withCompletionHandler:handleError];
-            }];
-        }];
-    }
-    
-    self.interval = [self.updater startAutomaticChecksWithInterval:60 * 60 * 4];
-    [self.updater.checkForUpdatesCommand execute:nil];
-#endif
-}
-
 //- (void)stopProductHuntTimer {
 //    if (self.productHuntTimer != nil) {
 //        [self.productHuntTimer invalidate];

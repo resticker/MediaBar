@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="wnN-yC-qI9">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="19162" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="wnN-yC-qI9">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="18122"/>
-        <plugIn identifier="com.apple.pdfkit.ibplugin" version="18122"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="19162"/>
+        <plugIn identifier="com.apple.pdfkit.ibplugin" version="19162"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
@@ -36,10 +36,12 @@
                         <rect key="frame" x="0.0" y="0.0" width="450" height="131"/>
                         <autoresizingMask key="autoresizingMask"/>
                         <subviews>
-                            <gridView xPlacement="leading" yPlacement="bottom" rowAlignment="none" translatesAutoresizingMaskIntoConstraints="NO" id="lff-jf-RAz">
-                                <rect key="frame" x="20" y="50" width="411" height="58"/>
+                            <gridView misplaced="YES" xPlacement="leading" yPlacement="bottom" rowAlignment="none" translatesAutoresizingMaskIntoConstraints="NO" id="lff-jf-RAz">
+                                <rect key="frame" x="20" y="-6" width="411" height="117"/>
                                 <rows>
                                     <gridRow yPlacement="center" height="19" topPadding="3" bottomPadding="3" id="x9f-Wp-eBZ"/>
+                                    <gridRow height="26" id="sKF-ma-IKV"/>
+                                    <gridRow height="21" id="VAq-ev-zb0"/>
                                     <gridRow height="27" id="z9Z-I5-ywX"/>
                                 </rows>
                                 <columns>
@@ -49,7 +51,7 @@
                                 <gridCells>
                                     <gridCell row="x9f-Wp-eBZ" column="NuV-b5-lHi" id="wSg-bo-XNV">
                                         <textField key="contentView" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="fzq-te-YoF">
-                                            <rect key="frame" x="54" y="38" width="126" height="16"/>
+                                            <rect key="frame" x="54" y="97" width="126" height="16"/>
                                             <textFieldCell key="cell" lineBreakMode="clipping" title="Play/Pause Shortcut" id="D7H-Ox-edM">
                                                 <font key="font" usesAppearanceFont="YES"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
@@ -59,10 +61,43 @@
                                     </gridCell>
                                     <gridCell row="x9f-Wp-eBZ" column="kJQ-QZ-Sxi" id="82M-Ft-A1m">
                                         <customView key="contentView" translatesAutoresizingMaskIntoConstraints="NO" id="s8A-Wy-R9o" customClass="MASShortcutView">
-                                            <rect key="frame" x="184" y="36" width="100" height="19"/>
+                                            <rect key="frame" x="184" y="95" width="100" height="19"/>
                                             <constraints>
                                                 <constraint firstAttribute="height" constant="19" id="NwH-2L-wfe"/>
                                             </constraints>
+                                        </customView>
+                                    </gridCell>
+                                    <gridCell row="sKF-ma-IKV" column="NuV-b5-lHi" id="J1k-5z-Nlj">
+                                        <textField key="contentView" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="uab-Vs-LrE">
+                                            <rect key="frame" x="30" y="60" width="150" height="16"/>
+                                            <textFieldCell key="cell" lineBreakMode="clipping" title="Skip Backward Shortcut" id="S8j-MC-MFH">
+                                                <font key="font" usesAppearanceFont="YES"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                    </gridCell>
+                                    <gridCell row="sKF-ma-IKV" column="kJQ-QZ-Sxi" id="Vuu-7d-CS7">
+                                        <customView key="contentView" translatesAutoresizingMaskIntoConstraints="NO" id="cOy-k4-53c" customClass="MASShortcutView">
+                                            <rect key="frame" x="184" y="60" width="100" height="19"/>
+                                            <constraints>
+                                                <constraint firstAttribute="height" constant="19" id="xZv-Un-wIJ"/>
+                                            </constraints>
+                                        </customView>
+                                    </gridCell>
+                                    <gridCell row="VAq-ev-zb0" column="NuV-b5-lHi" id="gUT-XO-ewe">
+                                        <textField key="contentView" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="hpg-Kr-NbX">
+                                            <rect key="frame" x="40" y="33" width="140" height="16"/>
+                                            <textFieldCell key="cell" lineBreakMode="clipping" title="Skip Forward Shortcut" id="gBP-Sh-qfG">
+                                                <font key="font" usesAppearanceFont="YES"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                    </gridCell>
+                                    <gridCell row="VAq-ev-zb0" column="kJQ-QZ-Sxi" id="3Xs-Bg-MWF">
+                                        <customView key="contentView" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5hP-9j-3b0" customClass="MASShortcutView">
+                                            <rect key="frame" x="184" y="33" width="100" height="21"/>
                                         </customView>
                                     </gridCell>
                                     <gridCell row="z9Z-I5-ywX" column="NuV-b5-lHi" id="WcM-bL-ctb">
@@ -91,7 +126,9 @@
                     </view>
                     <connections>
                         <outlet property="globalState" destination="uJT-tz-vZw" id="FQG-Hv-u9M"/>
-                        <outlet property="shortcutView" destination="s8A-Wy-R9o" id="5TO-ZR-Xd7"/>
+                        <outlet property="playPauseShortcutView" destination="s8A-Wy-R9o" id="5TO-ZR-Xd7"/>
+                        <outlet property="skipBackwardShortcutView" destination="cOy-k4-53c" id="qah-Fn-Pou"/>
+                        <outlet property="skipForwardShortcutView" destination="5hP-9j-3b0" id="MYV-sm-vHR"/>
                     </connections>
                 </viewController>
                 <customObject id="dAz-Hz-Aet" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
