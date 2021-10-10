@@ -3,6 +3,10 @@
 NSImage *spotifyRequestPermissionsAlbumArtwork = [NSImage imageNamed:@"Spotify Request Permissions Album Artwork"];
 NSString *spotifyBundleIdentifier = @"com.spotify.client";
 
+NSString *const kPreferenceGlobalShortcutPlayPause = @"GlobalShortcut";
+NSString *const kPreferenceGlobalShortcutSkipBackward = @"SkipBackwardShortcut";
+NSString *const kPreferenceGlobalShortcutSkipForward = @"SkipForwardShortcut";
+
 NSString *ShowArtistUserDefaultsKey = @"MBShowArtist";
 NSString *ShowTitleUserDefaultsKey = @"MBShowTitle";
 NSString *ShowAlbumUserDefaultsKey = @"MBShowAlbum";

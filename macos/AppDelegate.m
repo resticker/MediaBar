@@ -4,6 +4,7 @@
 #import "AppDelegate.h"
 
 #import "NSString+GetMusicBarVersion.h"
+#import <MASShortcut/Shortcut.h>
 
 #import "CustomMutableURLRequest.h"
 
@@ -12,6 +13,14 @@
 #import "GlobalState.h"
 
 #define RETURN_VOID(EXP) { EXP; return; }
+
+
+
+//static void *kGlobalShortcutContext = &kGlobalShortcutContext;
+
+//NSString *_observableKeyPathPlayPause;
+//NSString *_observableKeyPathSkipBackward;
+//NSString *_observableKeyPathSkipForward;
 
 
 @interface AppDelegate ()
@@ -28,6 +37,10 @@
 
 @property (weak) IBOutlet NSWindow *positioningWindow;
 @property (weak) IBOutlet NSView *positioningView;
+
+//@property (nonatomic, weak) IBOutlet MASShortcutView *playPauseShortcutView;
+//@property (nonatomic, weak) IBOutlet MASShortcutView *skipBackwardShortcutView;
+//@property (nonatomic, weak) IBOutlet MASShortcutView *skipForwardShortcutView;
 
 @property (strong) NSWindowController *preferencesController;
 
@@ -128,6 +141,8 @@
 #pragma mark - Application delegate
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification {
+    [self loadUserDefaults];
+    
     [NSNotificationCenter.defaultCenter addObserver:self
                                            selector:@selector(infoDidChange)
                                                name:GlobalStateNotification.infoDidChange
@@ -148,7 +163,31 @@
                                                name:SetupCompletedNotificationName
                                              object:nil];
     
-    [self loadUserDefaults];
+    
+    [[MASShortcutBinder sharedBinder]
+        bindShortcutWithDefaultsKey:kPreferenceGlobalShortcutPlayPause
+        toAction:^{
+            [self playPauseShortcutAction];
+        // Let me know if you find a better or a more convenient API.
+    }];
+    
+    [[MASShortcutBinder sharedBinder]
+        bindShortcutWithDefaultsKey:kPreferenceGlobalShortcutSkipBackward
+        toAction:^{
+            [self skipBackwardShortcutAction];
+        // Let me know if you find a better or a more convenient API.
+    }];
+    
+    [[MASShortcutBinder sharedBinder]
+        bindShortcutWithDefaultsKey:kPreferenceGlobalShortcutSkipForward
+        toAction:^{
+            [self skipForwardShortcutAction];
+        // Let me know if you find a better or a more convenient API.
+    }];
+
+//    _observableKeyPathPlayPause = [@"values." stringByAppendingString:kPreferenceGlobalShortcutPlayPause];
+//    _observableKeyPathSkipBackward = [@"values." stringByAppendingString:kPreferenceGlobalShortcutSkipBackward];
+//    _observableKeyPathSkipForward = [@"values." stringByAppendingString:kPreferenceGlobalShortcutSkipForward];
     
     self.statusItem = [NSStatusBar.systemStatusBar statusItemWithLength:NSVariableStatusItemLength];
     self.statusItem.button.title = self.icon;
@@ -283,8 +322,32 @@
     [NSApp activateIgnoringOtherApps:YES];
 }
 
-- (IBAction)testPlayPause:(NSButton *)sender {
+- (void)playPauseShortcutAction
+{
+//    NSLog(@"self.global State object is: %@", self.globalState);
+//    NSLog(@"togglePlayPause object is: %@", [self.globalState togglePlayPause]);
+    
+//    NSLog(@"trying to access global state");
     [self.globalState togglePlayPause];
+    NSLog(@"pressed playPause shortcut");
+    [[NSSound soundNamed:@"Frog"] play];
 }
+
+- (void)skipForwardShortcutAction
+{
+    [self.globalState skipForward];
+    NSLog(@"pressed skipforward shortcut");
+    [[NSSound soundNamed:@"Ping"] play];
+}
+
+- (void)skipBackwardShortcutAction
+{
+    [self.globalState skipBackward];
+    NSLog(@"pressed skipbackward shortcut");
+    [[NSSound soundNamed:@"Purr"] play];
+}
+
+
+
 
 @end
