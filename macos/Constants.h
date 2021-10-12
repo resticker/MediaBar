@@ -9,9 +9,6 @@ extern NSString *spotifyBundleIdentifier;
 extern NSString *const kPreferenceGlobalShortcutPlayPause;
 extern NSString *const kPreferenceGlobalShortcutSkipBackward;
 extern NSString *const kPreferenceGlobalShortcutSkipForward;
-//extern NSString *_observableKeyPathPlayPause;
-//extern NSString *_observableKeyPathSkipBackward;
-//extern NSString *_observableKeyPathSkipForward;
 
 extern NSString *ShowArtistUserDefaultsKey;
 extern NSString *ShowTitleUserDefaultsKey;

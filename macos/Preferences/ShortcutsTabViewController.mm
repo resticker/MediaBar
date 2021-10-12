@@ -4,15 +4,9 @@
 #import "Constants.h"
 #import "GlobalState.h"
 
-//static NSString *const kPreferenceGlobalShortcutPlayPause = @"GlobalShortcut";
-//static NSString *const kPreferenceGlobalShortcutSkipBackward = @"SkipBackwardShortcut";
-//static NSString *const kPreferenceGlobalShortcutSkipForward = @"SkipForwardShortcut";
-//
+
 static void *kGlobalShortcutContext = &kGlobalShortcutContext;
-//
-//NSString *_observableKeyPathPlayPause;
-//NSString *_observableKeyPathSkipBackward;
-//NSString *_observableKeyPathSkipForward;
+
 
 @interface ShortcutsTabViewController ()
 
@@ -48,36 +42,6 @@ static void *kGlobalShortcutContext = &kGlobalShortcutContext;
     
     NSLog(@"self.global State object is (from viewDidLoad): %@", self.globalState);
 }
-
-//- (void)viewWillAppear {
-//    NSLog(@"TEST...");
-//    NSLog(@"self.global State object is (from viewDidLoad): %@", self.globalState);
-//}
-
-//- (void)playPauseShortcutAction
-//{
-////    NSLog(@"self.global State object is: %@", self.globalState);
-////    NSLog(@"togglePlayPause object is: %@", [self.globalState togglePlayPause]);
-//    
-////    NSLog(@"trying to access global state");
-//    [self.globalState togglePlayPause];
-//    NSLog(@"pressed playPause shortcut");
-//    [[NSSound soundNamed:@"Frog"] play];
-//}
-//
-//- (void)skipForwardShortcutAction
-//{
-//    [self.globalState skipForward];
-//    NSLog(@"pressed skipforward shortcut");
-//    [[NSSound soundNamed:@"Ping"] play];
-//}
-//
-//- (void)skipBackwardShortcutAction
-//{
-//    [self.globalState skipBackward];
-//    NSLog(@"pressed skipbackward shortcut");
-//    [[NSSound soundNamed:@"Purr"] play];
-//}
 
 
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)obj

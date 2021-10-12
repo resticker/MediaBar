@@ -1,4 +1,3 @@
-//@import ReactiveCocoa;
 @import UserNotifications;
 
 #import "AppDelegate.h"
@@ -13,14 +12,6 @@
 #import "GlobalState.h"
 
 #define RETURN_VOID(EXP) { EXP; return; }
-
-
-
-//static void *kGlobalShortcutContext = &kGlobalShortcutContext;
-
-//NSString *_observableKeyPathPlayPause;
-//NSString *_observableKeyPathSkipBackward;
-//NSString *_observableKeyPathSkipForward;
 
 
 @interface AppDelegate ()
@@ -38,9 +29,6 @@
 @property (weak) IBOutlet NSWindow *positioningWindow;
 @property (weak) IBOutlet NSView *positioningView;
 
-//@property (nonatomic, weak) IBOutlet MASShortcutView *playPauseShortcutView;
-//@property (nonatomic, weak) IBOutlet MASShortcutView *skipBackwardShortcutView;
-//@property (nonatomic, weak) IBOutlet MASShortcutView *skipForwardShortcutView;
 
 @property (strong) NSWindowController *preferencesController;
 
@@ -96,31 +84,9 @@
     self.iconWhilePlaying = [self.userDefaults stringForKey:IconWhilePlayingUserDefaultsKey];
     self.maximumWidth = [self.userDefaults integerForKey:MaximumWidthUserDefaultsKey];
     
-//    if ([self.userDefaults boolForKey:EnableAutomaticUpdatesUserDefaultsKey]) {
-//        [self turnOnAutomaticUpdates];
-//        [self startProductHuntTimer];
-//    } else {
-//        [self turnOffAutomaticUpdates];
-//        [self stopProductHuntTimer];
-//    }
+
 }
 
-
-//- (void)stopProductHuntTimer {
-//    if (self.productHuntTimer != nil) {
-//        [self.productHuntTimer invalidate];
-//        self.productHuntTimer = nil;
-//    }
-//}
-//
-//- (void)startProductHuntTimer {
-//    if (self.productHuntTimer != nil) return;
-//    if ([self.userDefaults boolForKey:ProductHuntNotificationDisplayedUserDefaultsKey]) return;
-//
-//    if (@available(macOS 10.14, *)) {
-//        self.productHuntTimer = [NSTimer scheduledTimerWithTimeInterval:60 * 60 target:self selector:@selector(checkForProductHuntRelease) userInfo:nil repeats:YES];
-//    }
-//}
 
 
 #pragma mark - User notification center delegate
@@ -185,9 +151,6 @@
         // Let me know if you find a better or a more convenient API.
     }];
 
-//    _observableKeyPathPlayPause = [@"values." stringByAppendingString:kPreferenceGlobalShortcutPlayPause];
-//    _observableKeyPathSkipBackward = [@"values." stringByAppendingString:kPreferenceGlobalShortcutSkipBackward];
-//    _observableKeyPathSkipForward = [@"values." stringByAppendingString:kPreferenceGlobalShortcutSkipForward];
     
     self.statusItem = [NSStatusBar.systemStatusBar statusItemWithLength:NSVariableStatusItemLength];
     self.statusItem.button.title = self.icon;
@@ -329,25 +292,23 @@
     
 //    NSLog(@"trying to access global state");
     [self.globalState togglePlayPause];
-    NSLog(@"pressed playPause shortcut");
-    [[NSSound soundNamed:@"Frog"] play];
+//    NSLog(@"pressed playPause shortcut");
+//    [[NSSound soundNamed:@"Frog"] play];
 }
 
 - (void)skipForwardShortcutAction
 {
     [self.globalState skipForward];
-    NSLog(@"pressed skipforward shortcut");
-    [[NSSound soundNamed:@"Ping"] play];
+//    NSLog(@"pressed skipforward shortcut");
+//    [[NSSound soundNamed:@"Ping"] play];
 }
 
 - (void)skipBackwardShortcutAction
 {
     [self.globalState skipBackward];
-    NSLog(@"pressed skipbackward shortcut");
-    [[NSSound soundNamed:@"Purr"] play];
+//    NSLog(@"pressed skipbackward shortcut");
+//    [[NSSound soundNamed:@"Purr"] play];
 }
-
-
 
 
 @end
