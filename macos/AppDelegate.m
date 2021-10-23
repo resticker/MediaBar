@@ -40,6 +40,10 @@
 @property (strong) NSString *iconWhilePlaying;
 @property NSInteger maximumWidth;
 
+@property NSInteger stepBackwardDuration;
+@property NSInteger stepForwardDuration;
+
+
 @property (strong) NSTimer *productHuntTimer;
 
 //@property (strong) RACDisposable *interval;
@@ -83,7 +87,8 @@
     self.icon = [self.userDefaults stringForKey:IconUserDefaultsKey];
     self.iconWhilePlaying = [self.userDefaults stringForKey:IconWhilePlayingUserDefaultsKey];
     self.maximumWidth = [self.userDefaults integerForKey:MaximumWidthUserDefaultsKey];
-    
+    self.stepBackwardDuration = [self.userDefaults integerForKey:StepBackwardDurationUserDefaultsKey];
+    self.stepForwardDuration = [self.userDefaults integerForKey:StepForwardDurationUserDefaultsKey];
 
 }
 
@@ -134,21 +139,18 @@
         bindShortcutWithDefaultsKey:kPreferenceGlobalShortcutPlayPause
         toAction:^{
             [self playPauseShortcutAction];
-        // Let me know if you find a better or a more convenient API.
     }];
     
     [[MASShortcutBinder sharedBinder]
         bindShortcutWithDefaultsKey:kPreferenceGlobalShortcutSkipBackward
         toAction:^{
             [self skipBackwardShortcutAction];
-        // Let me know if you find a better or a more convenient API.
     }];
     
     [[MASShortcutBinder sharedBinder]
         bindShortcutWithDefaultsKey:kPreferenceGlobalShortcutSkipForward
         toAction:^{
             [self skipForwardShortcutAction];
-        // Let me know if you find a better or a more convenient API.
     }];
 
     
@@ -287,27 +289,17 @@
 
 - (void)playPauseShortcutAction
 {
-//    NSLog(@"self.global State object is: %@", self.globalState);
-//    NSLog(@"togglePlayPause object is: %@", [self.globalState togglePlayPause]);
-    
-//    NSLog(@"trying to access global state");
     [self.globalState togglePlayPause];
-//    NSLog(@"pressed playPause shortcut");
-//    [[NSSound soundNamed:@"Frog"] play];
 }
 
 - (void)skipForwardShortcutAction
 {
     [self.globalState skipForward];
-//    NSLog(@"pressed skipforward shortcut");
-//    [[NSSound soundNamed:@"Ping"] play];
 }
 
 - (void)skipBackwardShortcutAction
 {
     [self.globalState skipBackward];
-//    NSLog(@"pressed skipbackward shortcut");
-//    [[NSSound soundNamed:@"Purr"] play];
 }
 
 

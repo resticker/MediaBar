@@ -22,6 +22,8 @@ extern NSString *EnableErrorReportingUserDefaultsKey;
 extern NSString *EnableAutomaticUpdatesUserDefaultsKey;
 extern NSString *ProductHuntNotificationDisplayedUserDefaultsKey;
 extern NSString *SetupCompletedUserDefaultsKey;
+extern NSString *StepBackwardDurationUserDefaultsKey;
+extern NSString *StepForwardDurationUserDefaultsKey;
 
 extern NSString *SetupCompletedNotificationName;
 

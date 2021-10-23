@@ -40,7 +40,7 @@ static void *kGlobalShortcutContext = &kGlobalShortcutContext;
     
     self.preferredContentSize = NSMakeSize(self.view.frame.size.width, self.view.frame.size.height);
     
-    NSLog(@"self.global State object is (from viewDidLoad): %@", self.globalState);
+//    NSLog(@"self.global State object is (from viewDidLoad): %@", self.globalState);
 }
 
 

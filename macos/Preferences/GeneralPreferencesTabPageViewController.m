@@ -63,7 +63,7 @@
     self.launchAtLoginCheckbox.state = DNLoginServiceKit.loginItemExists ? NSControlStateValueOn : NSControlStateValueOff;
 }
 
-#pragma mark - Actions
+#pragma mark - ActionsÏ
 
 - (IBAction)booleanAction:(PreferencesCheckbox *)sender {
     [self.userDefaults setBool:sender.state == NSControlStateValueOn forKey:sender.userDefaultsKey];

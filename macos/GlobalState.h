@@ -21,6 +21,7 @@ extern const struct GlobalStateNotificationStruct {
 
 #pragma mark - Actions
 
+- (double)getElapsedTime;
 - (void)togglePlayPause;
 - (void)previous;
 - (void)skipBackward;

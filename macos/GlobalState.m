@@ -113,6 +113,7 @@ static void commonInit(GlobalState *self) {
     });
 }
 
+
 #pragma mark - NSObject methods
 
 - (instancetype)init {
@@ -152,6 +153,13 @@ static void commonInit(GlobalState *self) {
 
 #pragma mark - Actions
 
+
+- (double)getElapsedTime {
+    double TESTelapsedTimeAtTimestamp = self.elapsedTime;
+    
+    return self.isPlaying ? TESTelapsedTimeAtTimestamp + [NSDate.date timeIntervalSinceDate:self.timestamp] : TESTelapsedTimeAtTimestamp;
+}
+
 - (void)togglePlayPause {
     NSLog(@"togglePlayPause");
     MRMediaRemoteSendCommand(MRMediaRemoteCommandTogglePlayPause, nil);
@@ -164,14 +172,31 @@ static void commonInit(GlobalState *self) {
 }
 
 - (void)skipBackward {
-    NSLog(@"self.globalState.elapsedTime: %lf", self.elapsedTime);
-    MRMediaRemoteSetElapsedTime(self.elapsedTime - 10);
+    NSLog(@"self.elapsedTime: %lf", self.elapsedTime);
+    
+//    double TESTelapsedTimeAtTimestamp = self.elapsedTime;
+//    double TESTelapsedTime = self.isPlaying ? TESTelapsedTimeAtTimestamp + [NSDate.date timeIntervalSinceDate:self.timestamp] : TESTelapsedTimeAtTimestamp;
+    
+    double myElapsedTime = [self getElapsedTime];
+    
+    NSLog(@"myElapsedTime: %lf", myElapsedTime);
+    
+//    [self getNowPlayingInfo];
+//    self.elapsedTime = self.elapsedTime - 10;
+    MRMediaRemoteSetElapsedTime(myElapsedTime - 10);
+//    NSLog(@"(after skip) self.elapsedTime: %lf", self.elapsedTime);
+//    [self getNowPlayingInfo];
+//    NSLog(@"(after getting info) self.elapsedTime: %lf", self.elapsedTime);
     NSLog(@"global skipBackward");
 }
 
 - (void)skipForward {
-    NSLog(@"self.globalState.elapsedTime: %lf", self.elapsedTime);
-    MRMediaRemoteSetElapsedTime(self.elapsedTime + 10);
+//    NSLog(@"self.globalState.elapsedTime: %lf", self.elapsedTime);
+    
+    double myElapsedTime = [self getElapsedTime];
+    NSLog(@"myElapsedTime: %lf", myElapsedTime);
+    
+    MRMediaRemoteSetElapsedTime(myElapsedTime + 10);
     NSLog(@"global skipForward");
 }
 

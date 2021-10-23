@@ -19,6 +19,8 @@ NSString *EnableErrorReportingUserDefaultsKey = @"MBEnableErrorReporting";
 NSString *EnableAutomaticUpdatesUserDefaultsKey = @"MBEnableAutomaticUpdates";
 NSString *ProductHuntNotificationDisplayedUserDefaultsKey = @"MBProductHuntNotificationDisplayedUserDefaultsKey";
 NSString *SetupCompletedUserDefaultsKey = @"MBSetupCompletedUserDefaultsKey";
+NSString *StepBackwardDurationUserDefaultsKey = @"MBStepBackwardDuration";
+NSString *StepForwardDurationUserDefaultsKey = @"MBStepForwardDuration";
 
 NSString *SetupCompletedNotificationName = @"MBSetupCompleted";
 

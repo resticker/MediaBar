@@ -78,8 +78,9 @@ static NSSize albumArtworkSize = NSMakeSize(300, 300);
 - (void)handleTick {
     if (self.globalState.timestamp == nil) return;
 
-    double elapsedTimeAtTimestamp = self.globalState.elapsedTime;
-    double elapsedTime = self.globalState.isPlaying ? elapsedTimeAtTimestamp + [NSDate.date timeIntervalSinceDate:self.globalState.timestamp] : elapsedTimeAtTimestamp;
+//    double elapsedTimeAtTimestamp = self.globalState.elapsedTime;
+//    double elapsedTime = self.globalState.isPlaying ? elapsedTimeAtTimestamp + [NSDate.date timeIntervalSinceDate:self.globalState.timestamp] : elapsedTimeAtTimestamp;
+    double elapsedTime = [self.globalState getElapsedTime];
     
     [self handleTickWithElapsedTime:elapsedTime];
 }
@@ -149,23 +150,23 @@ static NSSize albumArtworkSize = NSMakeSize(300, 300);
 #pragma mark - Actions
 
 - (IBAction)playPauseAction:(NSButton *)sender {
-    NSLog(@"self.global State object is: %@", self.globalState);
+//    NSLog(@"self.global State object is: %@", self.globalState);
     [self.globalState togglePlayPause];
 }
 
 - (IBAction)previousAction:(NSButton *)sender {
     [self.globalState previous];
-    NSLog(@"in previousAction");
+//    NSLog(@"in previousAction");
 }
 
 - (IBAction)skipBackward:(NSButton *)sender {
     [self.globalState skipBackward];
-    NSLog(@"in skipBackward");
+//    NSLog(@"in skipBackward");
 }
 
 - (IBAction)skipForward:(NSButton *)sender {
     [self.globalState skipForward];
-    NSLog(@"in skipForward");
+//    NSLog(@"in skipForward");
 }
 
 - (IBAction)nextAction:(NSButton *)sender {
@@ -210,6 +211,7 @@ static NSSize albumArtworkSize = NSMakeSize(300, 300);
     }
 
     self.globalState.elapsedTime = elapsedTime;
+//    NSLog(@"updated self.globalState.elapsedTime");
 }
 
 #pragma mark - Popover delegate
