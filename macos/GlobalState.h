@@ -18,6 +18,8 @@ extern const struct GlobalStateNotificationStruct {
 @property (nullable) NSDate *timestamp;
 @property double duration;
 @property (nonatomic) double elapsedTime;
+@property NSInteger skipBackwardDuration;
+@property NSInteger skipForwardDuration;
 
 #pragma mark - Actions
 

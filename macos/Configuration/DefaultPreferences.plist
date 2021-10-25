@@ -2,9 +2,9 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>MBStepForwardDuration</key>
+	<key>MBSkipForwardDuration</key>
 	<integer>5</integer>
-	<key>MBStepBackwardDuration</key>
+	<key>MBSkipBackwardDuration</key>
 	<integer>5</integer>
 	<key>MBShowArtist</key>
 	<true/>

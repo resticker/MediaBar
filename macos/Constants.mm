@@ -3,7 +3,10 @@
 NSImage *spotifyRequestPermissionsAlbumArtwork = [NSImage imageNamed:@"Spotify Request Permissions Album Artwork"];
 NSString *spotifyBundleIdentifier = @"com.spotify.client";
 
-NSString *const kPreferenceGlobalShortcutPlayPause = @"GlobalShortcut";
+//NSString *const kPreferenceGlobalShortcutPlayPause = @"GlobalShortcut";
+NSString *const kPreferenceGlobalShortcutPlayPause = @"PlayPauseShortcut";
+NSString *const kPreferenceGlobalShortcutPreviousTrack = @"PreviousTrackShortcut";
+NSString *const kPreferenceGlobalShortcutNextTrack = @"NextTrackShortcut";
 NSString *const kPreferenceGlobalShortcutSkipBackward = @"SkipBackwardShortcut";
 NSString *const kPreferenceGlobalShortcutSkipForward = @"SkipForwardShortcut";
 
@@ -19,8 +22,8 @@ NSString *EnableErrorReportingUserDefaultsKey = @"MBEnableErrorReporting";
 NSString *EnableAutomaticUpdatesUserDefaultsKey = @"MBEnableAutomaticUpdates";
 NSString *ProductHuntNotificationDisplayedUserDefaultsKey = @"MBProductHuntNotificationDisplayedUserDefaultsKey";
 NSString *SetupCompletedUserDefaultsKey = @"MBSetupCompletedUserDefaultsKey";
-NSString *StepBackwardDurationUserDefaultsKey = @"MBStepBackwardDuration";
-NSString *StepForwardDurationUserDefaultsKey = @"MBStepForwardDuration";
+NSString *SkipBackwardDurationUserDefaultsKey = @"MBSkipBackwardDuration";
+NSString *SkipForwardDurationUserDefaultsKey = @"MBSkipForwardDuration";
 
 NSString *SetupCompletedNotificationName = @"MBSetupCompleted";
 

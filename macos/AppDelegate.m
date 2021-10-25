@@ -40,9 +40,6 @@
 @property (strong) NSString *iconWhilePlaying;
 @property NSInteger maximumWidth;
 
-@property NSInteger stepBackwardDuration;
-@property NSInteger stepForwardDuration;
-
 
 @property (strong) NSTimer *productHuntTimer;
 
@@ -87,11 +84,9 @@
     self.icon = [self.userDefaults stringForKey:IconUserDefaultsKey];
     self.iconWhilePlaying = [self.userDefaults stringForKey:IconWhilePlayingUserDefaultsKey];
     self.maximumWidth = [self.userDefaults integerForKey:MaximumWidthUserDefaultsKey];
-    self.stepBackwardDuration = [self.userDefaults integerForKey:StepBackwardDurationUserDefaultsKey];
-    self.stepForwardDuration = [self.userDefaults integerForKey:StepForwardDurationUserDefaultsKey];
-
+    self.globalState.skipBackwardDuration = [self.userDefaults integerForKey:SkipBackwardDurationUserDefaultsKey];
+    self.globalState.skipForwardDuration = [self.userDefaults integerForKey:SkipForwardDurationUserDefaultsKey];
 }
-
 
 
 #pragma mark - User notification center delegate
@@ -138,19 +133,31 @@
     [[MASShortcutBinder sharedBinder]
         bindShortcutWithDefaultsKey:kPreferenceGlobalShortcutPlayPause
         toAction:^{
-            [self playPauseShortcutAction];
+            [self.globalState togglePlayPause];
+    }];
+    
+    [[MASShortcutBinder sharedBinder]
+        bindShortcutWithDefaultsKey:kPreferenceGlobalShortcutPreviousTrack
+        toAction:^{
+            [self.globalState previous];
+    }];
+    
+    [[MASShortcutBinder sharedBinder]
+        bindShortcutWithDefaultsKey:kPreferenceGlobalShortcutNextTrack
+        toAction:^{
+            [self.globalState next];
     }];
     
     [[MASShortcutBinder sharedBinder]
         bindShortcutWithDefaultsKey:kPreferenceGlobalShortcutSkipBackward
         toAction:^{
-            [self skipBackwardShortcutAction];
+            [self.globalState skipBackward];
     }];
     
     [[MASShortcutBinder sharedBinder]
         bindShortcutWithDefaultsKey:kPreferenceGlobalShortcutSkipForward
         toAction:^{
-            [self skipForwardShortcutAction];
+            [self.globalState skipForward];
     }];
 
     
@@ -206,6 +213,7 @@
 
 - (void)userDefaultsDidChange:(NSNotification *)notification {
     if (notification != nil && notification.object == NSUserDefaults.standardUserDefaults) return;
+    NSLog(@"User defaults did change");
     
     [self loadUserDefaults];
     if ([NSThread isMainThread]) {
@@ -287,20 +295,20 @@
     [NSApp activateIgnoringOtherApps:YES];
 }
 
-- (void)playPauseShortcutAction
-{
-    [self.globalState togglePlayPause];
-}
-
-- (void)skipForwardShortcutAction
-{
-    [self.globalState skipForward];
-}
-
-- (void)skipBackwardShortcutAction
-{
-    [self.globalState skipBackward];
-}
+//- (void)playPauseShortcutAction
+//{
+//    [self.globalState togglePlayPause];
+//}
+//
+//- (void)skipForwardShortcutAction
+//{
+//    [self.globalState skipForward];
+//}
+//
+//- (void)skipBackwardShortcutAction
+//{
+//    [self.globalState skipBackward];
+//}
 
 
 @end

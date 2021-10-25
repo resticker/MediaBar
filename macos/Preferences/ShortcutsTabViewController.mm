@@ -11,6 +11,8 @@ static void *kGlobalShortcutContext = &kGlobalShortcutContext;
 @interface ShortcutsTabViewController ()
 
 @property (nonatomic, weak) IBOutlet MASShortcutView *playPauseShortcutView;
+@property (nonatomic, weak) IBOutlet MASShortcutView *previousTrackShortcutView;
+@property (nonatomic, weak) IBOutlet MASShortcutView *nextTrackShortcutView;
 @property (nonatomic, weak) IBOutlet MASShortcutView *skipBackwardShortcutView;
 @property (nonatomic, weak) IBOutlet MASShortcutView *skipForwardShortcutView;
 @property (strong) IBOutlet GlobalState *globalState; // This reference was becoming nil until I switched it from weak to strong
@@ -23,10 +25,20 @@ static void *kGlobalShortcutContext = &kGlobalShortcutContext;
     [super viewDidLoad];
     
     self.playPauseShortcutView.associatedUserDefaultsKey = kPreferenceGlobalShortcutPlayPause;
+    self.previousTrackShortcutView.associatedUserDefaultsKey = kPreferenceGlobalShortcutPreviousTrack;
+    self.nextTrackShortcutView.associatedUserDefaultsKey = kPreferenceGlobalShortcutNextTrack;
     self.skipBackwardShortcutView.associatedUserDefaultsKey = kPreferenceGlobalShortcutSkipBackward;
     self.skipForwardShortcutView.associatedUserDefaultsKey = kPreferenceGlobalShortcutSkipForward;
     
     [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKeyPath:kPreferenceGlobalShortcutPlayPause
+                                                                 options:NSKeyValueObservingOptionInitial
+                                                                 context:kGlobalShortcutContext];
+    
+    [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKeyPath:kPreferenceGlobalShortcutPreviousTrack
+                                                                 options:NSKeyValueObservingOptionInitial
+                                                                 context:kGlobalShortcutContext];
+    
+    [[NSUserDefaultsController sharedUserDefaultsController] addObserver:self forKeyPath:kPreferenceGlobalShortcutNextTrack
                                                                  options:NSKeyValueObservingOptionInitial
                                                                  context:kGlobalShortcutContext];
     

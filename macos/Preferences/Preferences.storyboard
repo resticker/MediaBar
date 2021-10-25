@@ -70,8 +70,8 @@
                                     </gridCell>
                                     <gridCell row="ePa-yr-fno" column="NuV-b5-lHi" id="crD-LC-7xl">
                                         <textField key="contentView" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="2PQ-pC-dVc">
-                                            <rect key="frame" x="138" y="87" width="69" height="16"/>
-                                            <textFieldCell key="cell" lineBreakMode="clipping" title="Next Track" id="Zeu-34-uf0">
+                                            <rect key="frame" x="114" y="87" width="93" height="16"/>
+                                            <textFieldCell key="cell" lineBreakMode="clipping" title="Previous Track" id="Zeu-34-uf0">
                                                 <font key="font" usesAppearanceFont="YES"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -82,15 +82,14 @@
                                         <customView key="contentView" translatesAutoresizingMaskIntoConstraints="NO" id="VAC-0o-HiP" customClass="MASShortcutView">
                                             <rect key="frame" x="211" y="87" width="100" height="19"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" constant="100" id="37L-Pp-Kfv"/>
                                                 <constraint firstAttribute="height" constant="19" id="wkI-Wp-mBa"/>
                                             </constraints>
                                         </customView>
                                     </gridCell>
                                     <gridCell row="kPk-uF-OUv" column="NuV-b5-lHi" id="EG1-Hu-6VF">
                                         <textField key="contentView" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="rR6-GQ-H9Q">
-                                            <rect key="frame" x="114" y="59" width="93" height="16"/>
-                                            <textFieldCell key="cell" lineBreakMode="clipping" title="Previous Track" id="FxM-AN-bCa">
+                                            <rect key="frame" x="138" y="59" width="69" height="16"/>
+                                            <textFieldCell key="cell" lineBreakMode="clipping" title="Next Track" id="FxM-AN-bCa">
                                                 <font key="font" usesAppearanceFont="YES"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -101,7 +100,6 @@
                                         <customView key="contentView" translatesAutoresizingMaskIntoConstraints="NO" id="ANn-Q2-mxf" customClass="MASShortcutView">
                                             <rect key="frame" x="211" y="59" width="100" height="19"/>
                                             <constraints>
-                                                <constraint firstAttribute="width" constant="100" id="NR6-DR-jNj"/>
                                                 <constraint firstAttribute="height" constant="19" id="ccg-tR-BWz"/>
                                             </constraints>
                                         </customView>
@@ -156,7 +154,9 @@
                     </view>
                     <connections>
                         <outlet property="globalState" destination="uJT-tz-vZw" id="FQG-Hv-u9M"/>
-                        <outlet property="playPauseShortcutView" destination="s8A-Wy-R9o" id="S37-6n-emH"/>
+                        <outlet property="nextTrackShortcutView" destination="ANn-Q2-mxf" id="cW1-TW-80n"/>
+                        <outlet property="playPauseShortcutView" destination="s8A-Wy-R9o" id="dJc-ry-ggq"/>
+                        <outlet property="previousTrackShortcutView" destination="VAC-0o-HiP" id="2Gj-6L-hoS"/>
                         <outlet property="skipBackwardShortcutView" destination="cOy-k4-53c" id="dsf-Az-qjX"/>
                         <outlet property="skipForwardShortcutView" destination="5hP-9j-3b0" id="jf9-dx-Jb2"/>
                     </connections>
@@ -301,8 +301,8 @@
                                     </gridCell>
                                     <gridCell row="CHs-0v-tZ1" column="nzm-tR-Q8n" id="XXx-TL-4EX">
                                         <textField key="contentView" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="OxZ-wx-jGU">
-                                            <rect key="frame" x="31" y="250" width="149" height="16"/>
-                                            <textFieldCell key="cell" lineBreakMode="clipping" title="Skip Backward Duration" id="qF7-6M-6k4">
+                                            <rect key="frame" x="30" y="250" width="150" height="16"/>
+                                            <textFieldCell key="cell" lineBreakMode="clipping" title="Skip Backward Seconds" id="qF7-6M-6k4">
                                                 <font key="font" usesAppearanceFont="YES"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -310,20 +310,55 @@
                                         </textField>
                                     </gridCell>
                                     <gridCell row="CHs-0v-tZ1" column="fr5-HD-BPh" id="ywT-IZ-BXr">
-                                        <textField key="contentView" verticalHuggingPriority="750" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5E7-JB-U2n">
-                                            <rect key="frame" x="184" y="247" width="100" height="21"/>
-                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="vQP-pV-Be0">
-                                                <numberFormatter key="formatter" formatterBehavior="default10_4" numberStyle="decimal" formatWidth="-1" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" maximumFractionDigits="3" id="q02-px-X9H"/>
-                                                <font key="font" metaFont="system"/>
-                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                            </textFieldCell>
-                                        </textField>
+                                        <stackView key="contentView" distribution="fill" orientation="horizontal" alignment="top" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="jd7-WN-zAX">
+                                            <rect key="frame" x="184" y="247" width="51" height="21"/>
+                                            <subviews>
+                                                <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="6vt-qz-aFq">
+                                                    <rect key="frame" x="0.0" y="0.0" width="30" height="21"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="21" id="5aC-Z8-QYe"/>
+                                                        <constraint firstAttribute="width" constant="30" id="IIf-fu-1zQ"/>
+                                                    </constraints>
+                                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="6bV-c0-7bd">
+                                                        <numberFormatter key="formatter" formatterBehavior="custom10_4" allowsFloats="NO" formatWidth="-1" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" maximumFractionDigits="3" id="bWH-fq-WyJ">
+                                                            <real key="minimum" value="0.0"/>
+                                                            <real key="maximum" value="999"/>
+                                                        </numberFormatter>
+                                                        <font key="font" metaFont="system"/>
+                                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                    </textFieldCell>
+                                                    <connections>
+                                                        <binding destination="Mqr-ek-lvs" name="value" keyPath="MBSkipBackwardDuration" id="3Ac-62-iUB">
+                                                            <dictionary key="options">
+                                                                <bool key="NSContinuouslyUpdatesValue" value="YES"/>
+                                                                <bool key="NSValidatesImmediately" value="YES"/>
+                                                            </dictionary>
+                                                        </binding>
+                                                    </connections>
+                                                </textField>
+                                                <stepper horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="OfR-ke-5rN">
+                                                    <rect key="frame" x="35" y="-3" width="19" height="28"/>
+                                                    <stepperCell key="cell" continuous="YES" alignment="left" maxValue="999" valueWraps="YES" id="8UX-D0-yy9"/>
+                                                    <connections>
+                                                        <binding destination="Mqr-ek-lvs" name="value" keyPath="MBSkipBackwardDuration" id="1B8-3f-FRi"/>
+                                                    </connections>
+                                                </stepper>
+                                            </subviews>
+                                            <visibilityPriorities>
+                                                <integer value="1000"/>
+                                                <integer value="1000"/>
+                                            </visibilityPriorities>
+                                            <customSpacing>
+                                                <real value="3.4028234663852886e+38"/>
+                                                <real value="3.4028234663852886e+38"/>
+                                            </customSpacing>
+                                        </stackView>
                                     </gridCell>
                                     <gridCell row="YTV-5k-RAd" column="nzm-tR-Q8n" id="TiW-yI-h65">
                                         <textField key="contentView" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="7Vc-mA-kfc">
-                                            <rect key="frame" x="41" y="223" width="139" height="16"/>
-                                            <textFieldCell key="cell" lineBreakMode="clipping" title="Skip Forward Duration" id="awg-Lr-7hj">
+                                            <rect key="frame" x="40" y="223" width="140" height="16"/>
+                                            <textFieldCell key="cell" lineBreakMode="clipping" title="Skip Forward Seconds" id="awg-Lr-7hj">
                                                 <font key="font" usesAppearanceFont="YES"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -331,15 +366,50 @@
                                         </textField>
                                     </gridCell>
                                     <gridCell row="YTV-5k-RAd" column="fr5-HD-BPh" id="556-Ge-n1m">
-                                        <textField key="contentView" verticalHuggingPriority="750" ambiguous="YES" translatesAutoresizingMaskIntoConstraints="NO" id="p0v-5x-5HW">
-                                            <rect key="frame" x="184" y="220" width="100" height="21"/>
-                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="PaV-4M-WVL">
-                                                <numberFormatter key="formatter" formatterBehavior="default10_4" numberStyle="decimal" formatWidth="-1" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" maximumFractionDigits="3" id="OOY-Br-wn3"/>
-                                                <font key="font" metaFont="system"/>
-                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
-                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                            </textFieldCell>
-                                        </textField>
+                                        <stackView key="contentView" distribution="fill" orientation="horizontal" alignment="top" horizontalStackHuggingPriority="249.99998474121094" verticalStackHuggingPriority="249.99998474121094" detachesHiddenViews="YES" translatesAutoresizingMaskIntoConstraints="NO" id="5WC-eB-OlG">
+                                            <rect key="frame" x="184" y="220" width="51" height="21"/>
+                                            <subviews>
+                                                <textField verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="RaM-EG-0Li">
+                                                    <rect key="frame" x="0.0" y="0.0" width="30" height="21"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="width" constant="30" id="TBN-Z9-mpb"/>
+                                                        <constraint firstAttribute="height" constant="21" id="drW-BY-Fyr"/>
+                                                    </constraints>
+                                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="IPV-fC-fau">
+                                                        <numberFormatter key="formatter" formatterBehavior="custom10_4" allowsFloats="NO" formatWidth="-1" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" maximumFractionDigits="3" id="iJd-yV-UZV">
+                                                            <real key="minimum" value="0.0"/>
+                                                            <real key="maximum" value="999"/>
+                                                        </numberFormatter>
+                                                        <font key="font" metaFont="system"/>
+                                                        <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                    </textFieldCell>
+                                                    <connections>
+                                                        <binding destination="Mqr-ek-lvs" name="value" keyPath="MBSkipForwardDuration" id="cRf-nz-lfy">
+                                                            <dictionary key="options">
+                                                                <bool key="NSContinuouslyUpdatesValue" value="YES"/>
+                                                                <bool key="NSValidatesImmediately" value="YES"/>
+                                                            </dictionary>
+                                                        </binding>
+                                                    </connections>
+                                                </textField>
+                                                <stepper horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="amR-Tq-aQj">
+                                                    <rect key="frame" x="35" y="-3" width="19" height="28"/>
+                                                    <stepperCell key="cell" continuous="YES" alignment="left" maxValue="999" valueWraps="YES" id="NCn-zD-7GT"/>
+                                                    <connections>
+                                                        <binding destination="Mqr-ek-lvs" name="value" keyPath="MBSkipForwardDuration" id="Vv9-aU-d0S"/>
+                                                    </connections>
+                                                </stepper>
+                                            </subviews>
+                                            <visibilityPriorities>
+                                                <integer value="1000"/>
+                                                <integer value="1000"/>
+                                            </visibilityPriorities>
+                                            <customSpacing>
+                                                <real value="3.4028234663852886e+38"/>
+                                                <real value="3.4028234663852886e+38"/>
+                                            </customSpacing>
+                                        </stackView>
                                     </gridCell>
                                     <gridCell row="Kl4-SW-6Ds" column="nzm-tR-Q8n" id="y1T-oH-rHI">
                                         <textField key="contentView" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="vbg-t1-05O">
@@ -562,6 +632,7 @@
                 </viewController>
                 <customObject id="3ao-cZ-0sd" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
                 <customObject id="Mqr-ek-lvs" customClass="NSUserDefaults"/>
+                <userDefaultsController representsSharedInstance="YES" id="emm-KQ-FWH"/>
             </objects>
             <point key="canvasLocation" x="1126" y="-286"/>
         </scene>

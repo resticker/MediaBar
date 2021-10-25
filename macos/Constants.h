@@ -7,6 +7,8 @@ extern NSImage *spotifyRequestPermissionsAlbumArtwork;
 extern NSString *spotifyBundleIdentifier;
 
 extern NSString *const kPreferenceGlobalShortcutPlayPause;
+extern NSString *const kPreferenceGlobalShortcutPreviousTrack;
+extern NSString *const kPreferenceGlobalShortcutNextTrack;
 extern NSString *const kPreferenceGlobalShortcutSkipBackward;
 extern NSString *const kPreferenceGlobalShortcutSkipForward;
 
@@ -22,8 +24,8 @@ extern NSString *EnableErrorReportingUserDefaultsKey;
 extern NSString *EnableAutomaticUpdatesUserDefaultsKey;
 extern NSString *ProductHuntNotificationDisplayedUserDefaultsKey;
 extern NSString *SetupCompletedUserDefaultsKey;
-extern NSString *StepBackwardDurationUserDefaultsKey;
-extern NSString *StepForwardDurationUserDefaultsKey;
+extern NSString *SkipBackwardDurationUserDefaultsKey;
+extern NSString *SkipForwardDurationUserDefaultsKey;
 
 extern NSString *SetupCompletedNotificationName;
 

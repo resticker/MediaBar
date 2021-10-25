@@ -21,10 +21,12 @@
 @property (weak) IBOutlet PreferencesPopUpButton *iconPopUpButton;
 @property (weak) IBOutlet PreferencesPopUpButton *iconWhilePlayingPopUpButton;
 
-
 @property (weak) IBOutlet NSButton *launchAtLoginCheckbox;
 
 @property (weak) IBOutlet NSSlider *maximumWidthSlider;
+
+
+//@property (weak) NSNumber *textFieldNumber;
 
 @end
 
