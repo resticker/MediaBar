@@ -67,6 +67,9 @@ static NSSize albumArtworkSize = NSMakeSize(300, 300);
     
     self.elapsedTimeLabel.stringValue = [NSString formatSeconds:elapsedTime];
     
+//    self.elapsedTimeLabel.stringValue = [NSString stringWithFormat:@"%d:%02d", minutes, seconds];;
+//    stringWithFormat:@"%d:%02d"
+    
     self.progressWidthConstraint.constant = self.progress.superview.bounds.size.width * (elapsedTime / duration);
 
     if (self.showRemainingTime) {

@@ -161,42 +161,42 @@ static void commonInit(GlobalState *self) {
 }
 
 - (void)togglePlayPause {
-    NSLog(@"togglePlayPause");
+//    NSLog(@"togglePlayPause");
     MRMediaRemoteSendCommand(MRMediaRemoteCommandTogglePlayPause, nil);
 }
 
 - (void)previous {
     MRMediaRemoteSendCommand(MRMediaRemoteCommandPreviousTrack, nil);
-    NSLog(@"global previous");
+//    NSLog(@"global previous");
 }
 
 
 - (void)next {
     MRMediaRemoteSendCommand(MRMediaRemoteCommandNextTrack, nil);
-    NSLog(@"global next");
+//    NSLog(@"global next");
 }
 
 - (void)skipBackward {
 //    double myElapsedTime = [self getElapsedTime];
 //    NSLog(@"myElapsedTime: %lf", myElapsedTime);
-    NSLog(@"stepBackwardDuration: %ld", _skipBackwardDuration);
+//    NSLog(@"stepBackwardDuration: %ld", _skipBackwardDuration);
     
 
     MRMediaRemoteSetElapsedTime([self getElapsedTime] - _skipBackwardDuration);
 //    MRMediaRemoteSetElapsedTime([self getElapsedTime] - [self.userDefaults integerForKey:StepBackwardDurationUserDefaultsKey]);
 
-    NSLog(@"global skipBackward");
+//    NSLog(@"global skipBackward");
 }
 
 - (void)skipForward {
 //    double myElapsedTime = [self getElapsedTime];
 //    NSLog(@"myElapsedTime: %lf", myElapsedTime);
     
-    NSLog(@"stepForwardDuration: %ld", _skipForwardDuration);
+//    NSLog(@"stepForwardDuration: %ld", _skipForwardDuration);
     MRMediaRemoteSetElapsedTime([self getElapsedTime] + _skipForwardDuration);
     
 //    MRMediaRemoteSetElapsedTime([self getElapsedTime] + 10);
-    NSLog(@"global skipForward");
+//    NSLog(@"global skipForward");
 }
 
 - (void)setElapsedTime:(double)elapsedTime {

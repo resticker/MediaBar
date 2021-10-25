@@ -2,7 +2,7 @@
 
 static NSDateFormatter *createFormatter(BOOL withHours) {
     NSDateFormatter *formatter = [[NSDateFormatter alloc] init];
-    [formatter setDateFormat:withHours ? @"H:m:ss" : @"m:ss"];
+    [formatter setDateFormat:withHours ? @"H:mm:ss" : @"mm:ss"];
     [formatter setTimeZone:[NSTimeZone timeZoneForSecondsFromGMT:0]];
     return formatter;
 }
