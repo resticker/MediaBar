@@ -145,9 +145,7 @@ static NSSize albumArtworkSize = NSMakeSize(300, 300);
 #pragma mark - Notification handlers
 
 - (void)stateDidChange:(NSNotification *)notification {
-    if (self.popover.isShown) {
-        [self updatePopover];
-    }
+    [self updatePopover];
 }
 
 #pragma mark - Actions

@@ -1,4 +1,4 @@
-@import DNLoginServiceKit;
+// @import DNLoginServiceKit;  // Temporarily disabled
 
 #import "GeneralPreferencesTabPageViewController.h"
 
@@ -62,7 +62,8 @@
     NSInteger maximumWidth = [self.userDefaults integerForKey:MaximumWidthUserDefaultsKey];
     self.maximumWidthSlider.integerValue = maximumWidth;
     
-    self.launchAtLoginCheckbox.state = DNLoginServiceKit.loginItemExists ? NSControlStateValueOn : NSControlStateValueOff;
+    // self.launchAtLoginCheckbox.state = DNLoginServiceKit.loginItemExists ? NSControlStateValueOn : NSControlStateValueOff;  // Temporarily disabled
+    self.launchAtLoginCheckbox.state = NSControlStateValueOff;  // Default to off
 }
 
 #pragma mark - ActionsÏ
@@ -73,9 +74,9 @@
 
 - (IBAction)launchAtLoginCheckboxAction:(NSButton *)sender {
     if (self.launchAtLoginCheckbox.state == NSControlStateValueOn) {
-        [DNLoginServiceKit addLoginItem];
+        // [DNLoginServiceKit addLoginItem];  // Temporarily disabled
     } else {
-        [DNLoginServiceKit removeLoginItem];
+        // [DNLoginServiceKit removeLoginItem];  // Temporarily disabled
     }
 }
 

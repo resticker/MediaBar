@@ -23,8 +23,6 @@
 		6E3FB6EA24418BD900A343FE /* GeneralPreferencesTabPageViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E3FB6E924418BD900A343FE /* GeneralPreferencesTabPageViewController.m */; };
 		6E3FB6ED2441920F00A343FE /* PreferencesCheckbox.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E3FB6EC2441920F00A343FE /* PreferencesCheckbox.m */; };
 		6E3FB6F02441A69900A343FE /* PreferencesPopUpButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E3FB6EF2441A69900A343FE /* PreferencesPopUpButton.m */; };
-		6E3FB73024437B3600A343FE /* DNLoginServiceKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E3FB72E24437ADE00A343FE /* DNLoginServiceKit.framework */; };
-		6E3FB73124437B3600A343FE /* DNLoginServiceKit.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6E3FB72E24437ADE00A343FE /* DNLoginServiceKit.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6E6BF6B724502D4100702DE0 /* PrivateMediaRemote.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E376BA2245027E3005528CF /* PrivateMediaRemote.framework */; };
 		6E6BF6B824502D4100702DE0 /* PrivateMediaRemote.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 6E376BA2245027E3005528CF /* PrivateMediaRemote.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		6E6BF6BE2450301B00702DE0 /* LicenseView.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E6BF6BD2450301B00702DE0 /* LicenseView.m */; };
@@ -62,7 +60,6 @@
 			dstSubfolderSpec = 10;
 			files = (
 				9B6B718B26ED449000D1D815 /* MASShortcut.framework in Embed Frameworks */,
-				6E3FB73124437B3600A343FE /* DNLoginServiceKit.framework in Embed Frameworks */,
 				9BD934BC26BF17BC00F4C2C8 /* MediaRemote.framework in Embed Frameworks */,
 				6E6BF6B824502D4100702DE0 /* PrivateMediaRemote.framework in Embed Frameworks */,
 			);
@@ -116,8 +113,6 @@
 		6E3FB6EE2441A69900A343FE /* PreferencesPopUpButton.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = PreferencesPopUpButton.h; sourceTree = "<group>"; };
 		6E3FB6EF2441A69900A343FE /* PreferencesPopUpButton.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PreferencesPopUpButton.m; sourceTree = "<group>"; };
 		6E3FB72C2443799D00A343FE /* Cartfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Cartfile; sourceTree = "<group>"; };
-		6E3FB72E24437ADE00A343FE /* DNLoginServiceKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = DNLoginServiceKit.framework; path = Carthage/Build/Mac/DNLoginServiceKit.framework; sourceTree = "<group>"; };
-		6E3FB73624437D4900A343FE /* DNLoginServiceKit.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = DNLoginServiceKit.framework.dSYM; path = Carthage/Build/Mac/DNLoginServiceKit.framework.dSYM; sourceTree = "<group>"; };
 		6E3FB744244438FC00A343FE /* Configuration/ConfigExample.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = Configuration/ConfigExample.xcconfig; sourceTree = "<group>"; };
 		6E6BF6BC2450301B00702DE0 /* LicenseView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LicenseView.h; sourceTree = "<group>"; };
 		6E6BF6BD2450301B00702DE0 /* LicenseView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = LicenseView.m; sourceTree = "<group>"; };
@@ -167,7 +162,6 @@
 				6E8F7F54244964F9000FBC83 /* ScriptingBridge.framework in Frameworks */,
 				9BD934BB26BF17BC00F4C2C8 /* MediaRemote.framework in Frameworks */,
 				6E6BF6C0245030AE00702DE0 /* PDFKit.framework in Frameworks */,
-				6E3FB73024437B3600A343FE /* DNLoginServiceKit.framework in Frameworks */,
 				9B6B718A26ED449000D1D815 /* MASShortcut.framework in Frameworks */,
 				6E6BF6B724502D4100702DE0 /* PrivateMediaRemote.framework in Frameworks */,
 			);
@@ -222,7 +216,6 @@
 				6E6BF6BF245030AE00702DE0 /* PDFKit.framework */,
 				6E376BA2245027E3005528CF /* PrivateMediaRemote.framework */,
 				6E052D4E244935CB007D37A0 /* ScriptingBridge.framework */,
-				6E3FB72E24437ADE00A343FE /* DNLoginServiceKit.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -248,7 +241,6 @@
 			isa = PBXGroup;
 			children = (
 				9B6B718C26ED449F00D1D815 /* MASShortcut.framework.dSYM */,
-				6E3FB73624437D4900A343FE /* DNLoginServiceKit.framework.dSYM */,
 				6EB3808B2453AF9D00307E8C /* PrivateMediaRemote.framework.dSYM */,
 			);
 			name = Symbols;
@@ -583,7 +575,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 0.0.0.0.0;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = V6D7S5K2DC;
 				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -595,6 +587,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 0.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = xyz.resticker.MediaBar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -615,7 +608,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				CURRENT_PROJECT_VERSION = 0.0.0.0.0;
-				DEVELOPMENT_TEAM = "";
+				DEVELOPMENT_TEAM = V6D7S5K2DC;
 				ENABLE_HARDENED_RUNTIME = YES;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
@@ -627,6 +620,7 @@
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 				);
+				MACOSX_DEPLOYMENT_TARGET = 15.0;
 				MARKETING_VERSION = 0.0.0;
 				PRODUCT_BUNDLE_IDENTIFIER = xyz.resticker.MediaBar;
 				PRODUCT_NAME = "$(TARGET_NAME)";

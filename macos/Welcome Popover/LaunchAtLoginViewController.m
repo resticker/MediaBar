@@ -1,4 +1,4 @@
-@import DNLoginServiceKit;
+// @import DNLoginServiceKit;  // Temporarily disabled
 
 #import "LaunchAtLoginViewController.h"
 
@@ -11,7 +11,7 @@
 @implementation LaunchAtLoginViewController
 
 - (IBAction)enableLaunchAtLoginAction:(NSButton *)sender {
-    [DNLoginServiceKit addLoginItem];
+    // [DNLoginServiceKit addLoginItem];  // Temporarily disabled
     [self nextAction:sender];
 }
 

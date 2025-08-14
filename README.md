@@ -1,56 +1,59 @@
-![MusicBar](https://raw.githubusercontent.com/dimitarnestorov/MusicBar/gh-pages/github-title.png)
+# MediaBar
 
-<p align="center">
-iTunes and Spotify in your menu bar
-</p>
-<p align="center">
-<a href="https://github.com/dimitarnestorov/MusicBar/releases/latest/download/MusicBar.zip"><img src="https://raw.githubusercontent.com/dimitarnestorov/MusicBar/gh-pages/download.png" width="130" height="50"></a>
-<a href="https://join.slack.com/t/dimitarnestorov/shared_invite/zt-doeglpiu-M6hiX4aKxwD9o2tqLUwlTQ"><img alt="Slack" src="https://raw.githubusercontent.com/dimitarnestorov/MusicBar/gh-pages/slack.png" width="130" height="50"></a>
-</p>
-<p align="center">
-<img src="https://raw.githubusercontent.com/dimitarnestorov/MusicBar/gh-pages/showcase.gif" alt="Showcase" width="400">
-</p>
+A macOS menu bar app for controlling media playback with global keyboard shortcuts and enhanced skip functionality.
 
-## Get MusicBar
+## What it does
 
-[Download the latest release](https://github.com/dimitarnestorov/MusicBar/releases/latest/download/MusicBar.zip)
+MediaBar displays current media information (title, artist, album artwork) in your menu bar and provides comprehensive playback controls through both the menu bar interface and global keyboard shortcuts.
 
- macOS 10.12 or later required
+### Key Features
 
-## Player Support
+- **Menu Bar Display**: Shows currently playing track info and album artwork
+- **Global Keyboard Shortcuts**: Control playback from anywhere on your system
+- **Skip Controls**: Skip forward/backward by customizable time intervals (not just track-to-track)
+- **Configurable Skip Duration**: Set custom skip amounts (default: 5 seconds)
+- **Universal Player Support**: Works with any media player that supports macOS Now Playing
 
-Every player that supports the Now Playing Today widget is supported. If the player doesn't support album artwork in the widget (shows the player icon) then MusicBar doesn't support it either (with some exceptions).
+## Controls Available
 
-|Player|Controls|Artist|Title|Album|Album Art|
-|-|-|-|-|-|-|
-|iTunes / Music|✅|✅|✅|✅|✅|
-|Spotify|✅|✅|✅|✅|✅<sup>\[1\]</sup>|
-|TIDAL|✅|✅|✅|✅|❌<sup>\[2\]</sup>|
-|Deezer|❌|❌|❌|❌|❌|
-|Qobuz|❌|❌|❌|❌|❌|
-|[Google Play Music Desktop Player](https://www.googleplaymusicdesktopplayer.com/)|✅|✅|✅|✅|❌<sup>\[2\]</sup>|
-|[Auryo](https://auryo.com/)|✅|✅|✅|✅|❌<sup>\[3\]</sup>|
-|Google Chrome<sup>\[4\]</sup>|✅|✅|✅|✅|❌|
-|IINA|✅|✅|✅|✅|❌|
-|QuickTime Player|✅|✅|✅|✅|❌|
-|VOX<sup>\[2\]</sup>|❌|❌|❌|❌|❌|
-|VLC<sup>\[2\]</sup>|❌|❌|❌|❌|❌|
+### Menu Bar Controls
+- Play/Pause
+- Previous Track
+- Next Track
+- Skip Backward (by seconds)
+- Skip Forward (by seconds)
 
-1. Support was implemented as a part of MusicBar (it may stop working)
-1. Working on a solution
-1. Waiting for https://github.com/auryo/electron-media-service/pull/1 to be merged
-1. Requires media keys to be enabled
+### Global Keyboard Shortcuts
+All controls above can be assigned custom keyboard shortcuts that work system-wide:
+- Play/Pause shortcut
+- Previous Track shortcut  
+- Next Track shortcut
+- Skip Backward shortcut (by duration)
+- Skip Forward shortcut (by duration)
 
-## Feature requests
+## Settings
 
-Issues labeled with [feature request](https://github.com/dimitarnestorov/MusicBar/labels/feature%20request) that have the most 👍 reactions will be prioritized.
+### Skip Duration Configuration
+- **Skip Backward Duration**: Customizable seconds to skip backward (default: 5s)
+- **Skip Forward Duration**: Customizable seconds to skip forward (default: 5s)
 
-## Credits
+### Display Options
+- Show/hide artist name
+- Show/hide track title
+- Show/hide album name
+- Show/hide remaining time
+- Hide text when paused
+- Maximum display width
+- Custom menu bar icons
 
-MusicBar is heavily inspired from [SpotMenu](https://github.com/kmikiy/SpotMenu) which is a combination of [TrayPlay](https://github.com/mborgerson/TrayPlay) and [Statusfy](https://github.com/paulyoung/Statusfy).
+## Supported Players
 
-## License
+Works with any player that supports macOS Now Playing system, including:
+- Apple Music/iTunes
+- Spotify
+- TIDAL
+- Chrome (web players)
+- IINA
+- QuickTime Player
+- And many others
 
-Licensed under the [European Union Public Licence (EUPL)](https://github.com/dimitarnestorov/MusicBar/blob/master/LICENSE). [Translations 🔗](https://joinup.ec.europa.eu/collection/eupl/eupl-text-eupl-12).
-
-Copyright © 2020 Dimitar Nestorov

@@ -3,7 +3,7 @@
 #import "AppDelegate.h"
 
 #import "NSString+GetMusicBarVersion.h"
-#import <MASShortcut/Shortcut.h>
+// #import <MASShortcut/Shortcut.h>  // Temporarily disabled for media-control testing
 
 #import "CustomMutableURLRequest.h"
 
@@ -130,6 +130,8 @@
                                              object:nil];
     
     
+    // Temporarily disabled MASShortcut bindings to test media-control integration
+    /*
     [[MASShortcutBinder sharedBinder]
         bindShortcutWithDefaultsKey:kPreferenceGlobalShortcutPlayPause
         toAction:^{
@@ -159,6 +161,7 @@
         toAction:^{
             [self.globalState skipForward];
     }];
+    */
 
     
     self.statusItem = [NSStatusBar.systemStatusBar statusItemWithLength:NSVariableStatusItemLength];
@@ -226,6 +229,10 @@
 }
 
 - (void)infoDidChange {
+    NSLog(@"infoDidChange called - artist: %@, title: %@, isPlaying: %@", 
+          self.globalState.artist, self.globalState.title, 
+          self.globalState.isPlaying ? @"YES" : @"NO");
+    
     NSMutableAttributedString *title = [[NSMutableAttributedString alloc] init];
     if (self.icon.length > 0) {
         NSString *toAppend = [NSString stringWithFormat:@"%@ ", self.icon];
