@@ -36,3 +36,15 @@ MediaBar.zip
 
 # Finder
 Icon
+
+# Test and debug files
+test_*
+*_test.py
+*_test.m
+media_bridge_test.py
+media_poller.py
+minimal_mediabar_test.m
+simple_test.py
+
+# Build artifacts
+*.o
