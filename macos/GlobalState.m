@@ -239,6 +239,7 @@ static void commonInit(GlobalState *self) {
 - (void)updateFromMediaControlData:(NSDictionary *)payload {
     if (!payload || [payload count] == 0) return;
     
+    
     BOOL didChange = NO;
     
     // Update playing state
@@ -266,19 +267,21 @@ static void commonInit(GlobalState *self) {
         }
     }
     
-    if (payload[@"artist"] != nil) {
-        NSString *newArtist = payload[@"artist"];
+    // Update artist - only if key is present in payload
+    if ([payload.allKeys containsObject:@"artist"]) {
+        NSString *newArtist = payload[@"artist"]; // Can be nil or actual value
         if (![self.artist isEqualToString:newArtist]) {
-            NSLog(@"👤 Artist changed: %@ -> %@", self.artist ?: @"(none)", newArtist);
+            NSLog(@"👤 Artist changed: %@ -> %@", self.artist ?: @"(none)", newArtist ?: @"(none)");
             self.artist = newArtist;
             didChange = YES;
         }
     }
     
-    if (payload[@"album"] != nil) {
-        NSString *newAlbum = payload[@"album"];
+    // Update album - only if key is present in payload  
+    if ([payload.allKeys containsObject:@"album"]) {
+        NSString *newAlbum = payload[@"album"]; // Can be nil or actual value
         if (![self.album isEqualToString:newAlbum]) {
-            NSLog(@"💿 Album changed: %@ -> %@", self.album ?: @"(none)", newAlbum);
+            NSLog(@"💿 Album changed: %@ -> %@", self.album ?: @"(none)", newAlbum ?: @"(none)");
             self.album = newAlbum;
             didChange = YES;
         }

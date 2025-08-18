@@ -57,3 +57,58 @@ Works with any player that supports macOS Now Playing system, including:
 - QuickTime Player
 - And many others
 
+## Building
+
+### Prerequisites
+- Xcode 16.4 or later
+- macOS 15.0+ SDK
+- Carthage (for dependencies)
+
+### Build Instructions
+
+#### Development/Debug Build
+```bash
+# Install dependencies
+carthage update --platform macOS
+
+# Build debug version (either scheme works)
+xcodebuild -scheme MediaBar -configuration Debug clean build
+# or
+xcodebuild -scheme Debug -configuration Debug clean build
+
+# Built app location:
+# ~/Library/Developer/Xcode/DerivedData/MediaBar-*/Build/Products/Debug/MediaBar.app
+```
+
+#### Production/Release Build
+```bash
+# Install dependencies
+carthage update --platform macOS
+
+# Build optimized release version
+xcodebuild -scheme MediaBar -configuration Release clean build
+
+# Built app location:
+# ~/Library/Developer/Xcode/DerivedData/MediaBar-*/Build/Products/Release/MediaBar.app
+```
+
+#### Install to Applications
+```bash
+# For Release build (recommended):
+ditto "~/Library/Developer/Xcode/DerivedData/MediaBar-*/Build/Products/Release/MediaBar.app" /Applications/MediaBar.app
+
+# Fix code signing for local development:
+codesign --remove-signature /Applications/MediaBar.app/Contents/Frameworks/PrivateMediaRemote.framework
+codesign --force --sign - /Applications/MediaBar.app/Contents/Frameworks/PrivateMediaRemote.framework  
+codesign --force --sign - /Applications/MediaBar.app
+```
+
+### Build Configurations
+
+- **Debug**: Includes debug symbols, no optimization (`-O0`), faster compile time
+  - Binary size: ~56KB (single architecture) 
+- **Release**: Optimized for size (`-Os`), stripped symbols, slower compile time
+  - Binary size: ~793KB (universal binary: arm64 + x86_64)
+
+**Note**: Debug builds may only include the current architecture (arm64 on Apple Silicon), while Release builds include both Intel and Apple Silicon architectures for distribution.
+

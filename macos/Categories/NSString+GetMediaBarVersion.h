@@ -7,9 +7,9 @@ typedef enum {
     UpdatesVersionUseCase,
 } VersionUseCase;
 
-@interface NSString (GetMusicBarVersion)
+@interface NSString (GetMediaBarVersion)
 
-+ (NSString *)getMusicBarVersionFor:(VersionUseCase)useCase;
++ (NSString *)getMediaBarVersionFor:(VersionUseCase)useCase;
 
 @end
 

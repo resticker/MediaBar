@@ -1,8 +1,8 @@
-#import "NSString+GetMusicBarVersion.h"
+#import "NSString+GetMediaBarVersion.h"
 
-@implementation NSString (GetMusicBarVersion)
+@implementation NSString (GetMediaBarVersion)
 
-+ (NSString *)getMusicBarVersionFor:(VersionUseCase)useCase {
++ (NSString *)getMediaBarVersionFor:(VersionUseCase)useCase {
 #ifdef DEBUG
     NSString *fourthComponent = @"1";
     NSString *fifthComponent = @"0";

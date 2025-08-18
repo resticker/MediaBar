@@ -2,7 +2,7 @@
 
 #import "AppDelegate.h"
 
-#import "NSString+GetMusicBarVersion.h"
+#import "NSString+GetMediaBarVersion.h"
 #import "MediaBar-Swift.h"
 
 #import "CustomMutableURLRequest.h"

@@ -43,7 +43,7 @@
 		6E8F7F5A244973FE000FBC83 /* Constants.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6E8F7F58244973FE000FBC83 /* Constants.mm */; };
 		6E91D1042454CC5A00AA9875 /* musicbar.ttf in CopyFiles */ = {isa = PBXBuildFile; fileRef = 6E6BF6FE24515C7800702DE0 /* musicbar.ttf */; };
 		6EB380802453988B00307E8C /* CustomMutableURLRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB3807F2453988B00307E8C /* CustomMutableURLRequest.m */; };
-		6EB3808324539BBF00307E8C /* NSString+GetMusicBarVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB3808224539BBF00307E8C /* NSString+GetMusicBarVersion.m */; };
+		6EB3808324539BBF00307E8C /* NSString+GetMediaBarVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB3808224539BBF00307E8C /* NSString+GetMediaBarVersion.m */; };
 		9B55088426ED67100023948A /* ShortcutsTabViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9B55088326ED67100023948A /* ShortcutsTabViewController.mm */; };
 		9B5CED232E52C18500144671 /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 9B5CED222E52C18500144671 /* KeyboardShortcuts */; };
 		9B5CED252E52C19C00144671 /* ShortcutDefinitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5CED242E52C19C00144671 /* ShortcutDefinitions.swift */; };
@@ -137,13 +137,13 @@
 		6E81930224412A5000879AEE /* PreferencesTabPageViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = PreferencesTabPageViewController.m; sourceTree = "<group>"; };
 		6E887B182448F14E0011849F /* Gemfile */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Gemfile; sourceTree = "<group>"; };
 		6E887B192448F14E0011849F /* Gemfile.lock */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Gemfile.lock; sourceTree = "<group>"; };
-		6E8F7F53244963D4000FBC83 /* Configuration/MusicBar.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Configuration/MusicBar.entitlements; sourceTree = "<group>"; };
+		6E8F7F53244963D4000FBC83 /* Configuration/MediaBar.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Configuration/MediaBar.entitlements; sourceTree = "<group>"; };
 		6E8F7F58244973FE000FBC83 /* Constants.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = Constants.mm; sourceTree = "<group>"; };
 		6E8F7F59244973FE000FBC83 /* Constants.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Constants.h; sourceTree = "<group>"; };
 		6EB3807E2453988B00307E8C /* CustomMutableURLRequest.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CustomMutableURLRequest.h; sourceTree = "<group>"; };
 		6EB3807F2453988B00307E8C /* CustomMutableURLRequest.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CustomMutableURLRequest.m; sourceTree = "<group>"; };
-		6EB3808124539BBF00307E8C /* NSString+GetMusicBarVersion.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+GetMusicBarVersion.h"; sourceTree = "<group>"; };
-		6EB3808224539BBF00307E8C /* NSString+GetMusicBarVersion.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+GetMusicBarVersion.m"; sourceTree = "<group>"; };
+		6EB3808124539BBF00307E8C /* NSString+GetMediaBarVersion.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "NSString+GetMediaBarVersion.h"; sourceTree = "<group>"; };
+		6EB3808224539BBF00307E8C /* NSString+GetMediaBarVersion.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = "NSString+GetMediaBarVersion.m"; sourceTree = "<group>"; };
 		6EB3808B2453AF9D00307E8C /* PrivateMediaRemote.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = PrivateMediaRemote.framework.dSYM; path = Carthage/Build/Mac/PrivateMediaRemote.framework.dSYM; sourceTree = "<group>"; };
 		9B55088326ED67100023948A /* ShortcutsTabViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ShortcutsTabViewController.mm; sourceTree = "<group>"; };
 		9B55088526ED672D0023948A /* ShortcutsTabViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShortcutsTabViewController.h; sourceTree = "<group>"; };
@@ -230,8 +230,8 @@
 				6E04241C243D44CC00E113F4 /* NSString+FormatTime.mm */,
 				6E376A5B244E54B7005528CF /* NSData+MD5.h */,
 				6E376A5C244E54B7005528CF /* NSData+MD5.m */,
-				6EB3808124539BBF00307E8C /* NSString+GetMusicBarVersion.h */,
-				6EB3808224539BBF00307E8C /* NSString+GetMusicBarVersion.m */,
+				6EB3808124539BBF00307E8C /* NSString+GetMediaBarVersion.h */,
+				6EB3808224539BBF00307E8C /* NSString+GetMediaBarVersion.m */,
 			);
 			path = Categories;
 			sourceTree = "<group>";
@@ -303,7 +303,7 @@
 				6E3FB72C2443799D00A343FE /* Cartfile */,
 				6E887B182448F14E0011849F /* Gemfile */,
 				6E887B192448F14E0011849F /* Gemfile.lock */,
-				6E8F7F53244963D4000FBC83 /* Configuration/MusicBar.entitlements */,
+				6E8F7F53244963D4000FBC83 /* Configuration/MediaBar.entitlements */,
 				6E3FB744244438FC00A343FE /* Configuration/ConfigExample.xcconfig */,
 				6E0423772439F6AF00E113F4 /* Configuration/Info.plist */,
 				6E3FB6D92441458100A343FE /* Configuration/DefaultPreferences.plist */,
@@ -437,7 +437,7 @@
 				6E0423C3243A37FA00E113F4 /* PopoverViewController.mm in Sources */,
 				6E376A5D244E54B7005528CF /* NSData+MD5.m in Sources */,
 				6E8192F6243E94A100879AEE /* ProgressContainerView.m in Sources */,
-				6EB3808324539BBF00307E8C /* NSString+GetMusicBarVersion.m in Sources */,
+				6EB3808324539BBF00307E8C /* NSString+GetMediaBarVersion.m in Sources */,
 				6E0423712439F6AE00E113F4 /* AppDelegate.m in Sources */,
 				6E0423FC243D240D00E113F4 /* GlobalState.m in Sources */,
 			);
@@ -573,7 +573,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = Configuration/MusicBar.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Configuration/MediaBar.entitlements;
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -583,7 +583,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/Mac",
-					"$(PROJECT_DIR)/MusicBar.xcodeproj/Private\\ Frameworks",
+					"$(PROJECT_DIR)/MediaBar.xcodeproj/Private\\ Frameworks",
 				);
 				INFOPLIST_FILE = Configuration/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
@@ -610,7 +610,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CLANG_ENABLE_MODULES = YES;
-				CODE_SIGN_ENTITLEMENTS = Configuration/MusicBar.entitlements;
+				CODE_SIGN_ENTITLEMENTS = Configuration/MediaBar.entitlements;
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
@@ -624,7 +624,7 @@
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Carthage/Build/Mac",
-					"$(PROJECT_DIR)/MusicBar.xcodeproj/Private\\ Frameworks",
+					"$(PROJECT_DIR)/MediaBar.xcodeproj/Private\\ Frameworks",
 				);
 				GCC_GENERATE_DEBUGGING_SYMBOLS = NO;
 				GCC_OPTIMIZATION_LEVEL = s;

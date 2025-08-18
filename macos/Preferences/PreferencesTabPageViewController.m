@@ -13,7 +13,7 @@
 }
 
 - (IBAction)githubButtonAction:(NSButton *)sender {
-    [NSWorkspace.sharedWorkspace openURL:[NSURL URLWithString:@"https://github.com/dimitarnestorov/MusicBar"]];
+    [NSWorkspace.sharedWorkspace openURL:[NSURL URLWithString:@"https://github.com/resticker/MediaBar"]];
 }
 
 @end

@@ -7,15 +7,15 @@ platform :mac do
       skip_package_pkg: true,
     )
     notarize(
-      package: "MusicBar.app",
+      package: "MediaBar.app",
       username: ENV['APPLE_ID_EMAIL'],
       print_log: true,
     )
     sentry_upload_dsym(
       auth_token: ENV['SENTRY_AUTH_TOKEN'],
-      org_slug: "musicbar",
+      org_slug: "mediabar",
       project_slug: "mac",
-      dsym_path: './MusicBar.app.dSYM.zip',
+      dsym_path: './MediaBar.app.dSYM.zip',
       info_plist: './Configuration/Info.plist',
     )
   end

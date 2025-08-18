@@ -276,9 +276,9 @@
         </menu>
         <menu title="Main Menu" systemMenu="main" id="Rfq-fC-L1A">
             <items>
-                <menuItem title="MusicBar" id="TB4-NH-xG0">
+                <menuItem title="MediaBar" id="TB4-NH-xG0">
                     <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="MusicBar" systemMenu="apple" id="QRm-73-TNC"/>
+                    <menu key="submenu" title="MediaBar" systemMenu="apple" id="QRm-73-TNC"/>
                 </menuItem>
             </items>
             <point key="canvasLocation" x="60" y="-118"/>

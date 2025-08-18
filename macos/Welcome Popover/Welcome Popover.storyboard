@@ -18,7 +18,7 @@
                             <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ciu-GL-u34">
                                 <rect key="frame" x="18" y="117" width="264" height="48"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" selectable="YES" alignment="center" title="It only takes a few short steps to set up MusicBar. Click Next to get started." id="ODd-HN-Tle">
+                                <textFieldCell key="cell" selectable="YES" alignment="center" title="It only takes a few short steps to set up MediaBar. Click Next to get started." id="ODd-HN-Tle">
                                     <font key="font" metaFont="system"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -90,7 +90,7 @@ DQ
                             <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="Hzw-cb-Dyc">
                                 <rect key="frame" x="18" y="150" width="264" height="48"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" selectable="YES" alignment="center" title="Get the latest features, bug fixes, and improvements by updating MusicBar automatically." id="nUi-Oe-RHw">
+                                <textFieldCell key="cell" selectable="YES" alignment="center" title="Get the latest features, bug fixes, and improvements by updating MediaBar automatically." id="nUi-Oe-RHw">
                                     <font key="font" metaFont="cellTitle"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -101,7 +101,7 @@ DQ
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                 <textFieldCell key="cell" selectable="YES" alignment="center" id="Oz9-TR-OEA">
                                     <font key="font" metaFont="cellTitle"/>
-                                    <string key="title">You will receive a notification when the updates are ready to install. If you dismiss it updates will be installed automatically when MusicBar restarts.</string>
+                                    <string key="title">You will receive a notification when the updates are ready to install. If you dismiss it updates will be installed automatically when MediaBar restarts.</string>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                 </textFieldCell>
@@ -109,7 +109,7 @@ DQ
                             <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="gbE-bO-wgu">
                                 <rect key="frame" x="18" y="206" width="264" height="26"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" alignment="center" title="Keep MusicBar Up to Date" id="NGH-2f-DvF">
+                                <textFieldCell key="cell" alignment="center" title="Keep MediaBar Up to Date" id="NGH-2f-DvF">
                                     <font key="font" metaFont="systemSemibold" size="21"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -152,7 +152,7 @@ DQ
                             <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="6uH-Xm-Aac">
                                 <rect key="frame" x="18" y="134" width="264" height="64"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" selectable="YES" alignment="center" title="Help MusicBar development by choosing to share app activity and crash data. You can change your decision later in Preferences." id="Y8I-RI-XpB">
+                                <textFieldCell key="cell" selectable="YES" alignment="center" title="Help MediaBar development by choosing to share app activity and crash data. You can change your decision later in Preferences." id="Y8I-RI-XpB">
                                     <font key="font" metaFont="cellTitle"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -220,7 +220,7 @@ DQ
                             <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="wTG-qp-uzc">
                                 <rect key="frame" x="18" y="155" width="264" height="43"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
-                                <textFieldCell key="cell" selectable="YES" alignment="center" title="Choose to start MusicBar automatically when you login." id="UcW-ra-CVp">
+                                <textFieldCell key="cell" selectable="YES" alignment="center" title="Choose to start MediaBar automatically when you login." id="UcW-ra-CVp">
                                     <font key="font" metaFont="cellTitle"/>
                                     <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                     <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>

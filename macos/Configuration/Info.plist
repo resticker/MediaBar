@@ -31,9 +31,11 @@
 	<key>MBSentryDSN</key>
 	<string>$(SENTRY_DSN)</string>
 	<key>NSAppleEventsUsageDescription</key>
-	<string>Allow MusicBar to get the album artwork from Spotify</string>
+	<string>Allow MediaBar to get the album artwork from Spotify</string>
 	<key>NSHumanReadableCopyright</key>
-	<string>Copyright © 2020 Dimitar Nestorov. Licensed under the EUPL.</string>
+	<string>Copyright © 2020 Dimitar Nestorov
+Copyright © 2024 Resticker
+Licensed under the EUPL.</string>
 	<key>NSMainNibFile</key>
 	<string>Main</string>
 	<key>NSPrincipalClass</key>
