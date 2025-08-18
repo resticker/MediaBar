@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -45,9 +45,8 @@
 		6EB380802453988B00307E8C /* CustomMutableURLRequest.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB3807F2453988B00307E8C /* CustomMutableURLRequest.m */; };
 		6EB3808324539BBF00307E8C /* NSString+GetMusicBarVersion.m in Sources */ = {isa = PBXBuildFile; fileRef = 6EB3808224539BBF00307E8C /* NSString+GetMusicBarVersion.m */; };
 		9B55088426ED67100023948A /* ShortcutsTabViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 9B55088326ED67100023948A /* ShortcutsTabViewController.mm */; };
-		9B6B718A26ED449000D1D815 /* MASShortcut.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9B6B718926ED449000D1D815 /* MASShortcut.framework */; };
-		9B6B718B26ED449000D1D815 /* MASShortcut.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9B6B718926ED449000D1D815 /* MASShortcut.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
-		9B6B718D26ED449F00D1D815 /* MASShortcut.framework.dSYM in Resources */ = {isa = PBXBuildFile; fileRef = 9B6B718C26ED449F00D1D815 /* MASShortcut.framework.dSYM */; };
+		9B5CED232E52C18500144671 /* KeyboardShortcuts in Frameworks */ = {isa = PBXBuildFile; productRef = 9B5CED222E52C18500144671 /* KeyboardShortcuts */; };
+		9B5CED252E52C19C00144671 /* ShortcutDefinitions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5CED242E52C19C00144671 /* ShortcutDefinitions.swift */; };
 		9BD934BB26BF17BC00F4C2C8 /* MediaRemote.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9BD934BA26BF17BC00F4C2C8 /* MediaRemote.framework */; };
 		9BD934BC26BF17BC00F4C2C8 /* MediaRemote.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 9BD934BA26BF17BC00F4C2C8 /* MediaRemote.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
@@ -59,7 +58,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				9B6B718B26ED449000D1D815 /* MASShortcut.framework in Embed Frameworks */,
 				9BD934BC26BF17BC00F4C2C8 /* MediaRemote.framework in Embed Frameworks */,
 				6E6BF6B824502D4100702DE0 /* PrivateMediaRemote.framework in Embed Frameworks */,
 			);
@@ -149,8 +147,8 @@
 		6EB3808B2453AF9D00307E8C /* PrivateMediaRemote.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = PrivateMediaRemote.framework.dSYM; path = Carthage/Build/Mac/PrivateMediaRemote.framework.dSYM; sourceTree = "<group>"; };
 		9B55088326ED67100023948A /* ShortcutsTabViewController.mm */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.objcpp; path = ShortcutsTabViewController.mm; sourceTree = "<group>"; };
 		9B55088526ED672D0023948A /* ShortcutsTabViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ShortcutsTabViewController.h; sourceTree = "<group>"; };
-		9B6B718926ED449000D1D815 /* MASShortcut.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MASShortcut.framework; path = Carthage/Build/Mac/MASShortcut.framework; sourceTree = "<group>"; };
-		9B6B718C26ED449F00D1D815 /* MASShortcut.framework.dSYM */ = {isa = PBXFileReference; lastKnownFileType = wrapper.dsym; name = MASShortcut.framework.dSYM; path = Carthage/Build/Mac/MASShortcut.framework.dSYM; sourceTree = "<group>"; };
+		9B5CED242E52C19C00144671 /* ShortcutDefinitions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ShortcutDefinitions.swift; sourceTree = "<group>"; };
+		9B5CED262E52C1C500144671 /* MediaBar-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "MediaBar-Bridging-Header.h"; sourceTree = "<group>"; };
 		9BD934BA26BF17BC00F4C2C8 /* MediaRemote.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MediaRemote.framework; path = ../../../../../System/Library/PrivateFrameworks/MediaRemote.framework; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -161,8 +159,8 @@
 			files = (
 				6E8F7F54244964F9000FBC83 /* ScriptingBridge.framework in Frameworks */,
 				9BD934BB26BF17BC00F4C2C8 /* MediaRemote.framework in Frameworks */,
+				9B5CED232E52C18500144671 /* KeyboardShortcuts in Frameworks */,
 				6E6BF6C0245030AE00702DE0 /* PDFKit.framework in Frameworks */,
-				9B6B718A26ED449000D1D815 /* MASShortcut.framework in Frameworks */,
 				6E6BF6B724502D4100702DE0 /* PrivateMediaRemote.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -173,6 +171,7 @@
 		6E0423632439F6AE00E113F4 = {
 			isa = PBXGroup;
 			children = (
+				9B5CED242E52C19C00144671 /* ShortcutDefinitions.swift */,
 				6E887B152448F10A0011849F /* Configuration */,
 				6E0423E8243A437700E113F4 /* Frameworks */,
 				6E3FB73824437D8800A343FE /* Symbols */,
@@ -197,6 +196,7 @@
 				6E0423C2243A37FA00E113F4 /* PopoverViewController.mm */,
 				6E6BF6FC245157F500702DE0 /* product-hunt-logo-orange-240.png */,
 				6E6BF6FE24515C7800702DE0 /* musicbar.ttf */,
+				9B5CED262E52C1C500144671 /* MediaBar-Bridging-Header.h */,
 			);
 			sourceTree = "<group>";
 		};
@@ -211,7 +211,6 @@
 		6E0423E8243A437700E113F4 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				9B6B718926ED449000D1D815 /* MASShortcut.framework */,
 				9BD934BA26BF17BC00F4C2C8 /* MediaRemote.framework */,
 				6E6BF6BF245030AE00702DE0 /* PDFKit.framework */,
 				6E376BA2245027E3005528CF /* PrivateMediaRemote.framework */,
@@ -240,7 +239,6 @@
 		6E3FB73824437D8800A343FE /* Symbols */ = {
 			isa = PBXGroup;
 			children = (
-				9B6B718C26ED449F00D1D815 /* MASShortcut.framework.dSYM */,
 				6EB3808B2453AF9D00307E8C /* PrivateMediaRemote.framework.dSYM */,
 			);
 			name = Symbols;
@@ -347,6 +345,7 @@
 				TargetAttributes = {
 					6E04236B2439F6AE00E113F4 = {
 						CreatedOnToolsVersion = 11.4;
+						LastSwiftMigration = 1640;
 					};
 				};
 			};
@@ -359,6 +358,9 @@
 				Base,
 			);
 			mainGroup = 6E0423632439F6AE00E113F4;
+			packageReferences = (
+				9B5CED212E52C18500144671 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
+			);
 			productRefGroup = 6E04236D2439F6AE00E113F4 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -379,7 +381,6 @@
 				6E0423732439F6AF00E113F4 /* Assets.xcassets in Resources */,
 				6E6BF6FF24515C7800702DE0 /* musicbar.ttf in Resources */,
 				6E6BF7052452BE1400702DE0 /* Welcome Popover.storyboard in Resources */,
-				9B6B718D26ED449F00D1D815 /* MASShortcut.framework.dSYM in Resources */,
 				6E0423762439F6AF00E113F4 /* Main.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -422,6 +423,7 @@
 				6E6BF70B2452F58C00702DE0 /* WelcomeViewController.m in Sources */,
 				6E6BF6BE2450301B00702DE0 /* LicenseView.m in Sources */,
 				6E6BF70E2452F86100702DE0 /* AutomaticUpdatesViewController.m in Sources */,
+				9B5CED252E52C19C00144671 /* ShortcutDefinitions.swift in Sources */,
 				6E0423F6243B691700E113F4 /* NSImage+ProportionalScaling.m in Sources */,
 				6E3FB6EA24418BD900A343FE /* GeneralPreferencesTabPageViewController.m in Sources */,
 				6E6BF7022452B0AB00702DE0 /* VersionLabel.m in Sources */,
@@ -570,6 +572,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Configuration/MusicBar.entitlements;
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
@@ -592,6 +595,9 @@
 				PRODUCT_BUNDLE_IDENTIFIER = xyz.resticker.MediaBar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "MediaBar-Bridging-Header.h";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 6.0;
 				SYSTEM_FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
@@ -603,6 +609,7 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_ENTITLEMENTS = Configuration/MusicBar.entitlements;
 				CODE_SIGN_IDENTITY = "-";
 				CODE_SIGN_STYLE = Automatic;
@@ -625,6 +632,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = xyz.resticker.MediaBar;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SWIFT_OBJC_BRIDGING_HEADER = "MediaBar-Bridging-Header.h";
+				SWIFT_VERSION = 6.0;
 				SYSTEM_FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(SYSTEM_LIBRARY_DIR)/PrivateFrameworks",
@@ -654,6 +663,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		9B5CED212E52C18500144671 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/sindresorhus/KeyboardShortcuts";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 2.3.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		9B5CED222E52C18500144671 /* KeyboardShortcuts */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 9B5CED212E52C18500144671 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */;
+			productName = KeyboardShortcuts;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 6E0423642439F6AE00E113F4 /* Project object */;
 }

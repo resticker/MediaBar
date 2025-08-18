@@ -1,4 +1,5 @@
+github "Clipy/KeyHolder" "v3.0.1"
+github "Clipy/Magnet" "v3.4.0"
+github "Clipy/Sauce" "v2.4.1"
 github "PrivateFrameworks/PrivateMediaRemote" "v0.0.0"
 github "PrivateFrameworks/PrivateProtocolBuffer" "v0.0.0"
-github "dimitarnestorov/DNLoginServiceKit" "v1.0.0"
-github "shpakovski/MASShortcut" "10001acbf66522a20dedfc6002b750b99e1dd982"

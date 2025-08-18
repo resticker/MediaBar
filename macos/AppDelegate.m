@@ -3,7 +3,7 @@
 #import "AppDelegate.h"
 
 #import "NSString+GetMusicBarVersion.h"
-// #import <MASShortcut/Shortcut.h>  // Temporarily disabled for media-control testing
+#import "MediaBar-Swift.h"
 
 #import "CustomMutableURLRequest.h"
 
@@ -46,6 +46,8 @@
 //@property (strong) RACDisposable *interval;
 
 @property (strong) NSPopover *welcomePopover;
+
+@property (strong) MediaBarShortcuts *shortcuts;
 
 @end
 
@@ -130,46 +132,18 @@
                                              object:nil];
     
     
-    // Temporarily disabled MASShortcut bindings to test media-control integration
-    /*
-    [[MASShortcutBinder sharedBinder]
-        bindShortcutWithDefaultsKey:kPreferenceGlobalShortcutPlayPause
-        toAction:^{
-            [self.globalState togglePlayPause];
-    }];
-    
-    [[MASShortcutBinder sharedBinder]
-        bindShortcutWithDefaultsKey:kPreferenceGlobalShortcutPreviousTrack
-        toAction:^{
-            [self.globalState previous];
-    }];
-    
-    [[MASShortcutBinder sharedBinder]
-        bindShortcutWithDefaultsKey:kPreferenceGlobalShortcutNextTrack
-        toAction:^{
-            [self.globalState next];
-    }];
-    
-    [[MASShortcutBinder sharedBinder]
-        bindShortcutWithDefaultsKey:kPreferenceGlobalShortcutSkipBackward
-        toAction:^{
-            [self.globalState skipBackward];
-    }];
-    
-    [[MASShortcutBinder sharedBinder]
-        bindShortcutWithDefaultsKey:kPreferenceGlobalShortcutSkipForward
-        toAction:^{
-            [self.globalState skipForward];
-    }];
-    */
+    self.shortcuts = [MediaBarShortcuts shared];
+    [self setupGlobalShortcuts];
 
     
     self.statusItem = [NSStatusBar.systemStatusBar statusItemWithLength:NSVariableStatusItemLength];
-    self.statusItem.button.title = self.icon;
     self.statusItem.button.lineBreakMode = NSLineBreakByTruncatingTail;
     self.statusItem.button.target = self;
     self.statusItem.button.action = @selector(showPopover:);
     [self.statusItem.button sendActionOn:NSEventMaskLeftMouseUp | NSEventMaskRightMouseUp];
+    
+    // Initial icon display - this will be properly formatted by infoDidChange
+    [self infoDidChange];
     
     self.positioningWindow.opaque = YES;
     self.positioningWindow.backgroundColor = NSColor.clearColor;
@@ -317,5 +291,26 @@
 //    [self.globalState skipBackward];
 //}
 
+- (void)setupGlobalShortcuts {
+
+    __weak typeof(self) weakSelf = self;
+    
+    [self.shortcuts setupGlobalShortcutsWithPlayPauseAction:^{
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        [strongSelf.globalState togglePlayPause];
+    } previousAction:^{
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        [strongSelf.globalState previous];
+    } nextAction:^{
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        [strongSelf.globalState next];
+    } skipBackwardAction:^{
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        [strongSelf.globalState skipBackward];
+    } skipForwardAction:^{
+        __strong typeof(weakSelf) strongSelf = weakSelf;
+        [strongSelf.globalState skipForward];
+    }];
+}
 
 @end
