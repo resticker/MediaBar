@@ -8,7 +8,7 @@ open('Configuration/Config.xcconfig', 'w') { |f|
 
 versions = get_versions_from_ref ENV['GIT_REF']
 
-project_path = 'MusicBar.xcodeproj'
+project_path = 'MediaBar.xcodeproj'
 project = Xcodeproj::Project.open(project_path)
 project.targets.each do |target|
 	target.build_configurations.each do |config|

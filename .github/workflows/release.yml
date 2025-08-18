@@ -57,7 +57,7 @@ jobs:
         bundle install --jobs 4 --retry 3
         bundle exec ruby ../.github/scripts/setup_build.rb
         bundle exec fastlane release
-        zip -y -r MusicBar.zip MusicBar.app
+        zip -y -r MediaBar.zip MediaBar.app
 
     - name: Create release
       uses: actions/create-release@v1
@@ -66,7 +66,7 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Provided
       with:
         tag_name: ${{ github.ref }}
-        release_name: MusicBar ${{ github.ref }}
+        release_name: MediaBar ${{ github.ref }}
         draft: false
         prerelease: false
 
@@ -76,8 +76,8 @@ jobs:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }} # Provided
       with:
         upload_url: ${{ steps.create_release.outputs.upload_url }}
-        asset_path: ./macos/MusicBar.zip
-        asset_name: MusicBar.zip
+        asset_path: ./macos/MediaBar.zip
+        asset_name: MediaBar.zip
         asset_content_type: application/zip
 
     - name: Publish update

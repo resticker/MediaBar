@@ -7,7 +7,7 @@ require_relative 'get_versions_from_ref.rb'
 
 marketing_version, build_version, beta, semantic_version = get_versions_from_ref(ENV['GIT_REF']).values_at(:marketing_version, :build_version, :beta, :semantic_version)
 
-base_url = 'https://api.github.com/repos/dimitarnestorov/MusicBar/git/'
+base_url = 'https://api.github.com/repos/resticker/MediaBar/git/'
 auth = "token #{ENV['GITHUB_TOKEN']}"
 
 headers_get = { authorization: auth }
@@ -28,7 +28,7 @@ def content(build_version, semantic_version)
                 "pub_date": "#{DateTime.now.iso8601}",
                 "notes": "No notes",
                 "name": "#{build_version}",
-                "url": "https://github.com/dimitarnestorov/MusicBar/releases/download/#{semantic_version}/MusicBar.zip"
+                "url": "https://github.com/resticker/MediaBar/releases/download/#{semantic_version}/MediaBar.zip"
             \}
         \}
     \]

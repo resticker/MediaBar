@@ -239,10 +239,26 @@ static void commonInit(GlobalState *self) {
 - (void)updateFromMediaControlData:(NSDictionary *)payload {
     if (!payload || [payload count] == 0) return;
     
-    
     BOOL didChange = NO;
     
-    // Update playing state
+    // Check if this looks like a complete song change payload
+    // Complete payloads typically have title and other metadata keys present
+    BOOL hasTitle = [payload.allKeys containsObject:@"title"];
+    BOOL hasArtist = [payload.allKeys containsObject:@"artist"];
+    BOOL hasAlbum = [payload.allKeys containsObject:@"album"];
+    
+    // Consider it a complete song update if we have title + at least one other metadata field
+    // OR if we have just a title but it's different from current (song change)
+    BOOL isCompleteUpdate = (hasTitle && (hasArtist || hasAlbum)) ||
+                           (hasTitle && payload[@"title"] != nil && ![payload[@"title"] isEqualToString:self.title]);
+    
+#ifdef DEBUG
+    NSLog(@"📊 Payload analysis - title:%@ artist:%@ album:%@ -> complete update: %@", 
+          hasTitle ? @"YES" : @"NO", hasArtist ? @"YES" : @"NO", hasAlbum ? @"YES" : @"NO",
+          isCompleteUpdate ? @"YES" : @"NO");
+#endif
+    
+    // Update playing state (always process)
     if (payload[@"playing"] != nil) {
         BOOL newPlaying = [payload[@"playing"] boolValue];
         if (self.isPlaying != newPlaying) {
@@ -252,39 +268,60 @@ static void commonInit(GlobalState *self) {
             self.isPlaying = newPlaying;
             didChange = YES;
             
+#ifdef DEBUG
+            NSLog(@"🔍 [DEBUG] Play state change will trigger UI update");
+#endif
+            
             // Post playing state change notification
             [NSNotificationCenter.defaultCenter postNotificationName:GlobalStateNotification.isPlayingDidChange object:nil];
         }
     }
     
-    // Update track info
-    if (payload[@"title"] != nil) {
-        NSString *newTitle = payload[@"title"];
-        if (![self.title isEqualToString:newTitle]) {
-            NSLog(@"🎼 Title changed: %@ -> %@", self.title ?: @"(none)", newTitle);
-            self.title = newTitle;
-            didChange = YES;
+    // Only update track info for complete updates to avoid flashing
+    if (isCompleteUpdate) {
+        // Update title - always present in complete updates
+        if (hasTitle) {
+            NSString *newTitle = payload[@"title"]; // Can be nil or actual value
+            if (![self.title isEqualToString:newTitle]) {
+                NSLog(@"🎼 Title changed: %@ -> %@", self.title ?: @"(none)", newTitle ?: @"(none)");
+                self.title = newTitle;
+                didChange = YES;
+            }
         }
-    }
-    
-    // Update artist - only if key is present in payload
-    if ([payload.allKeys containsObject:@"artist"]) {
-        NSString *newArtist = payload[@"artist"]; // Can be nil or actual value
+        
+        // Update artist - clear if not present or empty in complete update
+        NSString *newArtist = nil;
+        if (hasArtist) {
+            newArtist = payload[@"artist"];
+            // Treat empty strings as nil for cleaner display
+            if (newArtist && [newArtist length] == 0) {
+                newArtist = nil;
+            }
+        }
         if (![self.artist isEqualToString:newArtist]) {
             NSLog(@"👤 Artist changed: %@ -> %@", self.artist ?: @"(none)", newArtist ?: @"(none)");
             self.artist = newArtist;
             didChange = YES;
         }
-    }
-    
-    // Update album - only if key is present in payload  
-    if ([payload.allKeys containsObject:@"album"]) {
-        NSString *newAlbum = payload[@"album"]; // Can be nil or actual value
+        
+        // Update album - clear if not present or empty in complete update
+        NSString *newAlbum = nil;
+        if (hasAlbum) {
+            newAlbum = payload[@"album"];
+            // Treat empty strings as nil for cleaner display
+            if (newAlbum && [newAlbum length] == 0) {
+                newAlbum = nil;
+            }
+        }
         if (![self.album isEqualToString:newAlbum]) {
             NSLog(@"💿 Album changed: %@ -> %@", self.album ?: @"(none)", newAlbum ?: @"(none)");
             self.album = newAlbum;
             didChange = YES;
         }
+    } else {
+#ifdef DEBUG
+        NSLog(@"⏭️ Skipping track info update - incomplete payload");
+#endif
     }
     
     // Update timing info

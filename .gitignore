@@ -48,3 +48,6 @@ simple_test.py
 
 # Build artifacts
 *.o
+
+# Swift Package Manager
+**/xcshareddata/swiftpm/

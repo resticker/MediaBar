@@ -207,6 +207,27 @@
           self.globalState.artist, self.globalState.title, 
           self.globalState.isPlaying ? @"YES" : @"NO");
     
+#ifdef DEBUG
+    static NSDate *lastUpdateTime = nil;
+    NSDate *now = [NSDate date];
+    NSTimeInterval timeSinceLastUpdate = lastUpdateTime ? [now timeIntervalSinceDate:lastUpdateTime] : 0;
+    lastUpdateTime = now;
+    
+    NSLog(@"🔍 [DEBUG] Display Logic Check (%.3fs since last):", timeSinceLastUpdate);
+    NSLog(@"  - isPlaying: %@", self.globalState.isPlaying ? @"YES" : @"NO");
+    NSLog(@"  - hideTextWhenPaused: %@", self.hideTextWhenPaused ? @"YES" : @"NO");
+    NSLog(@"  - showArtist: %@, showTitle: %@, showAlbum: %@", 
+          self.showArtist ? @"YES" : @"NO", 
+          self.showTitle ? @"YES" : @"NO", 
+          self.showAlbum ? @"YES" : @"NO");
+    NSLog(@"  - Media data: artist='%@', title='%@', album='%@'", 
+          self.globalState.artist ?: @"(nil)", 
+          self.globalState.title ?: @"(nil)", 
+          self.globalState.album ?: @"(nil)");
+    NSLog(@"  - Will show text: %@", 
+          (self.globalState.isPlaying || !self.hideTextWhenPaused) ? @"YES" : @"NO");
+#endif
+    
     NSMutableAttributedString *title = [[NSMutableAttributedString alloc] init];
     if (self.icon.length > 0) {
         NSString *toAppend = [NSString stringWithFormat:@"%@ ", self.icon];
@@ -230,6 +251,11 @@
         if (self.globalState.title != nil && self.showTitle) [artistTitleAlbum addObject:self.globalState.title];
         if (self.globalState.album != nil && self.showAlbum) [artistTitleAlbum addObject:self.globalState.album];
 
+#ifdef DEBUG
+        NSLog(@"  - Text components to show: %@", artistTitleAlbum);
+        NSLog(@"  - Component count: %lu", (unsigned long)artistTitleAlbum.count);
+#endif
+
         if (artistTitleAlbum.count == 1) {
             NSString *toAppend = [artistTitleAlbum objectAtIndex:0];
             NSUInteger lengthBeforeAppend = title.mutableString.length;
@@ -247,6 +273,11 @@
             [title addAttribute:NSFontAttributeName value:StatusItemTextFont range:NSMakeRange(lengthBeforeAppend, toAppend.length)];
         }
     }
+#ifdef DEBUG
+    else {
+        NSLog(@"  - Text display SKIPPED: paused and hideTextWhenPaused is enabled");
+    }
+#endif
     
     CGFloat padding = 10;
     CGFloat titleWidth = ceil(title.size.width) + 2;
@@ -255,6 +286,11 @@
     self.statusItem.length = newWidth;
     self.statusItem.button.frame = CGRectMake(padding / 2, 0, newWidth - padding, 22);
     self.statusItem.button.attributedTitle = title;
+    
+#ifdef DEBUG
+    NSLog(@"  - Final display: '%@' (width: %.1f)", title.string, newWidth);
+    NSLog(@"🔍 [DEBUG] Display update complete\n");
+#endif
     
     if (self.welcomePopover != nil) {
         [self.welcomePopover showRelativeToRect:self.statusItem.button.bounds ofView:self.statusItem.button preferredEdge:NSMinYEdge];
