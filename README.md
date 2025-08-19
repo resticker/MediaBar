@@ -57,6 +57,17 @@ Works with any player that supports macOS Now Playing system, including:
 - QuickTime Player
 - And many others
 
+## Dependencies
+
+MediaBar uses [ungive/media-control](https://github.com/ungive/media-control) v0.6.0 for real-time media state streaming on macOS 15+. This CLI tool provides:
+
+- **Event-driven updates**: Streams media changes as JSON for responsive UI updates
+- **Complete metadata**: Track info, playback state, timing, and media type
+- **macOS 15 compatibility**: Works with the latest macOS media system changes
+- **Installation**: `brew install ungive/tap/media-control` (automatically handled in builds)
+
+The app combines media-control for data streaming with PrivateMediaRemote framework for media controls and legacy compatibility.
+
 ## Building
 
 ### Prerequisites
@@ -111,4 +122,10 @@ codesign --force --sign - /Applications/MediaBar.app
   - Binary size: ~793KB (universal binary: arm64 + x86_64)
 
 **Note**: Debug builds may only include the current architecture (arm64 on Apple Silicon), while Release builds include both Intel and Apple Silicon architectures for distribution.
+
+## TODO
+
+### Architecture Improvements
+- [ ] find and remove all timers, polling, retries, etc. that represent dirty/poor architecture
+- [ ] make sure code (like media state management) is purely event-driven and reactive
 
