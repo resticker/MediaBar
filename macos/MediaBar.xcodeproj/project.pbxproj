@@ -390,6 +390,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		6E3FB7572447DBC200A343FE /* Codesign */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);

@@ -26,5 +26,7 @@
 	<false/>
 	<key>MBEnableAutomaticUpdates</key>
 	<false/>
+	<key>MBSetupCompletedUserDefaultsKey</key>
+	<true/>
 </dict>
 </plist>

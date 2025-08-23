@@ -39,8 +39,15 @@ static void commonInit(GlobalState *self) {
     // Start media-control stream process for event-driven notifications
     [self startMediaControlStream];
     
-    // Get initial state
-    [self getInitialMediaState];
+    // Get initial state asynchronously to avoid blocking app startup
+    dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+        [self getInitialMediaState];
+    });
+    
+    // Trigger initial display with empty state
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+        [NSNotificationCenter.defaultCenter postNotificationName:GlobalStateNotification.infoDidChange object:nil];
+    });
 }
 
 @implementation GlobalState {
@@ -381,29 +388,58 @@ static void commonInit(GlobalState *self) {
     task.launchPath = @"/opt/homebrew/bin/media-control";
     task.arguments = @[@"get"];
     
-    NSPipe *pipe = [NSPipe pipe];
-    task.standardOutput = pipe;
+    // Set up environment variables for media-control
+    NSMutableDictionary *environment = [NSMutableDictionary dictionaryWithDictionary:[[NSProcessInfo processInfo] environment]];
+    environment[@"PATH"] = @"/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin";
+    environment[@"DYLD_FRAMEWORK_PATH"] = @"/opt/homebrew/Frameworks";
+    task.environment = environment;
+    NSLog(@"🔧 Set environment PATH: %@", environment[@"PATH"]);
     
-    [task launch];
-    [task waitUntilExit];
+    NSPipe *stdoutPipe = [NSPipe pipe];
+    NSPipe *stderrPipe = [NSPipe pipe];
+    task.standardOutput = stdoutPipe;
+    task.standardError = stderrPipe;
     
-    NSData *data = [[pipe fileHandleForReading] readDataToEndOfFile];
-    NSString *output = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+    @try {
+        NSLog(@"🚀 Launching media-control task...");
+        [task launch];
+        NSLog(@"⏳ Waiting for media-control task to complete...");
+        [task waitUntilExit];
+        NSLog(@"✅ media-control task completed with exit code: %d", [task terminationStatus]);
+    } @catch (NSException *exception) {
+        NSLog(@"❌ Failed to launch media-control task: %@", exception.reason);
+        return;
+    }
+    
+    // Try stdout first
+    NSData *stdoutData = [[stdoutPipe fileHandleForReading] readDataToEndOfFile];
+    NSString *output = [[NSString alloc] initWithData:stdoutData encoding:NSUTF8StringEncoding];
+    
+    // If stdout is empty, check stderr (media-control sometimes outputs JSON to stderr)
+    if (output.length == 0) {
+        NSData *stderrData = [[stderrPipe fileHandleForReading] readDataToEndOfFile];
+        output = [[NSString alloc] initWithData:stderrData encoding:NSUTF8StringEncoding];
+        NSLog(@"📱 Got media state from stderr: %@", output);
+    }
     
     if (output.length > 0) {
+        NSLog(@"📱 Got initial media output (length %lu): %@", (unsigned long)output.length, [output substringToIndex:MIN(200, output.length)]);
         @try {
             NSData *jsonData = [output dataUsingEncoding:NSUTF8StringEncoding];
             NSDictionary *json = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:nil];
             
             if (json) {
-                NSLog(@"📱 Initial media state: %@", json);
+                NSLog(@"📱 Initial media state parsed successfully: %@", json);
                 [self updateFromMediaControlData:json];
+                NSLog(@"📱 Called updateFromMediaControlData with initial state");
+            } else {
+                NSLog(@"⚠️ Failed to parse JSON from output: %@", output);
             }
         } @catch (NSException *exception) {
             NSLog(@"⚠️ Failed to parse initial state JSON: %@", exception.reason);
         }
     } else {
-        NSLog(@"ℹ️ No initial media state available");
+        NSLog(@"ℹ️ No initial media state available (empty output)");
     }
 }
 

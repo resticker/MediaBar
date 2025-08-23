@@ -57,7 +57,10 @@
     if (self.popover.isShown) return;
     
     if (NSApp.currentEvent.type == NSEventTypeRightMouseUp) {
-        [self.statusItem popUpStatusItemMenu:self.menu];
+        self.statusItem.menu = self.menu;
+        dispatch_async(dispatch_get_main_queue(), ^{
+            self.statusItem.menu = nil;
+        });
         return;
     }
 
