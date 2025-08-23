@@ -56,14 +56,16 @@
 - (void)showPopover:(NSStatusBarButton *)sender {
     if (self.popover.isShown) return;
     
-    if (NSApp.currentEvent.type == NSEventTypeRightMouseUp) {
-        self.statusItem.menu = self.menu;
-        dispatch_async(dispatch_get_main_queue(), ^{
-            self.statusItem.menu = nil;
-        });
+    // Check if this is a right-click event
+    NSEvent *currentEvent = NSApp.currentEvent;
+    if (currentEvent.type == NSEventTypeRightMouseUp) {
+        // Right-click: Show context menu
+        NSPoint location = sender.bounds.origin;
+        [self.menu popUpMenuPositioningItem:nil atLocation:location inView:sender];
         return;
     }
-
+    
+    // Left-click: Show popover
     NSRect rect = [sender.window convertRectToScreen:sender.frame];
     CGFloat xOffset = CGRectGetMidX(self.positioningWindow.contentView.frame) - CGRectGetMidX(sender.frame);
     CGFloat x = rect.origin.x - xOffset;
@@ -80,6 +82,7 @@
     self.positioningView.bounds = CGRectOffset(self.positioningView.bounds, 0, -22);
     [self.positioningWindow orderOut:self];
 }
+
 
 - (void)loadUserDefaults {
     self.showArtist = [self.userDefaults boolForKey:ShowArtistUserDefaultsKey];
