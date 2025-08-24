@@ -41,8 +41,6 @@
 @property NSInteger maximumWidth;
 
 
-@property (strong) NSTimer *productHuntTimer;
-
 //@property (strong) RACDisposable *interval;
 
 @property (strong) NSPopover *welcomePopover;
@@ -451,19 +449,29 @@
     
     [self.shortcuts setupGlobalShortcutsWithPlayPauseAction:^{
         __strong typeof(weakSelf) strongSelf = weakSelf;
-        [strongSelf.globalState togglePlayPause];
+        if (strongSelf) {
+            [strongSelf.globalState togglePlayPause];
+        }
     } previousAction:^{
         __strong typeof(weakSelf) strongSelf = weakSelf;
-        [strongSelf.globalState previous];
+        if (strongSelf) {
+            [strongSelf.globalState previous];
+        }
     } nextAction:^{
         __strong typeof(weakSelf) strongSelf = weakSelf;
-        [strongSelf.globalState next];
+        if (strongSelf) {
+            [strongSelf.globalState next];
+        }
     } skipBackwardAction:^{
         __strong typeof(weakSelf) strongSelf = weakSelf;
-        [strongSelf.globalState skipBackward];
+        if (strongSelf) {
+            [strongSelf.globalState skipBackward];
+        }
     } skipForwardAction:^{
         __strong typeof(weakSelf) strongSelf = weakSelf;
-        [strongSelf.globalState skipForward];
+        if (strongSelf) {
+            [strongSelf.globalState skipForward];
+        }
     }];
 }
 

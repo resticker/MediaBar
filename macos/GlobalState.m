@@ -153,15 +153,18 @@ static void commonInit(GlobalState *self) {
     [NSNotificationCenter.defaultCenter removeObserver:self];
     MRMediaRemoteUnregisterForNowPlayingNotifications();
     
-    // Clean up media-control streams
+    // Clean up media-control streams with proper notification removal
+    if (mediaControlFileHandle) {
+        [[NSNotificationCenter defaultCenter] removeObserver:self
+                                                        name:NSFileHandleReadCompletionNotification
+                                                      object:mediaControlFileHandle];
+        [mediaControlFileHandle closeFile];
+        mediaControlFileHandle = nil;
+    }
+    
     if (mediaControlTask) {
         [mediaControlTask terminate];
         mediaControlTask = nil;
-    }
-    
-    if (mediaControlFileHandle) {
-        [mediaControlFileHandle closeFile];
-        mediaControlFileHandle = nil;
     }
     
     mediaControlPipe = nil;
