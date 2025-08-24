@@ -14,10 +14,11 @@
 
 ### 🔴 CRITICAL Issues (Priority 1)
 
-1. **No Test Coverage** - `macos/` directory
+1. **⚠️ No Test Coverage - DEFERRED** - `macos/` directory
    - Zero test files found in the entire codebase
    - Critical media streaming logic completely untested
    - Complex JSON buffering system lacks validation tests
+   - **Status**: Deferred due to time constraints and complexity of testing media integration
 
 2. **✅ Memory Management Concerns RESOLVED** - `macos/AppDelegate.m:44`, `macos/PopoverViewController.mm`
    - ✅ Removed unused productHuntTimer property (eliminated potential leak)
@@ -33,15 +34,19 @@
 
 ### 🟡 HIGH Issues (Priority 2)
 
-4. **Architecture Anti-patterns** - Multiple files
+4. **⚠️ Architecture Anti-patterns - NOT ADDRESSING** - Multiple files
    - Mixed initialization paths (timer-based, XIB-based) as noted in README TODO
    - GlobalState acting as both data model and controller violating SRP
    - Hard coupling between AppDelegate and GlobalState
+   - **Status**: Current architecture is functional and recently stabilized with thread safety improvements. Major refactoring would be high-risk without comprehensive test coverage and could break XIB/Interface Builder dependencies.
 
-5. **Error Handling Deficiencies** - `macos/GlobalState.m`
-   - NSTask failures not properly handled for media-control integration
-   - JSON parsing errors from fragmented stream data silently ignored
-   - Network requests lack timeout and retry logic
+5. **✅ Error Handling Deficiencies RESOLVED** - `macos/GlobalState.m`
+   - ✅ Added stderr capture for media-control processes with detailed logging
+   - ✅ Replaced error:nil patterns with proper NSError handling and validation
+   - ✅ Implemented timeout protection for NSTask operations (5s for initial queries, 60s stream watchdog)
+   - ✅ Added exponential backoff for stream restarts (1s→2s→4s→...→30s max)
+   - ✅ Enhanced JSON parsing with structure validation and buffer corruption recovery
+   - ✅ Added comprehensive error logging to /tmp/mediabar-debug.log for debugging
 
 6. **Security Considerations** - `macos/Configuration/MediaBar.entitlements`
    - Apple Events automation permission could be exploited

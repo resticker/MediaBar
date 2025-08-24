@@ -85,6 +85,18 @@ extern const struct GlobalStateNotificationStruct {
  */
 @property (atomic, strong) NSMutableString *mediaControlBuffer;
 
+#pragma mark - Error Handling & Recovery
+
+/**
+ * Properties for robust error handling and stream restart management.
+ * 
+ * currentBackoffDelay: Exponential backoff delay for stream restarts (starts at 1.0s, max 30.0s)
+ * restartAttempts: Counter for consecutive restart attempts (resets after successful operation)
+ */
+@property (atomic) NSTimeInterval currentBackoffDelay;
+@property (atomic) NSInteger restartAttempts;
+@property (atomic, nullable) NSDate *lastStreamDataTime;
+
 #pragma mark - Debug
 - (void)debugLog:(NSString *)message;
 

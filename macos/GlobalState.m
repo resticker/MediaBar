@@ -27,10 +27,13 @@ const struct GlobalStateNotificationStruct GlobalStateNotification = {
 - (void)startMediaControlStream;
 - (void)getInitialMediaState;
 - (void)mediaControlDataAvailable:(NSNotification *)notification;
+- (void)mediaControlErrorAvailable:(NSNotification *)notification;
 - (void)processMediaControlOutput:(NSString *)output;
 - (void)updateFromMediaControlData:(NSDictionary *)payload;
 - (void)debugLog:(NSString *)message;
 - (void)restartMediaControlStream;
+- (void)scheduleStreamWatchdog;
+- (BOOL)validateMediaControlJSON:(NSDictionary *)json;
 
 // Thread safety helpers
 - (void)postNotificationOnMainQueue:(NSString *)notificationName;
@@ -245,10 +248,23 @@ static void commonInit(GlobalState *self) {
     mediaControlTask.environment = environment;
     NSLog(@"🔧 Set environment PATH for stream: %@", environment[@"PATH"]);
     
-    // Set up pipe to read output
+    // Set up pipes to read output and errors
     mediaControlPipe = [NSPipe pipe];
     mediaControlTask.standardOutput = mediaControlPipe;
-    mediaControlTask.standardError = [NSPipe pipe]; // Discard errors
+    
+    // Capture stderr for debugging instead of discarding
+    NSPipe *errorPipe = [NSPipe pipe];
+    mediaControlTask.standardError = errorPipe;
+    NSFileHandle *errorHandle = [errorPipe fileHandleForReading];
+    
+    // Set up notification for error data availability
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(mediaControlErrorAvailable:)
+                                                 name:NSFileHandleReadCompletionNotification
+                                               object:errorHandle];
+    
+    // Start reading errors in background
+    [errorHandle readInBackgroundAndNotify];
     
     // Get file handle for reading
     mediaControlFileHandle = [mediaControlPipe fileHandleForReading];
@@ -266,6 +282,17 @@ static void commonInit(GlobalState *self) {
     @try {
         [mediaControlTask launch];
         NSLog(@"✅ media-control stream started successfully");
+        
+        // Reset exponential backoff on successful start
+        self.currentBackoffDelay = 0;
+        self.restartAttempts = 0;
+        [self debugLog:@"Stream started successfully - reset backoff timer"];
+        
+        // Set up watchdog timer to detect if stream becomes unresponsive
+        // Reset this timer each time we receive data in mediaControlDataAvailable
+        self.lastStreamDataTime = [NSDate date];
+        [self scheduleStreamWatchdog];
+        
     } @catch (NSException *exception) {
         NSLog(@"❌ Failed to start media-control: %@", exception.reason);
     }
@@ -275,6 +302,8 @@ static void commonInit(GlobalState *self) {
     NSData *data = notification.userInfo[NSFileHandleNotificationDataItem];
     
     if (data.length > 0) {
+        // Update watchdog timestamp - we received data so stream is responsive
+        self.lastStreamDataTime = [NSDate date];
         NSString *output = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
         
         // Process media control output on serial queue for thread safety
@@ -287,6 +316,22 @@ static void commonInit(GlobalState *self) {
     } else {
         NSLog(@"⚠️ media-control stream ended");
         [self restartMediaControlStream];
+    }
+}
+
+- (void)mediaControlErrorAvailable:(NSNotification *)notification {
+    NSData *data = notification.userInfo[NSFileHandleNotificationDataItem];
+    
+    if (data.length > 0) {
+        NSString *errorOutput = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
+        if (errorOutput.length > 0) {
+            NSLog(@"⚠️ media-control stderr: %@", [errorOutput stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]]);
+            [self debugLog:[NSString stringWithFormat:@"media-control stderr: %@", errorOutput]];
+        }
+        
+        // Continue reading error stream
+        NSFileHandle *errorHandle = (NSFileHandle *)notification.object;
+        [errorHandle readInBackgroundAndNotify];
     }
 }
 
@@ -324,6 +369,14 @@ static void commonInit(GlobalState *self) {
     // Append new data to buffer - this may complete a previously incomplete JSON object
     [self.mediaControlBuffer appendString:output];
     
+    // Buffer corruption recovery: if buffer gets too large, clear it to prevent memory issues
+    if (self.mediaControlBuffer.length > 1024 * 1024) { // 1MB limit
+        NSLog(@"⚠️ Media control buffer exceeded 1MB, clearing to prevent memory issues");
+        [self debugLog:[NSString stringWithFormat:@"Buffer corruption recovery: cleared %lu chars", (unsigned long)self.mediaControlBuffer.length]];
+        [self.mediaControlBuffer setString:@""];
+        return; // Skip processing this batch
+    }
+    
     // Process complete JSON objects from buffer (search for \n-terminated objects)
     NSRange searchRange = NSMakeRange(0, self.mediaControlBuffer.length);
     while (searchRange.location < self.mediaControlBuffer.length) {
@@ -340,19 +393,31 @@ static void commonInit(GlobalState *self) {
         NSString *trimmedLine = [line stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
         
         if (trimmedLine.length > 0) {
-            @try {
-                NSData *jsonData = [trimmedLine dataUsingEncoding:NSUTF8StringEncoding];
-                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:nil];
+            NSData *jsonData = [trimmedLine dataUsingEncoding:NSUTF8StringEncoding];
+            if (jsonData) {
+                NSError *jsonError = nil;
+                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&jsonError];
                 
-                if (json && [json[@"type"] isEqualToString:@"data"]) {
-                    [self debugLog:[NSString stringWithFormat:@"Processing complete JSON object (length: %lu)", (unsigned long)trimmedLine.length]];
-                    [self updateFromMediaControlData:json[@"payload"]];
+                if (json && !jsonError) {
+                    // Validate JSON structure
+                    if ([self validateMediaControlJSON:json]) {
+                        if ([json[@"type"] isEqualToString:@"data"]) {
+                            [self debugLog:[NSString stringWithFormat:@"Processing complete JSON object (length: %lu)", (unsigned long)trimmedLine.length]];
+                            [self updateFromMediaControlData:json[@"payload"]];
+                        } else {
+                            [self debugLog:[NSString stringWithFormat:@"Ignoring non-data JSON: %@", json[@"type"] ?: @"(no type)"]];
+                        }
+                    } else {
+                        NSLog(@"⚠️ Invalid JSON structure from media-control, skipping");
+                        [self debugLog:@"JSON validation failed - invalid structure"];
+                    }
                 } else {
-                    [self debugLog:[NSString stringWithFormat:@"Ignoring non-data JSON: %@", json[@"type"] ?: @"(no type)"]];
+                    NSLog(@"⚠️ Failed to parse media-control JSON: %@", jsonError.localizedDescription);
+                    [self debugLog:[NSString stringWithFormat:@"JSON parse failed: %@", jsonError.localizedDescription]];
                 }
-            } @catch (NSException *exception) {
-                NSLog(@"⚠️ Failed to parse media-control JSON: %@", exception.reason);
-                [self debugLog:[NSString stringWithFormat:@"JSON parse failed: %@", exception.reason]];
+            } else {
+                NSLog(@"⚠️ Failed to convert line to UTF8 data");
+                [self debugLog:@"Failed to convert line to UTF8 data"];
             }
         }
         
@@ -671,7 +736,18 @@ static void commonInit(GlobalState *self) {
         NSLog(@"🚀 Launching media-control task...");
         [task launch];
         NSLog(@"⏳ Waiting for media-control task to complete...");
+        
+        // Implement timeout protection (5 seconds for initial state query)
+        __block BOOL taskCompleted = NO;
+        dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(5.0 * NSEC_PER_SEC)), dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0), ^{
+            if (!taskCompleted && [task isRunning]) {
+                NSLog(@"⏰ media-control task timed out, terminating...");
+                [task terminate];
+            }
+        });
+        
         [task waitUntilExit];
+        taskCompleted = YES;
         NSLog(@"✅ media-control task completed with exit code: %d", [task terminationStatus]);
     } @catch (NSException *exception) {
         NSLog(@"❌ Failed to launch media-control task: %@", exception.reason);
@@ -691,19 +767,20 @@ static void commonInit(GlobalState *self) {
     
     if (output.length > 0) {
         NSLog(@"📱 Got initial media output (length %lu): %@", (unsigned long)output.length, [output substringToIndex:MIN(200, output.length)]);
-        @try {
-            NSData *jsonData = [output dataUsingEncoding:NSUTF8StringEncoding];
-            NSDictionary *json = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:nil];
+        NSData *jsonData = [output dataUsingEncoding:NSUTF8StringEncoding];
+        if (jsonData) {
+            NSError *jsonError = nil;
+            NSDictionary *json = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:&jsonError];
             
-            if (json) {
+            if (json && !jsonError) {
                 NSLog(@"📱 Initial media state parsed successfully: %@", json);
                 [self updateFromMediaControlData:json];
                 NSLog(@"📱 Called updateFromMediaControlData with initial state");
             } else {
-                NSLog(@"⚠️ Failed to parse JSON from output: %@", output);
+                NSLog(@"⚠️ Failed to parse JSON from output: %@ (error: %@)", output, jsonError.localizedDescription);
             }
-        } @catch (NSException *exception) {
-            NSLog(@"⚠️ Failed to parse initial state JSON: %@", exception.reason);
+        } else {
+            NSLog(@"⚠️ Failed to convert output to UTF8 data");
         }
     } else {
         NSLog(@"ℹ️ No initial media state available (empty output)");
@@ -730,8 +807,22 @@ static void commonInit(GlobalState *self) {
     
     mediaControlPipe = nil;
     
-    // Restart after a delay
-    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(2.0 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
+    // Implement exponential backoff for restart attempts
+    self.restartAttempts++;
+    
+    // Initialize backoff delay on first attempt
+    if (self.currentBackoffDelay == 0) {
+        self.currentBackoffDelay = 1.0; // Start with 1 second
+    }
+    
+    NSTimeInterval delayToUse = self.currentBackoffDelay;
+    NSLog(@"⏳ Restarting stream after %.1f second delay (attempt #%ld)", delayToUse, (long)self.restartAttempts);
+    [self debugLog:[NSString stringWithFormat:@"Exponential backoff: attempt %ld, delay %.1fs", (long)self.restartAttempts, delayToUse]];
+    
+    // Double the backoff delay for next time, capped at 30 seconds
+    self.currentBackoffDelay = MIN(self.currentBackoffDelay * 2.0, 30.0);
+    
+    dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(delayToUse * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
         [self startMediaControlStream];
     });
 }
@@ -745,8 +836,97 @@ static void commonInit(GlobalState *self) {
         [fileHandle closeFile];
     } else {
         // Create file if it doesn't exist
-        [timestampedMessage writeToFile:@"/tmp/mediabar-debug.log" atomically:NO encoding:NSUTF8StringEncoding error:nil];
+        NSError *writeError = nil;
+        BOOL success = [timestampedMessage writeToFile:@"/tmp/mediabar-debug.log" atomically:NO encoding:NSUTF8StringEncoding error:&writeError];
+        if (!success) {
+            NSLog(@"⚠️ Failed to write to debug log: %@", writeError.localizedDescription);
+        }
     }
+}
+
+- (void)scheduleStreamWatchdog {
+    // Cancel any existing watchdog timer
+    static dispatch_source_t watchdogTimer = nil;
+    if (watchdogTimer) {
+        dispatch_source_cancel(watchdogTimer);
+        watchdogTimer = nil;
+    }
+    
+    // Create new watchdog timer (60 second timeout for stream data)
+    watchdogTimer = dispatch_source_create(DISPATCH_SOURCE_TYPE_TIMER, 0, 0, dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0));
+    dispatch_source_set_timer(watchdogTimer, dispatch_time(DISPATCH_TIME_NOW, 60 * NSEC_PER_SEC), DISPATCH_TIME_FOREVER, 5 * NSEC_PER_SEC);
+    
+    dispatch_source_set_event_handler(watchdogTimer, ^{
+        if (self.lastStreamDataTime) {
+            NSTimeInterval timeSinceLastData = [[NSDate date] timeIntervalSinceDate:self.lastStreamDataTime];
+            if (timeSinceLastData > 60.0) {
+                NSLog(@"⏰ Stream watchdog: No data received for %.1f seconds, restarting stream", timeSinceLastData);
+                [self debugLog:[NSString stringWithFormat:@"Stream watchdog triggered: %.1f seconds since last data", timeSinceLastData]];
+                dispatch_async(dispatch_get_main_queue(), ^{
+                    [self restartMediaControlStream];
+                });
+            }
+        }
+    });
+    
+    dispatch_resume(watchdogTimer);
+}
+
+- (BOOL)validateMediaControlJSON:(NSDictionary *)json {
+    // Check basic structure
+    if (!json || ![json isKindOfClass:[NSDictionary class]]) {
+        return NO;
+    }
+    
+    // Check for required "type" field
+    NSString *type = json[@"type"];
+    if (!type || ![type isKindOfClass:[NSString class]]) {
+        return NO;
+    }
+    
+    // If it's a data type, validate payload structure
+    if ([type isEqualToString:@"data"]) {
+        NSDictionary *payload = json[@"payload"];
+        if (!payload || ![payload isKindOfClass:[NSDictionary class]]) {
+            return NO;
+        }
+        
+        // Validate that we have at least one expected field in payload
+        // Don't require all fields as some may be optional
+        NSArray *expectedFields = @[@"title", @"artist", @"album", @"artworkData", @"isPlaying", @"duration"];
+        BOOL hasAtLeastOneField = NO;
+        for (NSString *field in expectedFields) {
+            if (payload[field] != nil) {
+                hasAtLeastOneField = YES;
+                break;
+            }
+        }
+        
+        if (!hasAtLeastOneField) {
+            [self debugLog:@"JSON validation: payload has no recognized fields"];
+            return NO;
+        }
+        
+        // Validate field types if present
+        if (payload[@"title"] && ![payload[@"title"] isKindOfClass:[NSString class]]) {
+            [self debugLog:@"JSON validation: title is not a string"];
+            return NO;
+        }
+        if (payload[@"artist"] && ![payload[@"artist"] isKindOfClass:[NSString class]]) {
+            [self debugLog:@"JSON validation: artist is not a string"];
+            return NO;
+        }
+        if (payload[@"isPlaying"] && ![payload[@"isPlaying"] isKindOfClass:[NSNumber class]]) {
+            [self debugLog:@"JSON validation: isPlaying is not a boolean"];
+            return NO;
+        }
+        if (payload[@"duration"] && ![payload[@"duration"] isKindOfClass:[NSNumber class]]) {
+            [self debugLog:@"JSON validation: duration is not a number"];
+            return NO;
+        }
+    }
+    
+    return YES;
 }
 
 #pragma mark - Thread Safety Helpers
