@@ -107,3 +107,4 @@ When media information isn't displaying:
 2. Verify framework loading: Check logs for "Failed to load framework" errors
 3. Ensure single status item: Look for duplicate status bar creation in logs
 4. Check GlobalState notifications: Verify `infoDidChange` notifications are firing
+- When making changes to this app or solving problems, rely on using log files (located at /temp) to get a feedback loop on how your changes are affecting the app's behavior or for debugging current behavior. If you want to see what's going on with the menu bar, use AppleScript (like you already know how to use) to record instead of screenshots, and you can emulate clicks or whatever else you need. But primarily you want to be using log files heavily to create a feedback loop so that you can see what's really going on in the app and have a feedback loop for changes that you make.
