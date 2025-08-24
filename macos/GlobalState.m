@@ -34,6 +34,23 @@ const struct GlobalStateNotificationStruct GlobalStateNotification = {
 
 @end
 
+/**
+ * MEDIABAR INITIALIZATION: Core System Bootstrap
+ * ==============================================
+ * 
+ * Initializes MediaBar's real-time media monitoring system using media-control CLI integration.
+ * This replaces legacy MediaRemote callbacks with event-driven streaming for macOS 15+ compatibility.
+ * 
+ * INITIALIZATION SEQUENCE:
+ * 1. Start persistent media-control stream process (NSTask + NSFileHandle async reading)
+ * 2. Get initial media state via synchronous media-control query
+ * 3. Trigger UI update to display current state immediately
+ * 
+ * PERFORMANCE CONSIDERATIONS:
+ * - Stream process runs continuously in background for real-time updates
+ * - Initial state query happens on background queue to prevent app startup blocking  
+ * - UI notification dispatched after short delay for responsive status bar appearance
+ */
 static void commonInit(GlobalState *self) {
     NSLog(@"🚀 Starting media-control integration (macOS 15+ compatible)...");
     
@@ -174,16 +191,43 @@ static void commonInit(GlobalState *self) {
 
 #pragma mark - Media Control Integration
 
+/**
+ * Initializes real-time media-control stream for receiving media updates and artwork data.
+ * 
+ * This method establishes the core integration with the media-control CLI tool that provides
+ * access to macOS media information. The stream delivers JSON objects containing:
+ * - Track metadata (title, artist, album, duration, etc.)
+ * - Base64-encoded artwork data (can be 50KB-300KB for high-resolution album covers)
+ * - Playback state and timing information
+ * 
+ * CRITICAL IMPLEMENTATION DETAILS:
+ * 
+ * 1. ENVIRONMENT VARIABLES:
+ *    - PATH: Ensures media-control binary can be found and executed
+ *    - DYLD_FRAMEWORK_PATH: Required for media-control to load MediaRemote frameworks
+ *    - Without proper environment, stream fails silently with no media data
+ * 
+ * 2. STREAM ARGUMENTS:
+ *    - "--no-diff": Forces delivery of complete metadata on each update
+ *    - Without this flag, only changed fields are sent, breaking artwork delivery
+ * 
+ * 3. ASYNCHRONOUS PROCESSING:
+ *    - Uses NSFileHandle readInBackgroundAndNotify for non-blocking stream reads
+ *    - Large artwork data requires multiple read operations (handled by buffering)
+ * 
+ * The stream runs continuously until the app terminates, automatically restarting on failures.
+ * Data from this stream is processed by processMediaControlOutput: which handles JSON buffering.
+ */
 - (void)startMediaControlStream {
     [self debugLog:@"=== STARTING MEDIA STREAM ==="];
     NSLog(@"📡 Starting media-control stream for event-driven notifications...");
     
-    // Create task to run media-control stream
+    // Create task to run media-control stream with proper binary path
     mediaControlTask = [[NSTask alloc] init];
     mediaControlTask.launchPath = @"/opt/homebrew/bin/media-control";
-    mediaControlTask.arguments = @[@"stream", @"--no-diff"];
+    mediaControlTask.arguments = @[@"stream", @"--no-diff"];  // --no-diff ensures complete metadata delivery
     
-    // Set up environment variables for media-control stream
+    // CRITICAL: Set up environment variables for media-control framework loading
     NSMutableDictionary *environment = [NSMutableDictionary dictionaryWithDictionary:[[NSProcessInfo processInfo] environment]];
     environment[@"PATH"] = @"/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin";
     environment[@"DYLD_FRAMEWORK_PATH"] = @"/opt/homebrew/Frameworks";
@@ -231,16 +275,41 @@ static void commonInit(GlobalState *self) {
     }
 }
 
+/**
+ * Processes fragmented JSON data from media-control stream, implementing critical buffering for large artwork.
+ * 
+ * THE CORE PROBLEM SOLVED:
+ * Large base64 artwork data (50KB-300KB) gets split across multiple NSFileHandle read operations.
+ * Without buffering, JSON parsing fails on incomplete fragments, causing missing artwork display.
+ * 
+ * BUFFERING STRATEGY:
+ * 1. Accumulate all incoming data in mediaControlBuffer across multiple read operations
+ * 2. Search for complete JSON objects terminated by newline characters (\n)
+ * 3. Process only complete objects, leaving incomplete data for the next read cycle
+ * 4. Trim processed data to prevent memory accumulation
+ * 
+ * EXAMPLE SCENARIO:
+ * Read 1: '{"type":"data","payload":{"title":"Song","artworkData":"\/9j\/4A'
+ * Read 2: 'AQSkZJRgABAQAASABIAAD\/4QBMRXhpZgAATU0AKgAA..."}}\n'
+ * Result: Buffer assembles complete JSON object spanning both reads for successful parsing
+ * 
+ * This method is called asynchronously by NSFileHandle notifications and must handle:
+ * - Partial JSON objects spanning multiple reads
+ * - Multiple complete JSON objects in a single read
+ * - Mixed complete and partial objects in the same data chunk
+ * 
+ * @param output Raw string data from the media-control stream (may be incomplete JSON)
+ */
 - (void)processMediaControlOutput:(NSString *)output {
-    // Initialize buffer if needed
+    // Initialize buffer for accumulating fragmented JSON data across multiple reads
     if (!self.mediaControlBuffer) {
         self.mediaControlBuffer = [[NSMutableString alloc] init];
     }
     
-    // Append new output to buffer
+    // Append new data to buffer - this may complete a previously incomplete JSON object
     [self.mediaControlBuffer appendString:output];
     
-    // Process complete JSON objects from buffer
+    // Process complete JSON objects from buffer (search for \n-terminated objects)
     NSRange searchRange = NSMakeRange(0, self.mediaControlBuffer.length);
     while (searchRange.location < self.mediaControlBuffer.length) {
         // Find next complete JSON object (looks for newline)
@@ -284,10 +353,63 @@ static void commonInit(GlobalState *self) {
     }
 }
 
+/**
+ * Processes complete media data payload from media-control stream, handling artwork and metadata updates.
+ * 
+ * This method implements the core artwork processing pipeline and two-phase delivery pattern recognition.
+ * 
+ * TWO-PHASE DELIVERY PATTERN:
+ * Many media systems deliver metadata and artwork in separate messages:
+ * 1. First message: Contains track info (title, artist, album) but no artworkData
+ * 2. Second message: Contains same track info plus base64 artworkData
+ * 
+ * ARTWORK PROCESSING PIPELINE:
+ * 1. Extract base64 artworkData from JSON payload
+ * 2. Decode base64 string to NSData (handles 50KB-300KB artwork)
+ * 3. Generate MD5 checksum for duplicate detection and performance optimization
+ * 4. Create NSImage from decoded data with size validation
+ * 5. Update properties and notify UI via NSNotificationCenter
+ * 
+ * PERFORMANCE OPTIMIZATIONS:
+ * - MD5 checksums prevent redundant processing of identical artwork
+ * - Early return for empty payloads to avoid unnecessary processing
+ * - Checksum comparison before expensive NSImage creation
+ * 
+ * ERROR HANDLING:
+ * - Validates base64 data integrity before processing
+ * - Handles NSImage creation failures gracefully
+ * - Logs critical errors for debugging artwork delivery issues
+ * 
+ * @param payload Dictionary containing media metadata and optional base64 artwork data
+ *                Keys include: title, artist, album, artworkData, playing, elapsedTime, etc.
+ */
+/**
+ * ARTWORK PROCESSING PIPELINE: Phase 2 - Data Processing
+ * ====================================================
+ * 
+ * Handles JSON payload from media-control stream containing track metadata and base64 artwork.
+ * Implements intelligent change detection to prevent UI flashing during song transitions.
+ * 
+ * KEY FEATURES:
+ * - MD5 checksum validation prevents redundant artwork updates for same album
+ * - Two-phase detection: metadata arrives first, artwork typically follows in next message
+ * - Comprehensive logging for real-time troubleshooting at /tmp/mediabar-debug.log
+ * - Memory-efficient base64 decoding with proper NSImage lifecycle management
+ * 
+ * PAYLOAD STRUCTURE (from media-control):
+ * {
+ *   "title": "Song Title",
+ *   "artist": "Artist Name", 
+ *   "album": "Album Name",
+ *   "playing": true/false,
+ *   "artworkData": "base64-encoded-image-data-50KB-300KB",
+ *   "artworkMimeType": "image/png" or "image/jpeg"
+ * }
+ */
 - (void)updateFromMediaControlData:(NSDictionary *)payload {
     if (!payload || [payload count] == 0) return;
     
-    // File-based debug logging
+    // Comprehensive debug logging for artwork troubleshooting
     [self debugLog:[NSString stringWithFormat:@"=== PAYLOAD RECEIVED ==="]];
     [self debugLog:[NSString stringWithFormat:@"Keys: %@", [payload.allKeys componentsJoinedByString:@", "]]];
     if (payload[@"title"]) [self debugLog:[NSString stringWithFormat:@"Title: %@", payload[@"title"]]];

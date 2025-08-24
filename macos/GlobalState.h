@@ -7,6 +7,45 @@ extern const struct GlobalStateNotificationStruct {
     NSString * _Nonnull isPlayingDidChange;
 } GlobalStateNotification;
 
+/**
+ * MediaBar's central state management class handling real-time media information and artwork display.
+ * 
+ * ARTWORK SYSTEM ARCHITECTURE:
+ * ============================
+ * 
+ * 1. MEDIA-CONTROL INTEGRATION:
+ *    - Spawns `media-control stream --no-diff` process for real-time media updates
+ *    - Receives JSON objects containing metadata (title, artist) and base64 artwork data
+ *    - Uses NSTask with proper environment variables (PATH, DYLD_FRAMEWORK_PATH) for framework loading
+ * 
+ * 2. TWO-PHASE DELIVERY PATTERN:
+ *    - Media systems often deliver metadata first, then artwork in subsequent messages
+ *    - Track changes are detected immediately, artwork may arrive milliseconds later
+ *    - This prevents stale artwork being displayed for new tracks during transitions
+ * 
+ * 3. JSON BUFFERING SOLUTION:
+ *    - Large artwork data (50KB-300KB) gets fragmented across multiple NSFileHandle reads
+ *    - mediaControlBuffer accumulates partial data until complete JSON objects are available
+ *    - Critical for preventing JSON parse failures that cause missing artwork
+ * 
+ * 4. ARTWORK PROCESSING PIPELINE:
+ *    media-control stream → JSON buffering → artwork extraction → base64 decode → 
+ *    NSImage creation → checksum validation → UI notification → AppDelegate display
+ * 
+ * 5. PERFORMANCE OPTIMIZATIONS:
+ *    - MD5 checksums prevent redundant artwork updates for same album
+ *    - Images resized to 18x18 points for status bar display efficiency
+ *    - Memory cleanup via buffer trimming and proper NSImage lifecycle management
+ * 
+ * KEY METHODS:
+ * - startMediaControlStream: Initializes media-control integration with proper environment
+ * - processMediaControlOutput: Handles JSON buffering and parsing from fragmented stream data
+ * - updateFromMediaControlData: Processes artwork data, validates changes, updates properties
+ * 
+ * DEBUGGING:
+ * - Extensive logging to /tmp/mediabar-debug.log for real-time troubleshooting
+ * - Debug logs include buffer state, JSON sizes, artwork processing results
+ */
 @interface GlobalState : NSObject
 
 @property BOOL isPlaying;
@@ -31,6 +70,19 @@ extern const struct GlobalStateNotificationStruct {
 - (void)next;
 
 #pragma mark - Media Control Integration
+
+/**
+ * Buffer for accumulating JSON data from media-control stream across multiple read operations.
+ * 
+ * CRITICAL: Large artwork data (50KB-300KB base64) gets fragmented across multiple NSFileHandle
+ * reads. This buffer accumulates partial JSON until complete objects are available for parsing.
+ * Without buffering, JSON parsing fails on incomplete fragments, causing missing artwork.
+ * 
+ * The buffer is managed by processMediaControlOutput: which:
+ * 1. Appends new data from each read operation
+ * 2. Processes complete JSON objects (terminated by \n)
+ * 3. Removes processed data to prevent memory accumulation
+ */
 @property (nonatomic, strong) NSMutableString *mediaControlBuffer;
 
 #pragma mark - Debug

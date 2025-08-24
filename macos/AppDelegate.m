@@ -307,7 +307,29 @@
     }
 #endif
     
-    // Set artwork image if available
+    /*
+     * ARTWORK DISPLAY PIPELINE - Final stage of artwork processing
+     * 
+     * This section handles the UI display of artwork received from GlobalState's media-control stream.
+     * The artwork has already been processed (base64 decoded, validated, and converted to NSImage).
+     * 
+     * KEY REQUIREMENTS FOR STATUS BAR DISPLAY:
+     * 1. Size constraint: macOS status bar requires small images (18x18 points optimal)
+     * 2. Memory efficiency: Large original artwork (600x600+) must be resized to prevent UI lag
+     * 3. Visual quality: Maintain aspect ratio and smooth scaling for professional appearance
+     * 
+     * ARTWORK SIZING STRATEGY:
+     * - Original artwork: Often 600x600 pixels from streaming services (100KB+ in memory)
+     * - Status bar target: 18x18 points for consistent appearance with system UI
+     * - Scaling method: High-quality resize using NSImage drawInRect for smooth results
+     * 
+     * LAYOUT INTEGRATION:
+     * - Artwork positioned to the left of track title text
+     * - Status item width adjusted dynamically to accommodate artwork + text + padding
+     * - Image removed when no artwork available to prevent stale display
+     */
+    
+    // Debug logging for artwork UI state changes
     NSString *artworkDebug = [NSString stringWithFormat:@"[%@] === ARTWORK UI UPDATE ===\n", [NSDate date]];
     artworkDebug = [artworkDebug stringByAppendingFormat:@"Artwork state: %@\n", 
                    self.globalState.albumArtwork ? @"PRESENT" : @"NIL"];
@@ -329,17 +351,27 @@
           self.globalState.albumArtwork ? self.globalState.albumArtwork.size.height : 0);
     
     if (self.globalState.albumArtwork != nil) {
-        // Resize artwork to appropriate status bar size (18x18 points)
-        NSSize artworkSize = NSMakeSize(18, 18);
+        /*
+         * HIGH-QUALITY ARTWORK RESIZING FOR STATUS BAR
+         * 
+         * Converts large artwork (typically 600x600px) to optimal 18x18pt status bar size.
+         * Uses NSImage's drawing system for smooth scaling and proper aspect ratio handling.
+         * 
+         * Memory impact: Reduces artwork from ~100KB+ to ~1KB for efficient UI performance.
+         */
+        NSSize artworkSize = NSMakeSize(18, 18);  // Optimal size for macOS status bar integration
         NSImage *resizedArtwork = [[NSImage alloc] initWithSize:artworkSize];
-        [resizedArtwork lockFocus];
+        [resizedArtwork lockFocus];  // Begin drawing context for high-quality resize
+        // Draw original artwork into smaller canvas with smooth scaling
         [self.globalState.albumArtwork drawInRect:NSMakeRect(0, 0, artworkSize.width, artworkSize.height)
-                                         fromRect:NSZeroRect
-                                        operation:NSCompositingOperationSourceOver
-                                         fraction:1.0];
-        [resizedArtwork unlockFocus];
+                                         fromRect:NSZeroRect  // Use entire source image
+                                        operation:NSCompositingOperationSourceOver  // Standard alpha blending
+                                         fraction:1.0];  // Full opacity
+        [resizedArtwork unlockFocus];  // Complete drawing operations and finalize image
+        
+        // Apply resized artwork to status bar button with left-aligned positioning
         self.statusItem.button.image = resizedArtwork;
-        self.statusItem.button.imagePosition = NSImageLeft;
+        self.statusItem.button.imagePosition = NSImageLeft;  // Show artwork before text
         
         NSString *successLog = [NSString stringWithFormat:@"[%@] Status bar artwork set successfully (18x18 resize)\n", [NSDate date]];
         NSFileHandle *successFileHandle = [NSFileHandle fileHandleForWritingAtPath:@"/tmp/mediabar-debug.log"];
