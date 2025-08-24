@@ -25,10 +25,11 @@
    - ✅ Improved weak reference patterns with nil checks in callback blocks
    - ✅ Verified existing timer management in PopoverViewController is already correct
 
-3. **Thread Safety Issues** - `macos/GlobalState.m:54-69`
-   - Global state accessed from multiple dispatch queues without synchronization
-   - Media control buffer updates from background threads without locks
-   - UI updates potentially called from non-main threads
+3. **✅ Thread Safety Issues RESOLVED** - `macos/GlobalState.m:54-69`
+   - ✅ Added dedicated serial dispatch queue for GlobalState operations 
+   - ✅ All media control buffer access now synchronized via _stateQueue
+   - ✅ All NSNotificationCenter posts dispatched to main queue via postNotificationOnMainQueue helper
+   - ✅ Made properties atomic for thread-safe access (except elapsedTime with custom setter)
 
 ### 🟡 HIGH Issues (Priority 2)
 

@@ -48,17 +48,17 @@ extern const struct GlobalStateNotificationStruct {
  */
 @interface GlobalState : NSObject
 
-@property BOOL isPlaying;
-@property (nullable) NSString *title;
-@property (nullable) NSString *artist;
-@property (nullable) NSString *album;
-@property (nullable) NSImage *albumArtwork;
-@property (nullable) NSString *albumArtworkChecksum;
-@property (nullable) NSDate *timestamp;
-@property double duration;
+@property (atomic) BOOL isPlaying;
+@property (atomic, nullable) NSString *title;
+@property (atomic, nullable) NSString *artist;
+@property (atomic, nullable) NSString *album;
+@property (atomic, nullable) NSImage *albumArtwork;
+@property (atomic, nullable) NSString *albumArtworkChecksum;
+@property (atomic, nullable) NSDate *timestamp;
+@property (atomic) double duration;
 @property (nonatomic) double elapsedTime;
-@property NSInteger skipBackwardDuration;
-@property NSInteger skipForwardDuration;
+@property (atomic) NSInteger skipBackwardDuration;
+@property (atomic) NSInteger skipForwardDuration;
 
 #pragma mark - Actions
 
@@ -83,7 +83,7 @@ extern const struct GlobalStateNotificationStruct {
  * 2. Processes complete JSON objects (terminated by \n)
  * 3. Removes processed data to prevent memory accumulation
  */
-@property (nonatomic, strong) NSMutableString *mediaControlBuffer;
+@property (atomic, strong) NSMutableString *mediaControlBuffer;
 
 #pragma mark - Debug
 - (void)debugLog:(NSString *)message;

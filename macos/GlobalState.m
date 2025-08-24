@@ -32,6 +32,9 @@ const struct GlobalStateNotificationStruct GlobalStateNotification = {
 - (void)debugLog:(NSString *)message;
 - (void)restartMediaControlStream;
 
+// Thread safety helpers
+- (void)postNotificationOnMainQueue:(NSString *)notificationName;
+
 @end
 
 /**
@@ -64,7 +67,7 @@ static void commonInit(GlobalState *self) {
     
     // Trigger initial display with empty state
     dispatch_after(dispatch_time(DISPATCH_TIME_NOW, (int64_t)(0.1 * NSEC_PER_SEC)), dispatch_get_main_queue(), ^{
-        [NSNotificationCenter.defaultCenter postNotificationName:GlobalStateNotification.infoDidChange object:nil];
+        [self postNotificationOnMainQueue:GlobalStateNotification.infoDidChange];
     });
 }
 
@@ -74,6 +77,7 @@ static void commonInit(GlobalState *self) {
     NSTask * _Nullable mediaControlTask;
     NSPipe * _Nullable mediaControlPipe;
     NSFileHandle * _Nullable mediaControlFileHandle;
+    dispatch_queue_t _stateQueue;  // Serial queue for thread-safe state access
 }
 
 - (NSImage * _Nullable)getAlbumArtworkFromSpotify {
@@ -130,7 +134,7 @@ static void commonInit(GlobalState *self) {
             self->_elapsedTime = [[info objectForKey:kMRMediaRemoteNowPlayingInfoElapsedTime] doubleValue];
         }
         
-        [NSNotificationCenter.defaultCenter postNotificationName:GlobalStateNotification.infoDidChange object:nil];
+        [self postNotificationOnMainQueue:GlobalStateNotification.infoDidChange];
     });
 }
 
@@ -142,6 +146,10 @@ static void commonInit(GlobalState *self) {
 //    if (self) commonInit(self);
     if (self) {
         NSLog(@"global state saw self");
+        
+        // Initialize thread-safe serial queue for state management
+        _stateQueue = dispatch_queue_create("com.mediabar.globalstate", DISPATCH_QUEUE_SERIAL);
+        
         commonInit(self);
     } else {
         NSLog(@"global state didn't see self");
@@ -177,7 +185,7 @@ static void commonInit(GlobalState *self) {
     self.isPlaying = [[notification.userInfo objectForKey:kMRMediaRemoteNowPlayingApplicationIsPlayingUserInfoKey] boolValue];
     NSLog(@"▶️ Playing state changed to: %@", self.isPlaying ? @"PLAYING" : @"PAUSED");
     
-    [NSNotificationCenter.defaultCenter postNotificationName:GlobalStateNotification.isPlayingDidChange object:nil];
+    [self postNotificationOnMainQueue:GlobalStateNotification.isPlayingDidChange];
     
     [self getNowPlayingInfo];
 }
@@ -268,7 +276,11 @@ static void commonInit(GlobalState *self) {
     
     if (data.length > 0) {
         NSString *output = [[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding];
-        [self processMediaControlOutput:output];
+        
+        // Process media control output on serial queue for thread safety
+        dispatch_async(_stateQueue, ^{
+            [self processMediaControlOutput:output];
+        });
         
         // Continue reading
         [mediaControlFileHandle readInBackgroundAndNotify];
@@ -465,7 +477,7 @@ static void commonInit(GlobalState *self) {
 #endif
             
             // Post playing state change notification
-            [NSNotificationCenter.defaultCenter postNotificationName:GlobalStateNotification.isPlayingDidChange object:nil];
+            [self postNotificationOnMainQueue:GlobalStateNotification.isPlayingDidChange];
         }
     }
     
@@ -629,7 +641,7 @@ static void commonInit(GlobalState *self) {
     
     if (didChange) {
         [self debugLog:@"Posting GlobalStateNotification.infoDidChange"];
-        [NSNotificationCenter.defaultCenter postNotificationName:GlobalStateNotification.infoDidChange object:nil];
+        [self postNotificationOnMainQueue:GlobalStateNotification.infoDidChange];
     } else {
         [self debugLog:@"No changes detected, skipping notification"];
     }
@@ -734,6 +746,23 @@ static void commonInit(GlobalState *self) {
     } else {
         // Create file if it doesn't exist
         [timestampedMessage writeToFile:@"/tmp/mediabar-debug.log" atomically:NO encoding:NSUTF8StringEncoding error:nil];
+    }
+}
+
+#pragma mark - Thread Safety Helpers
+
+/**
+ * Safely posts NSNotification on main queue to ensure UI updates happen on main thread.
+ * This prevents crashes and ensures proper UI behavior when notifications are triggered
+ * from background threads (like media-control stream processing).
+ */
+- (void)postNotificationOnMainQueue:(NSString *)notificationName {
+    if ([NSThread isMainThread]) {
+        [NSNotificationCenter.defaultCenter postNotificationName:notificationName object:nil];
+    } else {
+        dispatch_async(dispatch_get_main_queue(), ^{
+            [NSNotificationCenter.defaultCenter postNotificationName:notificationName object:nil];
+        });
     }
 }
 
