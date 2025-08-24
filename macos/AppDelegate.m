@@ -115,6 +115,10 @@
 #pragma mark - Application delegate
 
 - (void)applicationDidFinishLaunching:(NSNotification *)notification {
+    // Test debug logging system
+    [self.globalState debugLog:@"=== MEDIABAR STARTUP ==="];
+    [self.globalState debugLog:@"applicationDidFinishLaunching called"];
+    
     [self loadUserDefaults];
     
     [NSNotificationCenter.defaultCenter addObserver:self
@@ -209,6 +213,24 @@
 }
 
 - (void)infoDidChange {
+    // File-based debug logging for UI updates
+    NSString *debugLog = [NSString stringWithFormat:@"[%@] === UI UPDATE TRIGGERED ===\n", [NSDate date]];
+    debugLog = [debugLog stringByAppendingFormat:@"Artist: %@\n", self.globalState.artist ?: @"(nil)"];
+    debugLog = [debugLog stringByAppendingFormat:@"Title: %@\n", self.globalState.title ?: @"(nil)"];
+    debugLog = [debugLog stringByAppendingFormat:@"Playing: %@\n", self.globalState.isPlaying ? @"YES" : @"NO"];
+    debugLog = [debugLog stringByAppendingFormat:@"Artwork available: %@\n", self.globalState.albumArtwork ? @"YES" : @"NO"];
+    if (self.globalState.albumArtwork) {
+        debugLog = [debugLog stringByAppendingFormat:@"Artwork size: %.0fx%.0f\n", 
+                   self.globalState.albumArtwork.size.width, self.globalState.albumArtwork.size.height];
+    }
+    
+    NSFileHandle *fileHandle = [NSFileHandle fileHandleForWritingAtPath:@"/tmp/mediabar-debug.log"];
+    if (fileHandle) {
+        [fileHandle seekToEndOfFile];
+        [fileHandle writeData:[debugLog dataUsingEncoding:NSUTF8StringEncoding]];
+        [fileHandle closeFile];
+    }
+    
     NSLog(@"infoDidChange called - artist: %@, title: %@, isPlaying: %@", 
           self.globalState.artist, self.globalState.title, 
           self.globalState.isPlaying ? @"YES" : @"NO");
@@ -285,9 +307,67 @@
     }
 #endif
     
+    // Set artwork image if available
+    NSString *artworkDebug = [NSString stringWithFormat:@"[%@] === ARTWORK UI UPDATE ===\n", [NSDate date]];
+    artworkDebug = [artworkDebug stringByAppendingFormat:@"Artwork state: %@\n", 
+                   self.globalState.albumArtwork ? @"PRESENT" : @"NIL"];
+    if (self.globalState.albumArtwork) {
+        artworkDebug = [artworkDebug stringByAppendingFormat:@"Artwork size: %.0fx%.0f\n", 
+                       self.globalState.albumArtwork.size.width, self.globalState.albumArtwork.size.height];
+    }
+    
+    NSFileHandle *artworkFileHandle = [NSFileHandle fileHandleForWritingAtPath:@"/tmp/mediabar-debug.log"];
+    if (artworkFileHandle) {
+        [artworkFileHandle seekToEndOfFile];
+        [artworkFileHandle writeData:[artworkDebug dataUsingEncoding:NSUTF8StringEncoding]];
+        [artworkFileHandle closeFile];
+    }
+    
+    NSLog(@"🖼️ [UI DEBUG] Artwork state: %@, size: %.0fx%.0f", 
+          self.globalState.albumArtwork ? @"PRESENT" : @"NIL",
+          self.globalState.albumArtwork ? self.globalState.albumArtwork.size.width : 0,
+          self.globalState.albumArtwork ? self.globalState.albumArtwork.size.height : 0);
+    
+    if (self.globalState.albumArtwork != nil) {
+        // Resize artwork to appropriate status bar size (18x18 points)
+        NSSize artworkSize = NSMakeSize(18, 18);
+        NSImage *resizedArtwork = [[NSImage alloc] initWithSize:artworkSize];
+        [resizedArtwork lockFocus];
+        [self.globalState.albumArtwork drawInRect:NSMakeRect(0, 0, artworkSize.width, artworkSize.height)
+                                         fromRect:NSZeroRect
+                                        operation:NSCompositingOperationSourceOver
+                                         fraction:1.0];
+        [resizedArtwork unlockFocus];
+        self.statusItem.button.image = resizedArtwork;
+        self.statusItem.button.imagePosition = NSImageLeft;
+        
+        NSString *successLog = [NSString stringWithFormat:@"[%@] Status bar artwork set successfully (18x18 resize)\n", [NSDate date]];
+        NSFileHandle *successFileHandle = [NSFileHandle fileHandleForWritingAtPath:@"/tmp/mediabar-debug.log"];
+        if (successFileHandle) {
+            [successFileHandle seekToEndOfFile];
+            [successFileHandle writeData:[successLog dataUsingEncoding:NSUTF8StringEncoding]];
+            [successFileHandle closeFile];
+        }
+        
+        NSLog(@"🖼️ [UI DEBUG] Status bar artwork set successfully");
+    } else {
+        self.statusItem.button.image = nil;
+        
+        NSString *clearLog = [NSString stringWithFormat:@"[%@] Status bar artwork cleared (no artwork available)\n", [NSDate date]];
+        NSFileHandle *clearFileHandle = [NSFileHandle fileHandleForWritingAtPath:@"/tmp/mediabar-debug.log"];
+        if (clearFileHandle) {
+            [clearFileHandle seekToEndOfFile];
+            [clearFileHandle writeData:[clearLog dataUsingEncoding:NSUTF8StringEncoding]];
+            [clearFileHandle closeFile];
+        }
+        
+        NSLog(@"🖼️ [UI DEBUG] Status bar artwork cleared (no artwork available)");
+    }
+    
     CGFloat padding = 10;
     CGFloat titleWidth = ceil(title.size.width) + 2;
-    CGFloat widthWithPadding = titleWidth + padding;
+    CGFloat artworkWidth = self.globalState.albumArtwork ? 18 + 4 : 0; // 18pt image + 4pt spacing
+    CGFloat widthWithPadding = titleWidth + artworkWidth + padding;
     CGFloat newWidth = widthWithPadding > self.maximumWidth ? self.maximumWidth : widthWithPadding;
     self.statusItem.length = newWidth;
     self.statusItem.button.frame = CGRectMake(padding / 2, 0, newWidth - padding, 22);

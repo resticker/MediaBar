@@ -29,6 +29,7 @@ const struct GlobalStateNotificationStruct GlobalStateNotification = {
 - (void)mediaControlDataAvailable:(NSNotification *)notification;
 - (void)processMediaControlOutput:(NSString *)output;
 - (void)updateFromMediaControlData:(NSDictionary *)payload;
+- (void)debugLog:(NSString *)message;
 - (void)restartMediaControlStream;
 
 @end
@@ -174,12 +175,20 @@ static void commonInit(GlobalState *self) {
 #pragma mark - Media Control Integration
 
 - (void)startMediaControlStream {
+    [self debugLog:@"=== STARTING MEDIA STREAM ==="];
     NSLog(@"📡 Starting media-control stream for event-driven notifications...");
     
     // Create task to run media-control stream
     mediaControlTask = [[NSTask alloc] init];
     mediaControlTask.launchPath = @"/opt/homebrew/bin/media-control";
-    mediaControlTask.arguments = @[@"stream"];
+    mediaControlTask.arguments = @[@"stream", @"--no-diff"];
+    
+    // Set up environment variables for media-control stream
+    NSMutableDictionary *environment = [NSMutableDictionary dictionaryWithDictionary:[[NSProcessInfo processInfo] environment]];
+    environment[@"PATH"] = @"/opt/homebrew/bin:/usr/local/bin:/usr/bin:/bin";
+    environment[@"DYLD_FRAMEWORK_PATH"] = @"/opt/homebrew/Frameworks";
+    mediaControlTask.environment = environment;
+    NSLog(@"🔧 Set environment PATH for stream: %@", environment[@"PATH"]);
     
     // Set up pipe to read output
     mediaControlPipe = [NSPipe pipe];
@@ -223,30 +232,81 @@ static void commonInit(GlobalState *self) {
 }
 
 - (void)processMediaControlOutput:(NSString *)output {
-    // Split into lines and process each JSON object
-    NSArray *lines = [output componentsSeparatedByString:@"\n"];
+    // Initialize buffer if needed
+    if (!self.mediaControlBuffer) {
+        self.mediaControlBuffer = [[NSMutableString alloc] init];
+    }
     
-    for (NSString *line in lines) {
-        NSString *trimmedLine = [line stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-        if (trimmedLine.length == 0) continue;
-        
-        @try {
-            NSData *jsonData = [trimmedLine dataUsingEncoding:NSUTF8StringEncoding];
-            NSDictionary *json = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:nil];
-            
-            if (json && [json[@"type"] isEqualToString:@"data"]) {
-                [self updateFromMediaControlData:json[@"payload"]];
-            }
-        } @catch (NSException *exception) {
-            NSLog(@"⚠️ Failed to parse media-control JSON: %@", exception.reason);
+    // Append new output to buffer
+    [self.mediaControlBuffer appendString:output];
+    
+    // Process complete JSON objects from buffer
+    NSRange searchRange = NSMakeRange(0, self.mediaControlBuffer.length);
+    while (searchRange.location < self.mediaControlBuffer.length) {
+        // Find next complete JSON object (looks for newline)
+        NSRange newlineRange = [self.mediaControlBuffer rangeOfString:@"\n" options:0 range:searchRange];
+        if (newlineRange.location == NSNotFound) {
+            // No complete line yet, wait for more data
+            break;
         }
+        
+        // Extract complete line
+        NSRange lineRange = NSMakeRange(searchRange.location, newlineRange.location - searchRange.location);
+        NSString *line = [self.mediaControlBuffer substringWithRange:lineRange];
+        NSString *trimmedLine = [line stringByTrimmingCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+        
+        if (trimmedLine.length > 0) {
+            @try {
+                NSData *jsonData = [trimmedLine dataUsingEncoding:NSUTF8StringEncoding];
+                NSDictionary *json = [NSJSONSerialization JSONObjectWithData:jsonData options:0 error:nil];
+                
+                if (json && [json[@"type"] isEqualToString:@"data"]) {
+                    [self debugLog:[NSString stringWithFormat:@"Processing complete JSON object (length: %lu)", (unsigned long)trimmedLine.length]];
+                    [self updateFromMediaControlData:json[@"payload"]];
+                } else {
+                    [self debugLog:[NSString stringWithFormat:@"Ignoring non-data JSON: %@", json[@"type"] ?: @"(no type)"]];
+                }
+            } @catch (NSException *exception) {
+                NSLog(@"⚠️ Failed to parse media-control JSON: %@", exception.reason);
+                [self debugLog:[NSString stringWithFormat:@"JSON parse failed: %@", exception.reason]];
+            }
+        }
+        
+        // Move to next line
+        searchRange.location = newlineRange.location + newlineRange.length;
+    }
+    
+    // Remove processed data from buffer
+    if (searchRange.location > 0) {
+        NSString *remaining = [self.mediaControlBuffer substringFromIndex:searchRange.location];
+        [self.mediaControlBuffer setString:remaining];
+        [self debugLog:[NSString stringWithFormat:@"Buffer trimmed, remaining: %lu chars", (unsigned long)remaining.length]];
     }
 }
 
 - (void)updateFromMediaControlData:(NSDictionary *)payload {
     if (!payload || [payload count] == 0) return;
     
+    // File-based debug logging
+    [self debugLog:[NSString stringWithFormat:@"=== PAYLOAD RECEIVED ==="]];
+    [self debugLog:[NSString stringWithFormat:@"Keys: %@", [payload.allKeys componentsJoinedByString:@", "]]];
+    if (payload[@"title"]) [self debugLog:[NSString stringWithFormat:@"Title: %@", payload[@"title"]]];
+    if (payload[@"artist"]) [self debugLog:[NSString stringWithFormat:@"Artist: %@", payload[@"artist"]]];
+    if (payload[@"playing"]) [self debugLog:[NSString stringWithFormat:@"Playing: %@", payload[@"playing"]]];
+    if (payload[@"artworkMimeType"]) [self debugLog:[NSString stringWithFormat:@"ArtworkMimeType: %@", payload[@"artworkMimeType"]]];
+    if (payload[@"artworkData"]) {
+        NSString *artworkData = payload[@"artworkData"];
+        [self debugLog:[NSString stringWithFormat:@"ArtworkData length: %lu chars", (unsigned long)artworkData.length]];
+        [self debugLog:[NSString stringWithFormat:@"ArtworkData preview: %@...", [artworkData substringToIndex:MIN(50, artworkData.length)]]];
+    } else {
+        [self debugLog:@"ArtworkData: MISSING"];
+    }
+    
+    // Debug: Show all keys in payload
+    NSLog(@"🔍 [DEBUG] Received payload keys: %@", [payload.allKeys componentsJoinedByString:@", "]);
+    
     BOOL didChange = NO;
+    BOOL titleDidChange = NO;
     
     // Check if this looks like a complete song change payload
     // Complete payloads typically have title and other metadata keys present
@@ -289,7 +349,9 @@ static void commonInit(GlobalState *self) {
         // Update title - always present in complete updates
         if (hasTitle) {
             NSString *newTitle = payload[@"title"]; // Can be nil or actual value
-            if (![self.title isEqualToString:newTitle]) {
+            // Check for title change BEFORE updating self.title
+            titleDidChange = ![self.title isEqualToString:newTitle];
+            if (titleDidChange) {
                 NSLog(@"🎼 Title changed: %@ -> %@", self.title ?: @"(none)", newTitle ?: @"(none)");
                 self.title = newTitle;
                 didChange = YES;
@@ -351,32 +413,100 @@ static void commonInit(GlobalState *self) {
         self.timestamp = [formatter dateFromString:timestampString];
     }
     
-    // Fetch artwork when track info changes
-    if (didChange && (payload[@"title"] != nil || payload[@"artist"] != nil || payload[@"album"] != nil)) {
-        // Get current now playing info from MediaRemote for artwork
-        MRMediaRemoteGetNowPlayingInfo(dispatch_get_main_queue(), ^(NSDictionary *infoDict) {
-            if (infoDict) {
-                NSData *artworkData = infoDict[kMRMediaRemoteNowPlayingInfoArtworkData];
+    // Handle artwork from media-control payload (primary source)
+    [self debugLog:@"=== ARTWORK PROCESSING ==="];
+    if (payload[@"artworkData"] != nil) {
+        NSString *base64ArtworkData = payload[@"artworkData"];
+        [self debugLog:[NSString stringWithFormat:@"artworkData present, length: %lu", (unsigned long)[base64ArtworkData length]]];
+        NSLog(@"🎨 [ARTWORK DEBUG] artworkData present, length: %lu", (unsigned long)[base64ArtworkData length]);
+        
+        if (base64ArtworkData && [base64ArtworkData length] > 0) {
+            NSData *artworkData = [[NSData alloc] initWithBase64EncodedString:base64ArtworkData options:NSDataBase64DecodingIgnoreUnknownCharacters];
+            [self debugLog:[NSString stringWithFormat:@"Base64 decode result: %@ (length: %lu)", artworkData ? @"SUCCESS" : @"FAILED", (unsigned long)artworkData.length]];
+            NSLog(@"🎨 [ARTWORK DEBUG] Base64 decode result: %@ (length: %lu)", artworkData ? @"SUCCESS" : @"FAILED", (unsigned long)artworkData.length);
+            
+            if (artworkData) {
+                NSString *newArtworkChecksum = [artworkData MD5];
+                [self debugLog:[NSString stringWithFormat:@"New checksum: %@", newArtworkChecksum]];
+                [self debugLog:[NSString stringWithFormat:@"Current checksum: %@", self.albumArtworkChecksum ?: @"(nil)"]];
+                NSLog(@"🎨 [ARTWORK DEBUG] New checksum: %@, Current checksum: %@", newArtworkChecksum, self.albumArtworkChecksum);
                 
-                if (artworkData) {
-                    NSString *newArtworkChecksum = [artworkData MD5];
-                    if (![self.albumArtworkChecksum isEqualToString:newArtworkChecksum]) {
-                        NSLog(@"🖼️ Updating album artwork");
-                        self.albumArtwork = [[NSImage alloc] initWithData:artworkData];
-                        self.albumArtworkChecksum = newArtworkChecksum;
-                    }
+                NSString *trackInfo = [NSString stringWithFormat:@"'%@ - %@'", 
+                                      payload[@"artist"] ?: @"Unknown Artist", 
+                                      payload[@"title"] ?: @"Unknown Title"];
+                
+                if (![self.albumArtworkChecksum isEqualToString:newArtworkChecksum]) {
+                    [self debugLog:[NSString stringWithFormat:@"*** ARTWORK UPDATE *** Track: %@ - New artwork detected (checksum changed)", trackInfo]];
+                    [self debugLog:[NSString stringWithFormat:@"Previous checksum: %@", self.albumArtworkChecksum ?: @"(none)"]];
+                    [self debugLog:[NSString stringWithFormat:@"New checksum: %@", newArtworkChecksum]];
+                    NSLog(@"🖼️ Updating album artwork from media-control artworkData");
+                    NSImage *newImage = [[NSImage alloc] initWithData:artworkData];
+                    [self debugLog:[NSString stringWithFormat:@"NSImage creation: %@ (size: %.0fx%.0f)", 
+                                   newImage ? @"SUCCESS" : @"FAILED", 
+                                   newImage ? newImage.size.width : 0, 
+                                   newImage ? newImage.size.height : 0]];
+                    NSLog(@"🎨 [ARTWORK DEBUG] NSImage creation result: %@ (size: %.0fx%.0f)", 
+                          newImage ? @"SUCCESS" : @"FAILED", 
+                          newImage ? newImage.size.width : 0, 
+                          newImage ? newImage.size.height : 0);
+                    
+                    self.albumArtwork = newImage;
+                    self.albumArtworkChecksum = newArtworkChecksum;
+                    didChange = YES;
+                    [self debugLog:@"*** ARTWORK UPDATED SUCCESSFULLY *** - didChange = YES"];
                 } else {
-                    NSLog(@"🖼️ No artwork data available");
-                    self.albumArtwork = nil;
-                    self.albumArtworkChecksum = nil;
+                    [self debugLog:[NSString stringWithFormat:@"*** ARTWORK UNCHANGED *** Track: %@ - Same artwork as previous track (checksum: %@)", trackInfo, newArtworkChecksum]];
+                    [self debugLog:@"This is NORMAL behavior when multiple tracks share the same album artwork"];
+                    NSLog(@"🎨 [ARTWORK DEBUG] Checksum unchanged, skipping artwork update for track: %@", trackInfo);
                 }
+            } else {
+                [self debugLog:@"CRITICAL: Failed to decode base64 artwork data"];
+                NSLog(@"🎨 [ARTWORK DEBUG] Failed to decode base64 artwork data");
             }
-        });
+        } else {
+            [self debugLog:@"Empty or nil artworkData"];
+            NSLog(@"🎨 [ARTWORK DEBUG] Empty or nil artworkData");
+            // Empty artworkData means no artwork
+            if (self.albumArtwork != nil) {
+                [self debugLog:@"Clearing album artwork (empty artworkData)"];
+                NSLog(@"🖼️ Clearing album artwork (empty artworkData)");
+                self.albumArtwork = nil;
+                self.albumArtworkChecksum = nil;
+                didChange = YES;
+            }
+        }
+    } else {
+        [self debugLog:@"No artworkData key in payload"];
+        
+        // If this is a complete song update but no artwork, clear the old artwork
+        // to prevent showing previous song's artwork with new song metadata
+        if (isCompleteUpdate && titleDidChange && self.albumArtwork != nil) {
+            [self debugLog:[NSString stringWithFormat:@"Song changed to '%@' but no artwork in message - clearing old artwork to prevent mismatch", 
+                           self.title ?: @"(none)"]];
+            self.albumArtwork = nil;
+            self.albumArtworkChecksum = nil;
+            didChange = YES;
+        } else if (isCompleteUpdate && !titleDidChange) {
+            [self debugLog:@"Complete update but same song title - keeping existing artwork"];
+        } else if (isCompleteUpdate && titleDidChange) {
+            [self debugLog:@"Song changed but no existing artwork to clear"];
+        }
+        
+        // Stream will deliver artwork in subsequent messages
+        [self debugLog:@"No artworkData in this message - artwork will arrive in subsequent stream messages"];
     }
     
     // Post info change notification if anything changed
+    [self debugLog:[NSString stringWithFormat:@"=== FINAL STATE ==="]];
+    [self debugLog:[NSString stringWithFormat:@"didChange: %@", didChange ? @"YES" : @"NO"]];
+    [self debugLog:[NSString stringWithFormat:@"Current artwork: %@", self.albumArtwork ? @"PRESENT" : @"NIL"]];
+    [self debugLog:[NSString stringWithFormat:@"Current checksum: %@", self.albumArtworkChecksum ?: @"(nil)"]];
+    
     if (didChange) {
+        [self debugLog:@"Posting GlobalStateNotification.infoDidChange"];
         [NSNotificationCenter.defaultCenter postNotificationName:GlobalStateNotification.infoDidChange object:nil];
+    } else {
+        [self debugLog:@"No changes detected, skipping notification"];
     }
 }
 
@@ -444,6 +574,7 @@ static void commonInit(GlobalState *self) {
 }
 
 - (void)restartMediaControlStream {
+    [self debugLog:@"=== RESTARTING MEDIA STREAM ==="];
     NSLog(@"🔄 Restarting media-control stream...");
     
     // Clean up existing task
@@ -467,6 +598,20 @@ static void commonInit(GlobalState *self) {
         [self startMediaControlStream];
     });
 }
+
+- (void)debugLog:(NSString *)message {
+    NSString *timestampedMessage = [NSString stringWithFormat:@"[%@] %@\n", [NSDate date], message];
+    NSFileHandle *fileHandle = [NSFileHandle fileHandleForWritingAtPath:@"/tmp/mediabar-debug.log"];
+    if (fileHandle) {
+        [fileHandle seekToEndOfFile];
+        [fileHandle writeData:[timestampedMessage dataUsingEncoding:NSUTF8StringEncoding]];
+        [fileHandle closeFile];
+    } else {
+        // Create file if it doesn't exist
+        [timestampedMessage writeToFile:@"/tmp/mediabar-debug.log" atomically:NO encoding:NSUTF8StringEncoding error:nil];
+    }
+}
+
 
 #pragma mark - Actions
 

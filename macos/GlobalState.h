@@ -30,6 +30,12 @@ extern const struct GlobalStateNotificationStruct {
 - (void)skipForward;
 - (void)next;
 
+#pragma mark - Media Control Integration
+@property (nonatomic, strong) NSMutableString *mediaControlBuffer;
+
+#pragma mark - Debug
+- (void)debugLog:(NSString *)message;
+
 @end
 
 NS_ASSUME_NONNULL_END
