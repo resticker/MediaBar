@@ -34,6 +34,7 @@ const struct GlobalStateNotificationStruct GlobalStateNotification = {
 - (void)restartMediaControlStream;
 - (void)scheduleStreamWatchdog;
 - (BOOL)validateMediaControlJSON:(NSDictionary *)json;
+- (void)manageCacheSize;
 
 // Thread safety helpers
 - (void)postNotificationOnMainQueue:(NSString *)notificationName;
@@ -152,6 +153,9 @@ static void commonInit(GlobalState *self) {
         
         // Initialize thread-safe serial queue for state management
         _stateQueue = dispatch_queue_create("com.mediabar.globalstate", DISPATCH_QUEUE_SERIAL);
+        
+        // Initialize performance optimization cache
+        _artworkChecksumCache = [[NSMutableDictionary alloc] init];
         
         commonInit(self);
     } else {
@@ -617,18 +621,62 @@ static void commonInit(GlobalState *self) {
     
     // Handle artwork from media-control payload (primary source)
     [self debugLog:@"=== ARTWORK PROCESSING ==="];
+    
+    // Performance monitoring: Start timing artwork processing
+    NSDate *artworkProcessingStart = nil;
+    
     if (payload[@"artworkData"] != nil) {
         NSString *base64ArtworkData = payload[@"artworkData"];
         [self debugLog:[NSString stringWithFormat:@"artworkData present, length: %lu", (unsigned long)[base64ArtworkData length]]];
         NSLog(@"🎨 [ARTWORK DEBUG] artworkData present, length: %lu", (unsigned long)[base64ArtworkData length]);
         
         if (base64ArtworkData && [base64ArtworkData length] > 0) {
+            // Start timing artwork processing
+            artworkProcessingStart = [NSDate date];
+            [self debugLog:[NSString stringWithFormat:@"🕐 ARTWORK PROCESSING START - Base64 length: %lu", (unsigned long)base64ArtworkData.length]];
+            
+            // Implement artwork size limits to prevent memory issues
+            static const NSUInteger kMaxBase64Size = 500 * 1024; // 500KB base64 limit (~375KB decoded)
+            if (base64ArtworkData.length > kMaxBase64Size) {
+                [self debugLog:[NSString stringWithFormat:@"Artwork too large (%lu chars base64), skipping (limit: %lu)", (unsigned long)base64ArtworkData.length, (unsigned long)kMaxBase64Size]];
+                NSLog(@"⚠️ Artwork too large (%lu chars base64), skipping processing", (unsigned long)base64ArtworkData.length);
+                return;
+            }
+            
+            NSDate *base64DecodeStart = [NSDate date];
             NSData *artworkData = [[NSData alloc] initWithBase64EncodedString:base64ArtworkData options:NSDataBase64DecodingIgnoreUnknownCharacters];
-            [self debugLog:[NSString stringWithFormat:@"Base64 decode result: %@ (length: %lu)", artworkData ? @"SUCCESS" : @"FAILED", (unsigned long)artworkData.length]];
+            NSTimeInterval base64DecodeTime = [[NSDate date] timeIntervalSinceDate:base64DecodeStart];
+            [self debugLog:[NSString stringWithFormat:@"Base64 decode result: %@ (length: %lu, time: %.2fms)", artworkData ? @"SUCCESS" : @"FAILED", (unsigned long)artworkData.length, base64DecodeTime * 1000]];
             NSLog(@"🎨 [ARTWORK DEBUG] Base64 decode result: %@ (length: %lu)", artworkData ? @"SUCCESS" : @"FAILED", (unsigned long)artworkData.length);
             
             if (artworkData) {
-                NSString *newArtworkChecksum = [artworkData MD5];
+                // Additional decoded size check as safety measure
+                static const NSUInteger kMaxDecodedSize = 1024 * 1024; // 1MB decoded limit
+                if (artworkData.length > kMaxDecodedSize) {
+                    [self debugLog:[NSString stringWithFormat:@"Decoded artwork too large (%lu bytes), skipping (limit: %lu)", (unsigned long)artworkData.length, (unsigned long)kMaxDecodedSize]];
+                    NSLog(@"⚠️ Decoded artwork too large (%lu bytes), skipping processing", (unsigned long)artworkData.length);
+                    return;
+                }
+                // Implement MD5 caching to avoid redundant calculations for identical artwork
+                NSString *cacheKey = [base64ArtworkData substringToIndex:MIN(64, base64ArtworkData.length)];
+                NSString *newArtworkChecksum = self.artworkChecksumCache[cacheKey];
+                
+                NSDate *md5Start = [NSDate date];
+                if (!newArtworkChecksum) {
+                    // Cache miss - calculate MD5 and store in cache
+                    newArtworkChecksum = [artworkData MD5];
+                    NSTimeInterval md5Time = [[NSDate date] timeIntervalSinceDate:md5Start];
+                    self.artworkChecksumCache[cacheKey] = newArtworkChecksum;
+                    [self debugLog:[NSString stringWithFormat:@"MD5 cache miss - calculated and cached: %@ (time: %.2fms)", newArtworkChecksum, md5Time * 1000]];
+                    
+                    // Manage cache size to prevent memory issues
+                    [self manageCacheSize];
+                } else {
+                    // Cache hit - avoid redundant MD5 calculation
+                    NSTimeInterval cacheTime = [[NSDate date] timeIntervalSinceDate:md5Start];
+                    [self debugLog:[NSString stringWithFormat:@"MD5 cache hit - reused cached: %@ (time: %.2fms)", newArtworkChecksum, cacheTime * 1000]];
+                }
+                
                 [self debugLog:[NSString stringWithFormat:@"New checksum: %@", newArtworkChecksum]];
                 [self debugLog:[NSString stringWithFormat:@"Current checksum: %@", self.albumArtworkChecksum ?: @"(nil)"]];
                 NSLog(@"🎨 [ARTWORK DEBUG] New checksum: %@, Current checksum: %@", newArtworkChecksum, self.albumArtworkChecksum);
@@ -652,8 +700,22 @@ static void commonInit(GlobalState *self) {
                           newImage ? newImage.size.width : 0, 
                           newImage ? newImage.size.height : 0);
                     
-                    self.albumArtwork = newImage;
-                    self.albumArtworkChecksum = newArtworkChecksum;
+                    // Validate image creation and dimensions
+                    if (newImage && !NSEqualSizes(newImage.size, NSZeroSize)) {
+                        // Additional sanity check for reasonable image dimensions
+                        CGFloat width = newImage.size.width;
+                        CGFloat height = newImage.size.height;
+                        if (width > 0 && height > 0 && width <= 4096 && height <= 4096) {
+                            self.albumArtwork = newImage;
+                            self.albumArtworkChecksum = newArtworkChecksum;
+                        } else {
+                            [self debugLog:[NSString stringWithFormat:@"Image dimensions invalid or too large (%.0fx%.0f), skipping", width, height]];
+                            NSLog(@"⚠️ Image dimensions invalid or too large (%.0fx%.0f), skipping artwork", width, height);
+                        }
+                    } else {
+                        [self debugLog:@"NSImage creation failed or has zero size, skipping artwork"];
+                        NSLog(@"⚠️ NSImage creation failed or has zero size, skipping artwork");
+                    }
                     didChange = YES;
                     [self debugLog:@"*** ARTWORK UPDATED SUCCESSFULLY *** - didChange = YES"];
                 } else {
@@ -696,6 +758,12 @@ static void commonInit(GlobalState *self) {
         
         // Stream will deliver artwork in subsequent messages
         [self debugLog:@"No artworkData in this message - artwork will arrive in subsequent stream messages"];
+    }
+    
+    // Complete performance monitoring for artwork processing
+    if (artworkProcessingStart) {
+        NSTimeInterval totalArtworkTime = [[NSDate date] timeIntervalSinceDate:artworkProcessingStart];
+        [self debugLog:[NSString stringWithFormat:@"Total artwork processing time: %.2fms", totalArtworkTime * 1000]];
     }
     
     // Post info change notification if anything changed
@@ -927,6 +995,26 @@ static void commonInit(GlobalState *self) {
     }
     
     return YES;
+}
+
+- (void)manageCacheSize {
+    // Keep cache size reasonable to prevent memory issues (limit to 50 entries)
+    static const NSUInteger kMaxCacheSize = 50;
+    
+    if (self.artworkChecksumCache.count > kMaxCacheSize) {
+        // Remove oldest entries by clearing half the cache
+        // In a more sophisticated implementation, we could use LRU eviction
+        NSUInteger targetSize = kMaxCacheSize / 2;
+        NSArray *allKeys = self.artworkChecksumCache.allKeys;
+        NSUInteger itemsToRemove = self.artworkChecksumCache.count - targetSize;
+        
+        for (NSUInteger i = 0; i < itemsToRemove && i < allKeys.count; i++) {
+            [self.artworkChecksumCache removeObjectForKey:allKeys[i]];
+        }
+        
+        [self debugLog:[NSString stringWithFormat:@"Cache size management: pruned to %lu entries", (unsigned long)self.artworkChecksumCache.count]];
+        NSLog(@"🧹 Pruned MD5 cache from %lu to %lu entries", (unsigned long)allKeys.count, (unsigned long)self.artworkChecksumCache.count);
+    }
 }
 
 #pragma mark - Thread Safety Helpers

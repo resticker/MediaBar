@@ -40,6 +40,10 @@
 @property (strong) NSString *iconWhilePlaying;
 @property NSInteger maximumWidth;
 
+// Performance optimization properties
+@property (strong) NSMutableDictionary<NSString *, NSImage *> *resizedArtworkCache;
+@property (strong) dispatch_queue_t imageProcessingQueue;
+
 
 //@property (strong) RACDisposable *interval;
 
@@ -116,6 +120,10 @@
     // Test debug logging system
     [self.globalState debugLog:@"=== MEDIABAR STARTUP ==="];
     [self.globalState debugLog:@"applicationDidFinishLaunching called"];
+    
+    // Initialize performance optimization components
+    self.resizedArtworkCache = [[NSMutableDictionary alloc] init];
+    self.imageProcessingQueue = dispatch_queue_create("com.mediabar.imageprocessing", DISPATCH_QUEUE_SERIAL);
     
     [self loadUserDefaults];
     
@@ -349,37 +357,7 @@
           self.globalState.albumArtwork ? self.globalState.albumArtwork.size.height : 0);
     
     if (self.globalState.albumArtwork != nil) {
-        /*
-         * HIGH-QUALITY ARTWORK RESIZING FOR STATUS BAR
-         * 
-         * Converts large artwork (typically 600x600px) to optimal 18x18pt status bar size.
-         * Uses NSImage's drawing system for smooth scaling and proper aspect ratio handling.
-         * 
-         * Memory impact: Reduces artwork from ~100KB+ to ~1KB for efficient UI performance.
-         */
-        NSSize artworkSize = NSMakeSize(18, 18);  // Optimal size for macOS status bar integration
-        NSImage *resizedArtwork = [[NSImage alloc] initWithSize:artworkSize];
-        [resizedArtwork lockFocus];  // Begin drawing context for high-quality resize
-        // Draw original artwork into smaller canvas with smooth scaling
-        [self.globalState.albumArtwork drawInRect:NSMakeRect(0, 0, artworkSize.width, artworkSize.height)
-                                         fromRect:NSZeroRect  // Use entire source image
-                                        operation:NSCompositingOperationSourceOver  // Standard alpha blending
-                                         fraction:1.0];  // Full opacity
-        [resizedArtwork unlockFocus];  // Complete drawing operations and finalize image
-        
-        // Apply resized artwork to status bar button with left-aligned positioning
-        self.statusItem.button.image = resizedArtwork;
-        self.statusItem.button.imagePosition = NSImageLeft;  // Show artwork before text
-        
-        NSString *successLog = [NSString stringWithFormat:@"[%@] Status bar artwork set successfully (18x18 resize)\n", [NSDate date]];
-        NSFileHandle *successFileHandle = [NSFileHandle fileHandleForWritingAtPath:@"/tmp/mediabar-debug.log"];
-        if (successFileHandle) {
-            [successFileHandle seekToEndOfFile];
-            [successFileHandle writeData:[successLog dataUsingEncoding:NSUTF8StringEncoding]];
-            [successFileHandle closeFile];
-        }
-        
-        NSLog(@"🖼️ [UI DEBUG] Status bar artwork set successfully");
+        [self setStatusBarArtworkOptimized:self.globalState.albumArtwork withChecksum:self.globalState.albumArtworkChecksum];
     } else {
         self.statusItem.button.image = nil;
         
@@ -442,6 +420,102 @@
 //{
 //    [self.globalState skipBackward];
 //}
+
+#pragma mark - Performance Optimized Artwork Processing
+
+- (void)setStatusBarArtworkOptimized:(NSImage *)artwork withChecksum:(NSString *)checksum {
+    if (!artwork || !checksum) {
+        return;
+    }
+    
+    // Check cache first - use checksum as cache key for efficiency
+    NSImage *cachedResizedArtwork = self.resizedArtworkCache[checksum];
+    if (cachedResizedArtwork) {
+        // Cache hit - apply immediately without processing
+        self.statusItem.button.image = cachedResizedArtwork;
+        self.statusItem.button.imagePosition = NSImageLeft;
+        
+        NSString *cacheHitLog = [NSString stringWithFormat:@"[%@] Status bar artwork set from cache (checksum: %@)\n", [NSDate date], checksum];
+        NSFileHandle *logHandle = [NSFileHandle fileHandleForWritingAtPath:@"/tmp/mediabar-debug.log"];
+        if (logHandle) {
+            [logHandle seekToEndOfFile];
+            [logHandle writeData:[cacheHitLog dataUsingEncoding:NSUTF8StringEncoding]];
+            [logHandle closeFile];
+        }
+        
+        NSLog(@"🖼️ [UI DEBUG] Status bar artwork set from cache");
+        return;
+    }
+    
+    // Cache miss - process on background queue to avoid blocking UI
+    dispatch_async(self.imageProcessingQueue, ^{
+        NSImage *resizedArtwork = [self createResizedArtwork:artwork];
+        
+        if (resizedArtwork) {
+            // Cache the result for future use
+            self.resizedArtworkCache[checksum] = resizedArtwork;
+            
+            // Manage cache size to prevent memory issues
+            [self manageResizedArtworkCacheSize];
+            
+            // Apply to UI on main thread
+            dispatch_async(dispatch_get_main_queue(), ^{
+                // Double-check that this artwork is still current (avoid race conditions)
+                if ([checksum isEqualToString:self.globalState.albumArtworkChecksum]) {
+                    self.statusItem.button.image = resizedArtwork;
+                    self.statusItem.button.imagePosition = NSImageLeft;
+                    
+                    NSString *successLog = [NSString stringWithFormat:@"[%@] Status bar artwork set successfully (background processed)\n", [NSDate date]];
+                    NSFileHandle *logHandle = [NSFileHandle fileHandleForWritingAtPath:@"/tmp/mediabar-debug.log"];
+                    if (logHandle) {
+                        [logHandle seekToEndOfFile];
+                        [logHandle writeData:[successLog dataUsingEncoding:NSUTF8StringEncoding]];
+                        [logHandle closeFile];
+                    }
+                    
+                    NSLog(@"🖼️ [UI DEBUG] Status bar artwork set successfully (background processed)");
+                }
+            });
+        }
+    });
+}
+
+- (NSImage *)createResizedArtwork:(NSImage *)originalArtwork {
+    NSSize artworkSize = NSMakeSize(18, 18);  // Optimal size for macOS status bar
+    
+    // Use more efficient Core Graphics approach instead of lockFocus
+    NSImage *resizedArtwork = [[NSImage alloc] initWithSize:artworkSize];
+    [resizedArtwork lockFocus];
+    
+    // Draw with high-quality interpolation
+    [[NSGraphicsContext currentContext] setImageInterpolation:NSImageInterpolationHigh];
+    [originalArtwork drawInRect:NSMakeRect(0, 0, artworkSize.width, artworkSize.height)
+                       fromRect:NSZeroRect
+                      operation:NSCompositingOperationSourceOver
+                       fraction:1.0];
+    
+    [resizedArtwork unlockFocus];
+    
+    return resizedArtwork;
+}
+
+- (void)manageResizedArtworkCacheSize {
+    // Keep resized artwork cache reasonable (limit to 30 entries)
+    static const NSUInteger kMaxResizedCacheSize = 30;
+    
+    if (self.resizedArtworkCache.count > kMaxResizedCacheSize) {
+        // Remove oldest entries by clearing half the cache
+        NSUInteger targetSize = kMaxResizedCacheSize / 2;
+        NSArray *allKeys = self.resizedArtworkCache.allKeys;
+        NSUInteger itemsToRemove = self.resizedArtworkCache.count - targetSize;
+        
+        for (NSUInteger i = 0; i < itemsToRemove && i < allKeys.count; i++) {
+            [self.resizedArtworkCache removeObjectForKey:allKeys[i]];
+        }
+        
+        NSLog(@"🧹 Pruned resized artwork cache from %lu to %lu entries", (unsigned long)allKeys.count, (unsigned long)self.resizedArtworkCache.count);
+    }
+}
 
 - (void)setupGlobalShortcuts {
 

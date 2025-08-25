@@ -97,6 +97,19 @@ extern const struct GlobalStateNotificationStruct {
 @property (atomic) NSInteger restartAttempts;
 @property (atomic, nullable) NSDate *lastStreamDataTime;
 
+#pragma mark - Performance Optimization
+
+/**
+ * Cache for MD5 checksums to avoid recalculating for identical artwork data.
+ * 
+ * Key: Base64 artwork string (first 64 chars for memory efficiency)
+ * Value: MD5 checksum string
+ * 
+ * This prevents redundant MD5 calculations when the same artwork appears
+ * across multiple metadata updates (common with streaming services).
+ */
+@property (atomic, strong) NSMutableDictionary<NSString *, NSString *> *artworkChecksumCache;
+
 #pragma mark - Debug
 - (void)debugLog:(NSString *)message;
 
